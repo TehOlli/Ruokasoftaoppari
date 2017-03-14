@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/onsenui.css">
+        <link rel="stylesheet" type="text/css" href="css/onsen-css-components.css">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/angular.min.js"></script>
+        <script type="text/javascript" src="js/onsenui.min.js"></script>
+        <script type="text/javascript" src="js/angular-onsenui.min.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/controller.js"></script>
+        <title>Hello World</title>
+    </head>
+    <body>
+    <ons-navigator var="myNavigator" page="login.html" animation="slide">
+    <ons-template id="login.html">
+        <ons-page ng-controller="loginController">
+            <div class="login-input">
+                <p>
+                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="käyttäjänimi" float required></ons-input>
+                </p>
+                <p>
+                    <ons-button ng-click="inputFunction(userName); myNavigator" modifier="material">Button</ons-button>
+                </p>
+            </div>
+        </ons-page>
+    </ons-template>
+    <ons-template id="landing.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="center">Kotisivu</div>
+            </ons-toolbar>
+            <ons-list>
+                <ons-list-header>Ryhmät</ons-list-header>
+                <ons-list-item tappable ng-click="myNavigator.pushPage('home.html', {data: {valinta: 'Topin ryhmä'}})">Topin ryhmä</ons-list-item>
+                <ons-list-item tappable ng-click="myNavigator.pushPage('home.html', {data: {valinta: 'Ollin ryhmä'}})">Ollin ryhmä</ons-list-item>
+                <ons-list-item tappable ng-click="myNavigator.pushPage('home.html', {data: {valinta: 'Juhan ryhmä'}})">Juhan ryhmä</ons-list-item>
+            </ons-list>
+        </ons-page>
+    </ons-template>
+    </ons-navigator>
+    <ons-template id="home.html">
+        <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">{{ myNavigator.topPage.data.valinta }}</div>
+        </ons-toolbar>
+        
+        <ons-tabbar>
+            <ons-tab page="food.html" active="true">
+                <ons-icon class="tab-icons" icon="ion-fork"></ons-icon>
+                <span style="font-size: 14px">Ruokapaikat</span>
+            </ons-tab>
+            <ons-tab page="map.html" active="true">
+                <ons-icon class="tab-icons" icon="ion-map"></ons-icon>
+                <span style="font-size: 14px">Kartta</span>
+            </ons-tab>
+            <ons-tab page="chat.html" active="true">
+                <ons-icon class="tab-icons" icon="ion-chatbox"></ons-icon>
+                <span style="font-size: 14px">Chat</span>
+            </ons-tab>
+        </ons-tabbar>
+        
+
+        <ons-template id="food.html">
+            Ruokapaikat
+        </ons-template>
+
+        <ons-template id="map.html">
+            Kartta
+        </ons-template>
+
+        <ons-template id="chat.html">
+            Chatti
+        </ons-template>
+    </ons-template>
+    </body>
+</html>

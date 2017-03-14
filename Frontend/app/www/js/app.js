@@ -1,0 +1,1 @@
+var module = ons.bootstrap('my-app', ['onsen']);
