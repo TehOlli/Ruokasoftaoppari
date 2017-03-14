@@ -69,7 +69,20 @@
                 <div class="center">{{ myNavigator.topPage.data.valinta }}</div>
         </ons-toolbar>
         
-       
+        <ons-tabbar>
+            <ons-tab page="food.html" active="true">
+                <ons-icon class="tab-icons" icon="ion-fork"></ons-icon>
+                <span style="font-size: 14px">Ruokapaikat</span>
+            </ons-tab>
+            <ons-tab page="map.html" active="true">
+                <ons-icon class="tab-icons" icon="ion-map"></ons-icon>
+                <span style="font-size: 14px">Kartta</span>
+            </ons-tab>
+            <ons-tab page="chat.html" active="true">
+                <ons-icon class="tab-icons" icon="ion-chatbox"></ons-icon>
+                <span style="font-size: 14px">Chat</span>
+            </ons-tab>
+        </ons-tabbar>
         
 
         <ons-template id="food.html">
