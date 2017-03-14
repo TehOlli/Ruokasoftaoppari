@@ -9,4 +9,4 @@ app.get('/testi', function(req, res){
 });
 
 app.listen(port);
-console.log('Yeah, boiz, stuff on port ' + port + 'does this work?');
+console.log('Yeah, boiz, stuff on port ' + port + 'does this work??');
