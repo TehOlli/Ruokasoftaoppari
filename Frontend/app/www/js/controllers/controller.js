@@ -4,11 +4,15 @@ module.controller('loginController', ['$scope', '$log', function($scope, $log) {
             $log.info(user);
             if(user !== ""){
                 myNavigator
-                .pushPage("landing.html", {
+                .pushPage("list.html", {
     
                 })
 
             }
        }
+
+}]);
+module.controller('listController', ['$scope', '$log', function($scope, $log) {
+      
 
 }]);

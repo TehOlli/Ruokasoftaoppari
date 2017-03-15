@@ -19,6 +19,7 @@
 -->
 <html>
     <head>
+        <meta charset="utf-8">
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
@@ -32,70 +33,103 @@
         <script type="text/javascript" src="js/angular-onsenui.min.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
-        <script type="text/javascript" src="js/controller.js"></script>
+        <script type="text/javascript" src="js/controllers/controller.js"></script>
         <title>Hello World</title>
     </head>
     <body>
     <ons-navigator var="myNavigator" page="login.html" animation="slide">
+    </ons-navigator>
     <ons-template id="login.html">
         <ons-page ng-controller="loginController">
             <div class="login-input">
                 <p>
-                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="käyttäjänimi" float required></ons-input>
+                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float required></ons-input>
                 </p>
                 <p>
-                    <ons-button ng-click="inputFunction(userName); myNavigator" modifier="material">Button</ons-button>
+                    <ons-button ng-click="inputFunction(userName); myNavigator" modifier="material">Login</ons-button>
                 </p>
+            </div>
+        </ons-page> 
+    </ons-template>
+    <ons-template id="list.html">
+        <ons-page ng-controller="listController">
+            <ons-toolbar>
+                <div class="center">Home</div>
+            </ons-toolbar>
+            <ons-list>
+                <ons-list-header>Groups</ons-list-header>
+                 <ons-list-item ng-click="myNavigator.pushPage('group.html', {data: {choice: 'Topis group'}})" modifier="longdivider" tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="img/cat.jpg">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Topis Group</span><span class="list-item__subtitle">Description</span>
+                    </div>
+                </ons-list-item>
+                <ons-list-item ng-click="myNavigator.pushPage('group.html', {data: {choice: 'Ollis group'}})" modifier="longdivider" tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="img/cat.jpg">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Ollis Group</span><span class="list-item__subtitle">Description</span>
+                    </div>
+                </ons-list-item>
+                 <ons-list-item ng-click="myNavigator.pushPage('group.html', {data: {choice: 'Juhas group'}})" modifier="longdivider" tappable>
+                    <div class="left">
+                        <img class="list-item__thumbnail" src="img/cat.jpg">
+                    </div>
+                    <div class="center">
+                        <span class="list-item__title">Juhas Group</span><span class="list-item__subtitle">Description</span>
+                    </div>
+                </ons-list-item> 
+            </ons-list>
+            <div class="create-group" align="center">
+                <ons-button ng-click="myNavigator.pushPage('create.html')" modifier="material">Create group</ons-button>
             </div>
         </ons-page>
     </ons-template>
-    <ons-template id="landing.html">
+    <ons-template id="create.html">
         <ons-page>
             <ons-toolbar>
-                <div class="center">Kotisivu</div>
-            </ons-toolbar>
-            <ons-list>
-                <ons-list-header>Ryhmät</ons-list-header>
-                <ons-list-item tappable ng-click="myNavigator.pushPage('home.html', {data: {valinta: 'Topin ryhmä'}})">Topin ryhmä</ons-list-item>
-                <ons-list-item tappable ng-click="myNavigator.pushPage('home.html', {data: {valinta: 'Ollin ryhmä'}})">Ollin ryhmä</ons-list-item>
-                <ons-list-item tappable ng-click="myNavigator.pushPage('home.html', {data: {valinta: 'Juhan ryhmä'}})">Juhan ryhmä</ons-list-item>
-            </ons-list>
-        </ons-page>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Create a group</div>
+        </ons-toolbar>     
+        </ons-page>       
     </ons-template>
-    </ons-navigator>
-    <ons-template id="home.html">
+    <ons-template id="group.html">
         <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
-                <div class="center">{{ myNavigator.topPage.data.valinta }}</div>
-        </ons-toolbar>
-        
+                <div class="center">{{ myNavigator.topPage.data.choice }}</div>
+        </ons-toolbar>      
         <ons-tabbar>
             <ons-tab page="food.html" active="true">
-                <ons-icon class="tab-icons" icon="ion-fork"></ons-icon>
-                <span style="font-size: 14px">Ruokapaikat</span>
+                <div class="tab-bar__icon">
+                    <ons-icon class="tab-icons" icon="ion-pizza"></ons-icon>
+                </div>
             </ons-tab>
-            <ons-tab page="map.html" active="true">
-                <ons-icon class="tab-icons" icon="ion-map"></ons-icon>
-                <span style="font-size: 14px">Kartta</span>
+            <ons-tab page="map.html">
+                <div class="tab-bar__icon">
+                    <ons-icon class="tab-icons" icon="ion-map"></ons-icon>
+                </div>
             </ons-tab>
-            <ons-tab page="chat.html" active="true">
-                <ons-icon class="tab-icons" icon="ion-chatbox"></ons-icon>
-                <span style="font-size: 14px">Chat</span>
+            <ons-tab page="chat.html">
+                <div class="tab-bar__icon">
+                    <ons-icon class="tab-icons" icon="ion-chatbox"></ons-icon>
+                </div>
             </ons-tab>
         </ons-tabbar>
-        
+    </ons-template>
 
-        <ons-template id="food.html">
-            Ruokapaikat
-        </ons-template>
+    <ons-template id="food.html">
+        Restaurants
+    </ons-template>
 
-        <ons-template id="map.html">
-            Kartta
-        </ons-template>
+    <ons-template id="map.html">
+        Map
+    </ons-template>
 
-        <ons-template id="chat.html">
-            Chatti
-        </ons-template>
+    <ons-template id="chat.html">
+        Chat
     </ons-template>
     </body>
 </html>
