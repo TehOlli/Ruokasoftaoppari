@@ -93,7 +93,18 @@
             <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">Create a group</div>
-        </ons-toolbar>     
+            </ons-toolbar>
+             <div class="create-input">
+                <p>
+                    <ons-input ng-model="groupName" id="groupname" modifier="material" placeholder="Name" float></ons-input>
+                </p>
+                <p>
+                    <ons-input ng-model="groupDesc" id="groupdesc" modifier="material" placeholder="Description" float></ons-input>
+                </p>
+                <p>
+                    <ons-button ng-click="myNavigator.pushPage('list.html')" modifier="material">create</ons-button>
+                </p>
+            </div>     
         </ons-page>       
     </ons-template>
     <ons-template id="group.html">
