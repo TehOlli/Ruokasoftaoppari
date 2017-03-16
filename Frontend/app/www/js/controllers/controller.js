@@ -1,4 +1,4 @@
-module.controller('loginController', ['$scope', '$log', function($scope, $log) {
+module.controller('loginController', ['$scope', '$log', '$http', function($scope, $log, $http) {
        $scope.userName = "";
        $scope.inputFunction = function(user){
             if(user == ""){
