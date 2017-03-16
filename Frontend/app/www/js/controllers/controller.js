@@ -6,12 +6,14 @@ module.controller('loginController', ['$scope', '$log', '$http', function($scope
 
             }
             else{
-
-                $http.post('localhost:8080/login', $scope.userName).success(function (data){
-                    $log.info(data);
-                }).error(function (err){
-                    $log.info("error")
-                })
+                 $http({
+                    method: 'POST',
+                    url: 'http://localhost:8080/login'
+                }).then(function (success){
+                    $log.info(success);
+                },function (error){
+                    $log.info(error)
+                });
 
                 $log.info(user);
                  myNavigator
