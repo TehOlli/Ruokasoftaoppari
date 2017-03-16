@@ -8,11 +8,12 @@ module.controller('loginController', ['$scope', '$log', '$http', function($scope
             else{
                  $http({
                     method: 'POST',
-                    url: 'http://localhost:8080/login'
+                    url: 'http://localhost:8080/login',
+                    data: $scope.userName
                 }).then(function (success){
-                    $log.info(success);
+                    $log.info("onnistui");
                 },function (error){
-                    $log.info(error)
+                    $log.info("virhe")
                 });
 
                 $log.info(user);
