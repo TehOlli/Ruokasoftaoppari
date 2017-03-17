@@ -34,7 +34,7 @@
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/controller.js"></script>
-        <title>Hello World</title>
+        <title>Ruokasoftaoppari</title>
     </head>
     <body>
     <ons-navigator var="myNavigator" page="login.html" animation="slide">
@@ -43,7 +43,7 @@
         <ons-page ng-controller="loginController">
             <div class="login-input">
                 <p>
-                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float required></ons-input>
+                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float></ons-input>
                 </p>
                 <p>
                     <ons-button ng-click="inputFunction(userName); myNavigator" modifier="material">Login</ons-button>

@@ -6,17 +6,15 @@ module.controller('loginController', ['$scope', '$log', '$http', function($scope
 
             }
             else{
-                 $http({
-                    method: 'POST',
-                    url: 'http://localhost:8080/login',
-                    data: $scope.userName
-                }).then(function (success){
+                var data = JSON.stringify({username:user});
+
+                 $http.post('http://localhost:8080/login', data).then(function (success){
                     $log.info("onnistui");
                 },function (error){
                     $log.info("virhe")
                 });
 
-                $log.info(user);
+                $log.info(data);
                  myNavigator
                 .pushPage("list.html", {
     
