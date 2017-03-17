@@ -3,7 +3,8 @@
     "main": "server.js",
     "dependencies":{
         "express": "^4.15.2",
-        "mongodb": "^2.2.11"
+        "mongodb": "^2.2.11",
+        "mongoose" : "~3.6.19"
     }
 
 
