@@ -55,23 +55,5 @@ router.get('/user', function(req, res){
         });
 });
 
-/*
-router.get('/', function(req, res){
-    res.send('Frontpage works');
-});
-
-router.get('/hello/:name', function(req, res){
-    res.send('hello ' + req.params.name + '!');
-});
-
-router.get('/login', function(req, res){
-        res.send('This is the login');
-    });
-router.post('/login', function(req, res){
-        console.log('processing the login');
-        res.send('processing the login');
-    });
-*/
-
 app.listen(port);
 console.log('Connected on port ' + port);
