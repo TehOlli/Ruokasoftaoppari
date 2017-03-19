@@ -1,11 +1,13 @@
 var mong = require('mongoose');
+var dbConnection = require ('../backend/database');
 
-mong.connect("mongodb://localhost:27017/ruokasoftaoppari");
+mong.connect(dbConnection);
 console.log("Mongo connected");
 var userSchema = mong.Schema({
-    username: String
+    username: String,
+    userEmail: String
 })
 
 var User = mong.model('users', userSchema);
 
-exports.user = User;
+module.exports = User;

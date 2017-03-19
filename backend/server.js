@@ -3,7 +3,7 @@ var bodyParser          = require('body-parser');
 var app                 = express();
 var port                = process.env.port || 8080;
 var MongoClient         = require('mongodb').MongoClient;
-var userModel           = require('./userModel');
+var User           = require('./userModel');
 
 
 //Routing
@@ -39,17 +39,31 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.post('/login', jsonParser, function (req, res) {
+app.post('/signup', jsonParser, function (req, res) {
     console.log("Login1");
     if(!req.body) return res.sendStatus(400);
     console.log("Login2 " + req.body.username);
     res.send('Welcome, ' + req.body.username);
+
+    var userName = req.body.username;
+    var userEmail = req.body.email;
+    console.log("Username is " + userName);
+    var newUser = new User({
+        username: userName,
+        userEmail: userEmail
+    });
+
+    newUser.save(function(err, results){
+        if (err) throw err;
+        console.log("Saved user: " + req.body.username +".");
+        console.log(results);
+    });
 });
 
 
 router.get('/user', function(req, res){
         console.log("User check 1");
-        userModel.user.find({"username":"Testi2"}).exec(function(err, results){
+        User.find({"username":"Testi2"}).exec(function(err, results){
             console.log("User check 2");
             console.log(results);
         });
