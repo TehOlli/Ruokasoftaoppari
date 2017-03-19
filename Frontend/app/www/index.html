@@ -27,26 +27,31 @@
         <link rel="stylesheet" type="text/css" href="css/onsenui.css">
         <link rel="stylesheet" type="text/css" href="css/onsen-css-components.css">
         <link rel="stylesheet" type="text/css" href="css/index.css">
+
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/angular.min.js"></script>
         <script type="text/javascript" src="js/onsenui.min.js"></script>
         <script type="text/javascript" src="js/angular-onsenui.min.js"></script>
+
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/controller.js"></script>
         <title>Ruokasoftaoppari</title>
     </head>
     <body>
-    <ons-navigator var="myNavigator" page="login.html" animation="slide">
+    <ons-navigator var="myNavigator" page="signup.html" animation="slide">
     </ons-navigator>
-    <ons-template id="login.html">
-        <ons-page ng-controller="loginController">
+    <ons-template id="signup.html">
+        <ons-page ng-controller="signupController">
             <div class="login-input">
+                <p>
+                    <ons-input type="email" ng-model="email" id="email" modifier="material" placeholder="Email" float></ons-input>
+                </p>
                 <p>
                     <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float></ons-input>
                 </p>
                 <p>
-                    <ons-button ng-click="inputFunction(userName); myNavigator" modifier="material">Login</ons-button>
+                    <ons-button ng-click="inputFunction()" modifier="material">Login</ons-button>
                 </p>
             </div>
         </ons-page> 

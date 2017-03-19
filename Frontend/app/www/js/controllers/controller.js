@@ -1,17 +1,18 @@
-module.controller('loginController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+app.controller('signupController', ['$scope', '$log', '$http', function($scope, $log, $http) {
        $scope.userName = "";
-       $scope.inputFunction = function(user){
-            if(user == ""){
-                ons.notification.alert("Enter a username");
+       $scope.email = ""
+       $scope.inputFunction = function(){
+            if($scope.userName==""||$scope.email==""){
+                ons.notification.alert("Fill in the information");
 
             }
             else{
-                var data = JSON.stringify({username:user});
+                var data = JSON.stringify({username:$scope.userName, email:$scope.email});
 
-                 $http.post('http://localhost:8080/login', data).then(function (success){
-                    $log.info("onnistui");
+                 $http.post('http://localhost:8080/signup', data).then(function (success){
+                    $log.info("success", success);
                 },function (error){
-                    $log.info("virhe")
+                    $log.info("error", error)
                 });
 
                 $log.info(data);
@@ -24,7 +25,7 @@ module.controller('loginController', ['$scope', '$log', '$http', function($scope
 
 }]);
 
-module.controller('listController', ['$scope', '$log', function($scope, $log) {
+app.controller('listController', ['$scope', '$log', function($scope, $log) {
       $scope.groups = [
           {
               name: 'Topis group',
@@ -46,7 +47,7 @@ module.controller('listController', ['$scope', '$log', function($scope, $log) {
 
 }]);
 
-module.controller('createController', ['$scope', '$log', function($scope, $log) {
+app.controller('createController', ['$scope', '$log', function($scope, $log) {
       
 
 }]);

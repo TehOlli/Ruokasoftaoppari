@@ -1,1 +1,1 @@
-var module = ons.bootstrap('my-app', ['onsen']);
+var app = ons.bootstrap('my-app', ['onsen']);

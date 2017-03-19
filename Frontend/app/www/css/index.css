@@ -45,3 +45,14 @@ body {
 .create-input{
     text-align: center;
 }
+.toolbar{
+    background-color: #154187 !important;
+}
+
+.tabbar{
+    background-color: #154187 !important;
+}
+
+.button--material {
+    background-color: #154187 !important;
+}
