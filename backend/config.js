@@ -5,9 +5,9 @@ var databaseName = "ruokasoftaoppari";
 var dbUsername;
 var dbPassword;
 
-
-var dbConnection = `mongodb://${host}/${databaseName}`;
-
 //`mongodb://${dbUsername}:${dbPassword}@${host}/${databaseName}`;
 
-module.exports = dbConnection;
+module.exports = {
+    'secret' : 'salaisuus',
+    'dbConnection' : `mongodb://${host}/${databaseName}`
+};

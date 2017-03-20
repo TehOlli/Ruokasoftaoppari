@@ -1,11 +1,20 @@
 var mong = require('mongoose');
-var dbConnection = require ('../backend/database');
+var config = require ('./config');
 
-mong.connect(dbConnection);
+mong.connect(config.dbConnection);
 console.log("Mongo connected");
 var userSchema = mong.Schema({
-    username: String,
-    userEmail: String
+    username: {
+        type: String,
+        unique: true,
+        required: true
+    }, 
+    userEmail:  {
+        type: String,
+        lowercase: true,
+        unique: true,
+        required: true
+    }
 })
 
 var User = mong.model('users', userSchema);
