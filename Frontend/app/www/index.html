@@ -42,18 +42,20 @@
     <ons-navigator var="myNavigator" page="signup.html" animation="slide">
     </ons-navigator>
     <ons-template id="signup.html">
-        <ons-page ng-controller="signupController">
+        <ons-page id="signup"ng-controller="signupController">
+            <form name="signupForm">
             <div class="login-input">
                 <p>
-                    <ons-input type="email" ng-model="email" id="email" modifier="material" placeholder="Email" float></ons-input>
+                    <ons-input name="signupInput" type="email" ng-model="email" ng-pattern="emailVal" id="email" modifier="material" placeholder="Email" float></ons-input>
                 </p>
                 <p>
-                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float></ons-input>
+                    <ons-input name="signupInput2" ng-model="userName" ng-pattern="nameVal" id="username" modifier="material" placeholder="Username" float></ons-input>
                 </p>
                 <p>
-                    <ons-button ng-click="inputFunction()" modifier="material">Login</ons-button>
+                    <ons-button ng-click="inputFunction()" modifier="material">Sign up</ons-button>
                 </p>
             </div>
+            </form>
         </ons-page> 
     </ons-template>
     <ons-template id="list.html">
@@ -74,6 +76,7 @@
             </ons-list>
             <div class="create-group" align="center">
                 <ons-button ng-click="myNavigator.pushPage('create.html')" modifier="material">Create group</ons-button>
+                <ons-button ng-click="removeToken()" modifier="material">delete token</ons-button>
             </div>
         </ons-page>
     </ons-template>

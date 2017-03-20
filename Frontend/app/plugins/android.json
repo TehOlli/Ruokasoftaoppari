@@ -9,6 +9,9 @@
     "installed_plugins": {
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.software.app"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.software.app"
         }
     },
     "dependent_plugins": {}
