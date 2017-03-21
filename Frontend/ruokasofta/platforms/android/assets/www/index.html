@@ -19,31 +19,120 @@
 -->
 <html>
     <head>
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://localhost:8080/; img-src 'self' data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/onsenui.css">
+        <link rel="stylesheet" type="text/css" href="css/onsen-css-components.css">
         <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/angular.min.js"></script>
+        <script type="text/javascript" src="js/onsenui.min.js"></script>
+        <script type="text/javascript" src="js/angular-onsenui.min.js"></script>
+
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/controllers/controller.js"></script>
+        <title>Ruokasoftaoppari</title>
     </head>
     <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
+    <ons-navigator var="myNavigator" page="signup.html" animation="slide">
+    </ons-navigator>
+    <ons-template id="signup.html">
+        <ons-page id="signup"ng-controller="signupController">
+            <form name="signupForm">
+            <div class="login-input">
+                <p>
+                    <ons-input name="signupInput" type="email" ng-model="email" ng-pattern="emailVal" id="email" modifier="material" placeholder="Email" float></ons-input>
+                </p>
+                <p>
+                    <ons-input name="signupInput2" ng-model="userName" ng-pattern="nameVal" id="username" modifier="material" placeholder="Username" float></ons-input>
+                </p>
+                <p>
+                    <ons-button ng-click="inputFunction()" modifier="material">Sign up</ons-button>
+                </p>
             </div>
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
+            </form>
+        </ons-page> 
+    </ons-template>
+    <ons-template id="list.html">
+        <ons-page ng-controller="listController">
+            <ons-toolbar>
+                <div class="center">Home</div>
+            </ons-toolbar>
+            <ons-list>
+                <ons-list-header>Groups</ons-list-header>               
+                    <ons-list-item ng-repeat="group in groups" ng-click="myNavigator.pushPage('group.html', {data: {choice: 'Topis group'}})" modifier="longdivider" tappable>
+                        <div class="left">
+                            <img class="list-item__thumbnail" src="img/cat.jpg">
+                        </div>
+                        <div class="center">
+                            <span class="list-item__title">{{group.name}}</span><span class="list-item__subtitle">{{group.description}}</span>
+                        </div>
+                    </ons-list-item>
+            </ons-list>
+            <div class="create-group" align="center">
+                <ons-button ng-click="myNavigator.pushPage('create.html')" modifier="material">Create group</ons-button>
+                <ons-button ng-click="removeToken()" modifier="material">delete token</ons-button>
+            </div>
+        </ons-page>
+    </ons-template>
+    <ons-template id="create.html">
+        <ons-page ng-controller="createController">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Create a group</div>
+            </ons-toolbar>
+             <div class="create-input">
+                <p>
+                    <ons-input ng-model="groupName" id="groupname" modifier="material" placeholder="Name" float></ons-input>
+                </p>
+                <p>
+                    <ons-input ng-model="groupDesc" id="groupdesc" modifier="material" placeholder="Description" float></ons-input>
+                </p>
+                <p>
+                    <ons-button ng-click="myNavigator.pushPage('list.html')" modifier="material">create</ons-button>
+                </p>
+            </div>     
+        </ons-page>       
+    </ons-template>
+    <ons-template id="group.html">
+        <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">{{ myNavigator.topPage.data.choice }}</div>
+        </ons-toolbar>      
+        <ons-tabbar>
+            <ons-tab page="food.html" active="true">
+                <div class="tab-bar__icon">
+                    <ons-icon class="tab-icons" icon="ion-pizza"></ons-icon>
+                </div>
+            </ons-tab>
+            <ons-tab page="map.html">
+                <div class="tab-bar__icon">
+                    <ons-icon class="tab-icons" icon="ion-map"></ons-icon>
+                </div>
+            </ons-tab>
+            <ons-tab page="chat.html">
+                <div class="tab-bar__icon">
+                    <ons-icon class="tab-icons" icon="ion-chatbox"></ons-icon>
+                </div>
+            </ons-tab>
+        </ons-tabbar>
+    </ons-template>
+
+    <ons-template id="food.html">
+        Restaurants
+    </ons-template>
+
+    <ons-template id="map.html">
+        Map
+    </ons-template>
+
+    <ons-template id="chat.html">
+        Chat
+    </ons-template>
     </body>
 </html>
