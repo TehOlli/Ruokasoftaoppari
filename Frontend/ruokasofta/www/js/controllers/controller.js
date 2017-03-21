@@ -8,6 +8,21 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
        document.addEventListener('init', function (e) { 
             if (e.target.id == 'signup') { 
                  if(localStorage.token != null){
+
+                     var headers = { 'token': localStorage.token };
+
+                     $http({
+                        url: 'http://localhost:8080/auth/users', 
+                        method: "GET",
+                        headers: {headers}
+                    }).then(function (success){
+
+                    $log.info("token check success");
+
+                },function (error){
+
+                    $log.info("token check error")
+                });
                     myNavigator
                     .pushPage("list.html", {animation : 'none'})
                 }
