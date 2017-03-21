@@ -6,6 +6,8 @@ var MongoClient         = require('mongodb').MongoClient;
 var User                = require('./userModel');
 var config              = require('./config');
 var jwt                 = require('jsonwebtoken');
+var passport            = require('passport');
+var Strategy            = require('passport-http-bearer').Strategy;
 
 //==========
 //Configuration
@@ -16,15 +18,56 @@ var jsonParser          = bodyParser.json();
 var urlencodedParser    = bodyParser.urlencoded({extended: false});
 
 app.set('secret', config.secret);
+app.use('/', router);
+app.use('/auth', authRouter);
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    next();
+});
+authRouter.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    next();
+});
+authRouter.options("/*", function(req, res, next){
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.sendStatus(200);
+});
+passport.use(new Strategy(
+  function(token, done) {
+    User.findOne({ token: token }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) { return done(null, false); }
+      return done(null, user, { scope: 'all' });
+    });
+  }
+));
 
 //==========
 //Router Middleware
 //==========
 
 
+app.get('/users', 
+  passport.authenticate('bearer', { session: false }),
+  function(req, res) {
+    res.json(req.user);
+    console.log("wot");
+  });
+
 authRouter.use(function(req, res, next){
     try{
-        var token = req.headers['token'];
+       
+        console.log("---");
+        console.log(JSON.stringify(req.headers));
+        console.log("---");
+        console.log(JSON.stringify(req.header['Authorization']));
+        var token = req.headers['Authorization'];
     }catch(e){
         console.log(e.message);
     }
@@ -46,39 +89,9 @@ authRouter.use(function(req, res, next){
     }
 });
 
-/*
-router.use(function(req, res, next){
-    console.log(req.method, req.url);
-
-    next();
-});
-
-router.param('name', function(req, res, next, name){
-
-    console.log('Doing validation on ' + name);
-    
-    //new item saved to req
-    req.name = name;
-
-    next();
-});
-*/
 //==========
 //Routes
 //==========
-
-app.use('/', router);
-app.use('/auth', authRouter);
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-authRouter.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
 
 //User creation
 app.post('/signup', jsonParser, function (req, res) {
