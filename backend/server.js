@@ -32,12 +32,14 @@ authRouter.use(function(req, res, next) {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     next();
 });
+
 authRouter.options("/*", function(req, res, next){
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.sendStatus(200);
 });
+
 passport.use(new Strategy(
   function(token, done) {
     User.findOne({ token: token }, function (err, user) {
@@ -52,22 +54,23 @@ passport.use(new Strategy(
 //Router Middleware
 //==========
 
-
+/*
 app.get('/users', 
   passport.authenticate('bearer', { session: false }),
   function(req, res) {
     res.json(req.user);
     console.log("wot");
   });
+*/
 
 authRouter.use(function(req, res, next){
     try{
-       
+
         console.log("---");
         console.log(JSON.stringify(req.headers));
         console.log("---");
-        console.log(JSON.stringify(req.header['Authorization']));
-        var token = req.headers['Authorization'];
+        console.log(JSON.stringify(req.headers['authorization']));
+        var token = req.headers['authorization'].replace(/^Bearer\s/, '');
     }catch(e){
         console.log(e.message);
     }

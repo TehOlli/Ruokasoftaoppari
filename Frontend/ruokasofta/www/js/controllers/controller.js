@@ -10,7 +10,7 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
                  if(localStorage.token != null){
 
                      var token = localStorage.token;
-                     $http.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+                     
                      $http({
                         url: 'http://localhost:8080/auth/users', 
                         method: "GET"
