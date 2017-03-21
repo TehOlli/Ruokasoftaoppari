@@ -9,12 +9,12 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
             if (e.target.id == 'signup') { 
                  if(localStorage.token != null){
 
-                     var headers = { 'token': localStorage.token };
+                     var token = localStorage.token;
 
                      $http({
                         url: 'http://localhost:8080/auth/users', 
                         method: "GET",
-                        headers: {headers}
+                        Authorization: token
                     }).then(function (success){
 
                     $log.info("token check success");
