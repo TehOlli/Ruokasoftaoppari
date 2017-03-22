@@ -65,7 +65,6 @@ app.get('/users',
 
 authRouter.use(function(req, res, next){
     try{
-
         console.log("---");
         console.log(JSON.stringify(req.headers));
         console.log("---");
@@ -80,6 +79,7 @@ authRouter.use(function(req, res, next){
                 return res.json({success: false, message: 'Token authentication failed.'})
             }else{
                 req.decoded = decoded;
+                console.log("Decoded: " + decoded)
                 next();
             }
 
@@ -126,7 +126,8 @@ app.post('/signup', jsonParser, function (req, res) {
 });
 
 //Authentication (unfinished)
-app.post('/auth', function(req, res){
+/*
+app.post('/authssssssss', function(req, res){
     User.findOne({
         username: req.body.username
     }, function(){
@@ -137,16 +138,29 @@ app.post('/auth', function(req, res){
         }
     })
 });
+*/
 
 //==========
 //Authenticated Routes
 //==========
+
+//Checking arriving user for token
+authRouter.get('/', function(req, res){
+    res.json({success: true, message: "Token authenticated"});
+});
 
 //Get all users (returns JSON)
 authRouter.get('/users', function(req,res){
     User.find({}, function(err, users){
         res.json(users);
     });
+});
+
+//Group creation
+authRouter.get('/createGroup', function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupName = req.body.username();
 });
 
 app.listen(port);
