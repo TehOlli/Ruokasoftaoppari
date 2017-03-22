@@ -151,10 +151,10 @@ authRouter.get('/users', function(req,res){
 });
 
 //Group creation
-authRouter.post('/creategroup', jsonParser,function(req, res){
+authRouter.post('/creategroup', jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var groupName = req.body.groupName;
+    var groupName = req.body.groupname;
     var groupAdmin = req.body.email;
     var groupDesc = req.body.description;
 
