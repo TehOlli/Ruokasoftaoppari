@@ -2,12 +2,14 @@ var express             = require('express');
 var bodyParser          = require('body-parser');
 var app                 = express();
 var port                = process.env.port || 8080;
-var MongoClient         = require('mongodb').MongoClient;
+var mong                = require('mongoose');
 var User                = require('./userModel');
+var Group               = require('./groupModel');
 var config              = require('./config');
 var jwt                 = require('jsonwebtoken');
 var passport            = require('passport');
 var Strategy            = require('passport-http-bearer').Strategy;
+
 
 //==========
 //Configuration
@@ -50,6 +52,10 @@ passport.use(new Strategy(
   }
 ));
 
+mong.connect(config.dbConnection);
+console.log("Mongo connected");
+
+
 //==========
 //Router Middleware
 //==========
@@ -77,13 +83,13 @@ authRouter.use(function(req, res, next){
         jwt.verify(token, app.get('secret'), function(err, decoded){
             if(err){
                 return res.status(403).send({ 
-                success: false, 
-                message: 'Token authentication failed.'
+                    success: false, 
+                    message: 'Token authentication failed.'
                 });
                 console.log("kaikki hajos");
             }else{
                 req.decoded = decoded;
-                console.log("Decoded: " + decoded)
+                console.log("Decoded: " + JSON.stringify(decoded));
                 next();
             }
 
@@ -128,22 +134,6 @@ app.post('/signup', jsonParser, function (req, res) {
        
     });
 });
-
-//Authentication (unfinished)
-/*
-app.post('/authssssssss', function(req, res){
-    User.findOne({
-        username: req.body.username
-    }, function(){
-        if(err) throw err;
-
-        if(!user){
-            res.json({})
-        }
-    })
-});
-*/
-
 //==========
 //Authenticated Routes
 //==========
@@ -161,10 +151,29 @@ authRouter.get('/users', function(req,res){
 });
 
 //Group creation
-authRouter.get('/createGroup', function(req, res){
+authRouter.post('/creategroup', jsonParser,function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var groupName = req.body.username();
+    var groupName = req.body.groupName;
+    var groupAdmin = req.body.email;
+    var groupDesc = req.body.description;
+
+    var newGroup = new Group({
+        groupName: groupName,
+        groupAdmin: groupAdmin,
+        groupDesc: groupDesc
+    });
+
+    newGroup.save(function(err, results){
+        if (err) throw err;
+        console.log(results);
+        
+        res.json({
+            success: true,
+            message: 'Group created',
+        });
+       
+    });
 });
 
 app.listen(port);
