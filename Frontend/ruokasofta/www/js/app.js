@@ -1,6 +1,6 @@
 var app = ons.bootstrap('my-app', ['onsen']);
 
-function testInterceptor() {
+function Interceptor() {
   return {
     request: function(config) {
         if(localStorage.token != null){
@@ -8,23 +8,11 @@ function testInterceptor() {
         console.log(config.headers);
         }
       return config;
-    },
-
-    requestError: function(config) {
-      return config;
-    },
-
-    response: function(res) {
-      return res;
-    },
-
-    responseError: function(res) {
-      return res;
     }
   }
 }
 
-app.factory('testInterceptor', testInterceptor)
+app.factory('Interceptor', Interceptor)
 .config(function($httpProvider) {
-  $httpProvider.interceptors.push('testInterceptor');
+  $httpProvider.interceptors.push('Interceptor');
 })

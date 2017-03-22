@@ -6,30 +6,31 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
        $scope.nameVal = /^[a-zåäö0-9]+$/i;
        
        document.addEventListener('init', function (e) { 
-            if (e.target.id == 'signup') { 
+
+            if (e.target.id == 'signup') {
+
                  if(localStorage.token != null){
 
-                     var token = localStorage.token;
+                      $http.get('http://localhost:8080/auth/').then(function (success){
+
+                        $log.info("token check success");
+
+                        myNavigator.pushPage("list.html", {animation : 'none'})
+
+                      },function (error){
+                        
+                        localStorage.removeItem("token");
+
+                        $log.info("token check error")
+
+                      });
                      
-                     $http({
-                        url: 'http://localhost:8080/auth/users', 
-                        method: "GET"
-                    }).then(function (success){
-
-                    $log.info("token check success");
-
-                },function (error){
-
-                    $log.info("token check error")
-                });
-                    myNavigator
-                    .pushPage("list.html", {animation : 'none'})
                 }
 
             }
             });
 
-       $scope.inputFunction = function(){
+       $scope.signupFunction = function(){
 
             if($scope.userName==""||$scope.email==""){
 
@@ -53,11 +54,11 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
                  $http.post('http://localhost:8080/signup', data).then(function (success){
 
                     localStorage.token = success.data.token;
+                    localStorage.email = $scope.email;
                     $log.info(success.data.token);
                     $log.info("success");
 
-                    myNavigator
-                    .pushPage("list.html", {})
+                    myNavigator.pushPage("list.html", {})
 
                 },function (error){
                     $log.info("error", error)
@@ -96,7 +97,35 @@ app.controller('listController', ['$scope', '$log', function($scope, $log) {
 
 }]);
 
-app.controller('createController', ['$scope', '$log', function($scope, $log) {
+app.controller('createController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+    $scope.groupName = "";
+    $scope.groupDesc = "";
+
+    $scope.createFunction = function(){
+
+        if($scope.groupName==""||$scope.groupDesc==""){
+
+            ons.notification.alert("Fill in the information");
+
+        }
+        else {
+            
+            var data = JSON.stringify({groupname:$scope.groupName, description:$scope.groupDesc, email:localStorage.email});
+
+            $log.info(data);
+
+            $http.post('http://localhost:8080/auth/creategroup', data).then(function (success){
+
+                $log.info("success");
+
+            },function (error){
+
+                $log.info("error", error)
+
+            });
+        }
+    }
       
 
 }]);
