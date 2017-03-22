@@ -76,7 +76,11 @@ authRouter.use(function(req, res, next){
     if(token){
         jwt.verify(token, app.get('secret'), function(err, decoded){
             if(err){
-                return res.json({success: false, message: 'Token authentication failed.'})
+                return res.status(403).send({ 
+                success: false, 
+                message: 'Token authentication failed.'
+                });
+                console.log("kaikki hajos");
             }else{
                 req.decoded = decoded;
                 console.log("Decoded: " + decoded)
