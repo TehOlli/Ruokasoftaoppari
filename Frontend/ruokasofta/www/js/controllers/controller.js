@@ -69,31 +69,28 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
 
 }]);
 
-app.controller('listController', ['$scope', '$log', function($scope, $log) {
+app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+
+     $http.get('http://localhost:8080/auth/groups').then(function (success){
+
+                $scope.groups = success;
+
+                $log.info($scope.groups.data);
+
+                $log.info("group get success");
+
+            },function (error){
+            
+                $log.info(error)
+
+            });
     
     $scope.removeToken = function(){
         $log.info("token removed")
         localStorage.removeItem("token");
        }
-
-      $scope.groups = [
-          {
-              name: 'Topis group',
-              description: 'Description for this group'
-
-          },
-          {
-              name: 'Ollis group',
-              description: 'Description for this group'
-
-          },
-          {
-              name: 'Juhas group',
-              description: 'Description for this group'
-
-          }
-      ];
-      $log.info($scope.groups[0]);
+       
 
 }]);
 
@@ -118,6 +115,8 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
             $http.post('http://localhost:8080/auth/creategroup', data).then(function (success){
 
                 $log.info("success");
+
+                myNavigator.pushPage("list.html", {})
 
             },function (error){
 
