@@ -71,10 +71,6 @@ app.get('/users',
 
 authRouter.use(function(req, res, next){
     try{
-        console.log("---");
-        console.log(JSON.stringify(req.headers));
-        console.log("---");
-        console.log(JSON.stringify(req.headers['authorization']));
         var token = req.headers['authorization'].replace(/^Bearer\s/, '');
     }catch(e){
         console.log(e.message);
@@ -89,7 +85,6 @@ authRouter.use(function(req, res, next){
                 console.log("kaikki hajos");
             }else{
                 req.decoded = decoded;
-                console.log("Decoded: " + JSON.stringify(decoded));
                 next();
             }
 
