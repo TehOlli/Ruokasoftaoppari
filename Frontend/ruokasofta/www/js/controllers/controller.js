@@ -55,8 +55,7 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
 
                     localStorage.token = success.data.token;
                     localStorage.email = $scope.email;
-                    $log.info(success.data.token);
-                    $log.info("success");
+                    $log.info("signup success");
 
                     myNavigator.pushPage("list.html", {})
 
@@ -89,6 +88,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     $scope.removeToken = function(){
         $log.info("token removed")
         localStorage.removeItem("token");
+        localStorage.removeItem("email");
        }
        
 
