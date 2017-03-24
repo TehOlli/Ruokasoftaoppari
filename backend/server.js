@@ -37,7 +37,7 @@ authRouter.use(function(req, res, next) {
 
 authRouter.options("/*", function(req, res, next){
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Email');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.sendStatus(200);
 });
@@ -175,9 +175,10 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
        
     });
 
-authRouter.get('/groups', function(req, res, userEmail){
-    userEmail = req.headers['userEmail'];
-        Group.find({"userEmail":userEmail}, function(err, groups){
+authRouter.get('/groups', function(req, res){
+    userEmail = req.headers['email'];
+    console.log("User email " + userEmail);
+        Group.find({"groupAdmin":userEmail}, function(err, groups){
             res.json(groups);
         });
     });
