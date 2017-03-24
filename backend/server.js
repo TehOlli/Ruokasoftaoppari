@@ -174,6 +174,12 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
         });
        
     });
+
+    authRouter.get('/groups', function(req,res){
+    Group.find({}, function(err, groups){
+        res.json(groups);
+    });
+});
 });
 
 app.listen(port);
