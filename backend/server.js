@@ -24,7 +24,7 @@ app.use('/', router);
 app.use('/auth', authRouter);
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     next();
 });
@@ -37,7 +37,7 @@ authRouter.use(function(req, res, next) {
 
 authRouter.options("/*", function(req, res, next){
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Email');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.sendStatus(200);
 });
@@ -133,9 +133,10 @@ app.post('/signup', jsonParser, function (req, res) {
 //Authenticated Routes
 //==========
 
-//Checking arriving user for token
+//Used to trigger the authRouter middleware to check for authentication
 authRouter.get('/', function(req, res){
     res.json({success: true, message: "Token authenticated"});
+    console.log("Token authenticated");
 });
 
 //Get all users (returns JSON)
@@ -167,15 +168,19 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
             success: true,
             message: 'Group created',
         });
-       
     });
+});
 
 authRouter.get('/groups', function(req, res){
     userEmail = req.headers['email'];
     console.log("User email " + userEmail);
         Group.find({"groupAdmin":userEmail}, function(err, groups){
-            res.json(groups);
-        });
+            console.log("Groups: " +  groups);
+            if(groups = ""){
+                res.json({success: true, message: "No groups found."});
+            }else{
+                res.json(groups);
+            };
     });
 });
 
