@@ -65,7 +65,7 @@
             </ons-toolbar>
             <ons-list>
                 <ons-list-header>Groups</ons-list-header>               
-                    <ons-list-item ng-repeat="group in groups.data" ng-click="myNavigator.pushPage('group.html', {data: {choice: 'Topis group'}})" modifier="longdivider" tappable>
+                    <ons-list-item ng-repeat="group in groups.data" ng-click="myNavigator.pushPage('group.html', {data: {choice: group.groupName, id: group._id}})" modifier="longdivider" tappable>
                         <div class="left">
                             <img class="list-item__thumbnail" src="img/cat.jpg">
                         </div>
@@ -75,7 +75,9 @@
                     </ons-list-item>
             </ons-list>
             <div class="create-group" align="center">
-                <ons-button ng-click="myNavigator.pushPage('create.html')" modifier="material">Create group</ons-button>
+                <ons-fab ng-click="myNavigator.pushPage('create.html')" position="bottom right">
+                    <ons-icon icon="md-plus"></ons-icon>
+                </ons-fab>
                 <ons-button ng-click="removeToken()" modifier="material">delete token</ons-button>
             </div>
         </ons-page>
@@ -100,9 +102,11 @@
         </ons-page>       
     </ons-template>
     <ons-template id="group.html">
+        <ons-page>
         <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">{{ myNavigator.topPage.data.choice }}</div>
+                <div class="right"><ons-icon ng-click="dialog.show()" class="add-icon" icon="ion-person-add"></ons-icon></div>
         </ons-toolbar>      
         <ons-tabbar>
             <ons-tab page="food.html" active="true">
@@ -121,6 +125,18 @@
                 </div>
             </ons-tab>
         </ons-tabbar>
+        <ons-dialog var="dialog" ng-controller="dialogController">
+            <div style="text-align: center; padding: 10px;">
+                 <p>
+                    <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email" float></ons-input>
+                </p>
+                 <p>
+                <ons-button ng-click="adduserFunction(myNavigator.topPage.data.id)">Add</ons-button>
+                <ons-button ng-click="dialog.hide()">Close</ons-button>
+                </p>
+            </div>
+        </ons-dialog>
+        </ons-page> 
     </ons-template>
 
     <ons-template id="food.html">

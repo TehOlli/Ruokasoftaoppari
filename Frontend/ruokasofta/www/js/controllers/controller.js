@@ -70,7 +70,6 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
 
 app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
-
      $http.get('http://localhost:8080/auth/groups').then(function (success){
 
                 $scope.groups = success;
@@ -121,6 +120,40 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
             },function (error){
 
                 $log.info("error", error)
+
+            });
+        }
+    }
+      
+
+}]);
+app.controller('dialogController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+    $scope.userEmail = "";
+
+
+    $scope.adduserFunction = function(id){
+        $log.info($scope.userEmail);
+
+        if($scope.userEmail==""){
+
+
+        }
+        else {
+            
+            var data = JSON.stringify({email:$scope.userEmail, id:id});
+
+            $log.info(data);
+
+            $http.post('http://localhost:8080/auth/invitetogroup', data).then(function (success){
+
+                $log.info("add success");
+                
+
+            },function (error){
+
+                $log.info("add error", error)
+                dialog.hide();
 
             });
         }

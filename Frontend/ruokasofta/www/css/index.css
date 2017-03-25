@@ -55,3 +55,12 @@ body {
 .button--material {
     background-color: #154187 !important;
 }
+
+.fab{
+    background-color: #154187 !important;
+}
+
+.add-icon{
+    margin-right:10px;
+    font-size: 30px;
+}
