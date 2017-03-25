@@ -11,7 +11,10 @@ var userSchema = mong.Schema({
         lowercase: true,
         unique: true,
         required: true
-    }
+    },
+    groups: [{
+        groupName: String
+    }]
 });
 
 var User = mong.model('users', userSchema);

@@ -10,7 +10,7 @@ var groupSchema = mong.Schema({
         type: String,
         required: true
     },
-        groupDesc:  {
+    groupDesc:{
         type: String,
         required: true
     }

@@ -171,13 +171,33 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
     });
 });
 
+authRouter.post("/invitetogroup", jsonParser, function(req, res){
+    if(!req.body) return res.sendStatus(400);
+    console.log("Hei, täällä invitetogroup");
+    var groupID = req.body.id;
+    var userEmail = req.body.email;
+    console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
+
+    var exists = User.find({userEmail: userEmail, groups:groupID});
+
+    if(exists == ""){
+        console.log("If fired")
+        //Already exists
+    }else{
+        console.log("Else fired")
+        User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: groupID}}, function(err, user){
+            if(err) return handleError(err);
+            res.send(user);
+            console.log(user);
+        });
+    }
+});
+
 authRouter.post("/joinGroup", jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var groupName = req.body.groupname;
+    var groupID = req.body.groupId;
     var userEmail = req.body.email;
-
-    Group.find({})
 
 });
 
@@ -185,7 +205,7 @@ authRouter.get('/groups', function(req, res){
     if(!req.headers['email']) return res.sendStatus(400)
     userEmail = req.headers['email'];
     console.log("User email " + userEmail);
-        Group.find({"groupAdmin":userEmail}, function(err, groups){
+        Group.find({groupAdmin:userEmail}, function(err, groups){
             console.log("Groups: " +  groups);
             if(groups == ""){
                 res.json(null);
