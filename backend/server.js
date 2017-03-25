@@ -187,7 +187,7 @@ authRouter.get('/groups', function(req, res){
         Group.find({"groupAdmin":userEmail}, function(err, groups){
             console.log("Groups: " +  groups);
             if(groups == ""){
-                res.json({success: true, message: "No groups found."});
+                res.json({success: false, message: "No groups found."});
             }else{
                 res.json(groups);
             };
