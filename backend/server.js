@@ -182,12 +182,13 @@ authRouter.post("/joinGroup", jsonParser, function(req, res){
 });
 
 authRouter.get('/groups', function(req, res){
+    if(!req.headers['email']) return res.sendStatus(400)
     userEmail = req.headers['email'];
     console.log("User email " + userEmail);
         Group.find({"groupAdmin":userEmail}, function(err, groups){
             console.log("Groups: " +  groups);
             if(groups == ""){
-                
+                res.json(null);
             }else{
                 res.json(groups);
             };
