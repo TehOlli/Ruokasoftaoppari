@@ -171,12 +171,22 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
     });
 });
 
+authRouter.post("/joinGroup", jsonParser, function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupName = req.body.groupname;
+    var userEmail = req.body.email;
+
+    Group.find({})
+
+});
+
 authRouter.get('/groups', function(req, res){
     userEmail = req.headers['email'];
     console.log("User email " + userEmail);
         Group.find({"groupAdmin":userEmail}, function(err, groups){
             console.log("Groups: " +  groups);
-            if(groups = ""){
+            if(groups == ""){
                 res.json({success: true, message: "No groups found."});
             }else{
                 res.json(groups);
