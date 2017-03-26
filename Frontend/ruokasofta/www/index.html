@@ -65,7 +65,7 @@
             </ons-toolbar>
             <ons-list>
                 <ons-list-header>Groups</ons-list-header>               
-                    <ons-list-item ng-repeat="group in groups.data" ng-click="myNavigator.pushPage('group.html', {data: {choice: group.groupName, id: group._id}})" modifier="longdivider" tappable>
+                    <ons-list-item ng-repeat="group in groups.data" ng-click="saveId(group._id); myNavigator.pushPage('group.html', {data: {choice: group.groupName}})" modifier="longdivider" tappable>
                         <div class="left">
                             <img class="list-item__thumbnail" src="img/cat.jpg">
                         </div>
@@ -130,8 +130,10 @@
                  <p>
                     <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email" float></ons-input>
                 </p>
-                 <p>
-                <ons-button ng-click="adduserFunction(myNavigator.topPage.data.id)">Add</ons-button>
+                <div ng-repeat="user in users.data">
+                    <p>{{user.username}}</p>
+                </div>
+                <ons-button ng-click="adduserFunction()">Add</ons-button>
                 <ons-button ng-click="dialog.hide()">Close</ons-button>
                 </p>
             </div>

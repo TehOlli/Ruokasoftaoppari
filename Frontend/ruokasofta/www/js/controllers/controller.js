@@ -1,3 +1,4 @@
+//CONTROLLER FOR HANDLING SIGNUP
 app.controller('signupController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
        $scope.userName = "";
@@ -68,6 +69,7 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
 
 }]);
 
+//CONTROLLER FOR HANDLING GROUP LIST
 app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
      $http.get('http://localhost:8080/auth/groups').then(function (success){
@@ -83,7 +85,9 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
                 $log.info(error)
 
             });
-    
+    $scope.saveId= function(id){
+        localStorage.id = id;
+       }
     $scope.removeToken = function(){
         $log.info("token removed")
         localStorage.removeItem("token");
@@ -93,6 +97,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
 
 }]);
 
+//CONTROLLER FOR HANDLING CREATE A GROUP
 app.controller('createController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
     $scope.groupName = "";
@@ -127,12 +132,28 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
       
 
 }]);
+
+//CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
 app.controller('dialogController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
     $scope.userEmail = "";
 
+    var id = {id: localStorage.id}
 
-    $scope.adduserFunction = function(id){
+    $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
+                
+                $scope.users = success;
+
+                $log.info(success.data);
+
+            },function (error){
+            
+                $log.info(error)
+
+    });
+
+    $scope.adduserFunction = function(){
+
         $log.info($scope.userEmail);
 
         if($scope.userEmail==""){
@@ -141,7 +162,7 @@ app.controller('dialogController', ['$scope', '$log', '$http', function($scope, 
         }
         else {
             
-            var data = JSON.stringify({email:$scope.userEmail, id:id});
+            var data = JSON.stringify({email:$scope.userEmail, id:localStorage.id});
 
             $log.info(data);
 

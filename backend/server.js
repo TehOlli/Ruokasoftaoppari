@@ -227,14 +227,14 @@ authRouter.get('/members', function(req, res){
     if(!req.headers['id']) return res.sendStatus(400);
     groupID = req.headers['id'];
     console.log("GroupID: " + groupID);
-    User.find({groups: groupID}), function(err, members){
+    User.find({groups: groupID}, function(err, members){
         console.log("Members are: " + members);
-        if(members == ""){
-            res.json(null);
-        }else{
+        if(members.length){
             res.json(members);
+        }else{
+            res.json(null);
         }
-    };
+    });
 });
 
 app.listen(port);
