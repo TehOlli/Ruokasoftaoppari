@@ -30,14 +30,14 @@ app.use(function(req, res, next) {
 });
 authRouter.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email, id");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     next();
 });
 
 authRouter.options("/*", function(req, res, next){
     res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email, id");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.sendStatus(200);
 });
@@ -173,24 +173,32 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
 
 authRouter.post("/invitetogroup", jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
-    console.log("Hei, täällä invitetogroup");
+
     var groupID = req.body.id;
     var userEmail = req.body.email;
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
 
-    var exists = User.find({userEmail: userEmail, groups:groupID});
+    //Checks if user is already in that group
+    User.find({userEmail: userEmail, groups: groupID}, function(err, exists){
+        if(exists.length){
+            console.log("User is already in the group");
+            console.log(exists);
+        }else{
+            User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: groupID}}, function(err, user){
+                if(err) return handleError(err);
+                
+                if(user != null){
+                    console.log("If fired");
+                    res.send(user);
+                    console.log(user);
+                }else{
+                    console.log("Else fired");
+                    res.json({success:true, message:"User does not exist"});
+                }
 
-    if(exists == ""){
-        console.log("If fired")
-        //Already exists
-    }else{
-        console.log("Else fired")
-        User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: groupID}}, function(err, user){
-            if(err) return handleError(err);
-            res.send(user);
-            console.log(user);
-        });
-    }
+            });
+        }
+    });
 });
 
 authRouter.post("/joinGroup", jsonParser, function(req, res){
@@ -202,17 +210,31 @@ authRouter.post("/joinGroup", jsonParser, function(req, res){
 });
 
 authRouter.get('/groups', function(req, res){
-    if(!req.headers['email']) return res.sendStatus(400)
+    if(!req.headers['email']) return res.sendStatus(400);
     userEmail = req.headers['email'];
     console.log("User email " + userEmail);
-        Group.find({groupAdmin:userEmail}, function(err, groups){
-            console.log("Groups: " +  groups);
-            if(groups == ""){
-                res.json(null);
-            }else{
-                res.json(groups);
-            };
+    Group.find({groupAdmin:userEmail}, function(err, groups){
+        console.log("Groups: " +  groups);
+        if(groups == ""){
+            res.json(null);
+        }else{
+            res.json(groups);
+        };
     });
+});
+
+authRouter.get('/members', function(req, res){
+    if(!req.headers['id']) return res.sendStatus(400);
+    groupID = req.headers['id'];
+    console.log("GroupID: " + groupID);
+    User.find({groups: groupID}), function(err, members){
+        console.log("Members are: " + members);
+        if(members == ""){
+            res.json(null);
+        }else{
+            res.json(members);
+        }
+    };
 });
 
 app.listen(port);
