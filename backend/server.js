@@ -113,20 +113,26 @@ app.post('/signup', jsonParser, function (req, res) {
         userEmail: userEmail
     });
 
-    newUser.save(function(err, results){
-        if (err) throw err;
-        console.log(results);
-        
-        var token = jwt.sign(newUser, app.get('secret'), {
-            expiresIn: '24h'
-        });
-
-        res.json({
-            success: true,
-            message: 'Token sent',
-            token: token
-        });
-       
+    User.find({userEmail: userEmail}, function(err, exists){
+        if(exists.length){
+            console.log("User with that email already exists");
+            console.log(exists);
+            res.json({success: false, message: "User with that email already exists"});
+        }else{
+            newUser.save(function(err, results){
+                if (err) throw err;
+                console.log(results);
+                
+                var token = jwt.sign(newUser, app.get('secret'), {
+                    expiresIn: '24h'
+                });
+                res.json({
+                    success: true,
+                    message: 'Token sent',
+                    token: token
+                });
+            });
+        }
     });
 });
 //==========
