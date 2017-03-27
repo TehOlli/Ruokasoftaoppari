@@ -240,7 +240,6 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
                         console.log("User added to group members");
                         console.log(group);
                     });
-
                 }else{
                     console.log("Else fired");
                     res.json({success:true, message:"User does not exist"});
