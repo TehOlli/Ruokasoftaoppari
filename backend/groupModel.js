@@ -13,7 +13,10 @@ var groupSchema = mong.Schema({
     groupDesc:{
         type: String,
         required: true
-    }
+    },
+    members: [{
+        userEmail: String
+    }]
 });
 
 var Group = mong.model('groups', groupSchema);
