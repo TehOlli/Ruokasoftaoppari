@@ -53,15 +53,20 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
                 $log.info(data);
 
                  $http.post('http://localhost:8080/signup', data).then(function (success){
+                    
+                    if(success.data.success==false){
+                        ons.notification.alert(success.data.message);
+                    }
+                    else{
+                        localStorage.token = success.data.token;
+                        localStorage.email = $scope.email;
+                        $log.info("signup success");
 
-                    localStorage.token = success.data.token;
-                    localStorage.email = $scope.email;
-                    $log.info("signup success");
-
-                    myNavigator.pushPage("list.html", {})
+                        myNavigator.pushPage("list.html", {})
+                    }
 
                 },function (error){
-                    $log.info("error", error)
+                    $log.info("signup error", error)
                 });
 
             }
@@ -169,6 +174,18 @@ app.controller('dialogController', ['$scope', '$log', '$http', function($scope, 
             $http.post('http://localhost:8080/auth/invitetogroup', data).then(function (success){
 
                 $log.info("add success");
+
+                $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
+                
+                $scope.users = success;
+
+                $log.info(success.data);
+
+            },function (error){
+            
+                $log.info(error)
+
+                });
                 
 
             },function (error){

@@ -78,7 +78,7 @@
                 <ons-fab ng-click="myNavigator.pushPage('create.html')" position="bottom right">
                     <ons-icon icon="md-plus"></ons-icon>
                 </ons-fab>
-                <ons-button ng-click="removeToken()" modifier="material">delete token</ons-button>
+                <ons-button ng-click="removeToken(); myNavigator.pushPage('signup.html')" modifier="material">delete token</ons-button>
             </div>
         </ons-page>
     </ons-template>
@@ -128,13 +128,22 @@
         <ons-dialog var="dialog" ng-controller="dialogController">
             <div style="text-align: center; padding: 10px;">
                  <p>
-                    <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email" float></ons-input>
+                    <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
                 </p>
-                <div ng-repeat="user in users.data">
-                    <p>{{user.username}}</p>
+                <ons-list>
+                    <ons-list-item ng-repeat="user in users.data" modifier="longdivider">
+                        <div class="left user-list">
+                            <ons-icon class="add-user" icon="md-account"></ons-icon>
+                        </div>
+                        <div class="center user-list">
+                            {{user.username}}
+                        </div>
+                    </ons-list-item>
+                </ons-list>
+                <div class="user-list-but">
+                    <ons-button ng-click="adduserFunction()">Add</ons-button>
+                    <ons-button ng-click="dialog.hide()">Close</ons-button>
                 </div>
-                <ons-button ng-click="adduserFunction()">Add</ons-button>
-                <ons-button ng-click="dialog.hide()">Close</ons-button>
                 </p>
             </div>
         </ons-dialog>

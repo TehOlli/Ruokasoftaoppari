@@ -64,3 +64,15 @@ body {
     margin-right:10px;
     font-size: 30px;
 }
+
+.add-user{
+    font-size: 30px;
+}
+
+.user-list{
+    min-height:35px !important; padding:0;
+}
+
+.user-list-but{
+    margin-top:20px;
+}
