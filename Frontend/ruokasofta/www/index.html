@@ -36,6 +36,7 @@
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/controller.js"></script>
+        <script type="text/javascript" src="js/services/validationService.js"></script>
         <title>Ruokasoftaoppari</title>
     </head>
     <body>
@@ -46,10 +47,10 @@
             <form name="signupForm">
             <div class="login-input">
                 <p>
-                    <ons-input name="signupInput" type="email" ng-model="email" ng-pattern="emailVal" id="email" modifier="material" placeholder="Email" float></ons-input>
+                    <ons-input type="email" ng-model="email" id="email" modifier="material" placeholder="Email" float></ons-input>
                 </p>
                 <p>
-                    <ons-input name="signupInput2" ng-model="userName" ng-pattern="nameVal" id="username" modifier="material" placeholder="Username" float></ons-input>
+                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float></ons-input>
                 </p>
                 <p>
                     <ons-button ng-click="signupFunction()" modifier="material">Sign up</ons-button>

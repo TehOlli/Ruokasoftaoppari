@@ -1,10 +1,8 @@
 //CONTROLLER FOR HANDLING SIGNUP
-app.controller('signupController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+app.controller('signupController', ['$scope', '$log', '$http','validation', function($scope, $log, $http, validation) {
 
        $scope.userName = "";
        $scope.email = "";
-       $scope.emailVal = /^(([^<>()[\]\\.,;:\s@\']+(\.[^<>()[\]\\.,;:\s@\']+)*)|(\'.+\'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zåäöA-ZÅÄÖ\-0-9]+\.)+[a-zåäöA-ZÅÄÖ]{2,}))$/;
-       $scope.nameVal = /^[a-zåäö0-9]+$/i;
        
        document.addEventListener('init', function (e) { 
 
@@ -33,23 +31,11 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
 
        $scope.signupFunction = function(){
 
-            if($scope.userName==""||$scope.email==""){
+            var val = validation.signupVal($scope.email, $scope.userName);
 
-                ons.notification.alert("Fill in the information");
+            if(val==true){
 
-            }
-
-            else if(!$scope.signupForm.signupInput.$valid){
-                ons.notification.alert("Enter a proper email address");
-                
-            }
-
-            else if(!$scope.signupForm.signupInput2.$valid){
-                ons.notification.alert("Username can only contain letters and numbers");
-            }
-
-            else{
-                var data = JSON.stringify({username:$scope.userName, email:$scope.email});
+                 var data = JSON.stringify({username:$scope.userName, email:$scope.email});
                 $log.info(data);
 
                  $http.post('http://localhost:8080/signup', data).then(function (success){
@@ -70,6 +56,7 @@ app.controller('signupController', ['$scope', '$log', '$http', function($scope, 
                 });
 
             }
+
        }
 
 }]);
@@ -139,7 +126,7 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 }]);
 
 //CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
-app.controller('dialogController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+app.controller('dialogController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
 
     $scope.userEmail = "";
 
@@ -159,14 +146,10 @@ app.controller('dialogController', ['$scope', '$log', '$http', function($scope, 
 
     $scope.adduserFunction = function(){
 
-        $log.info($scope.userEmail);
+        var val = validation.adduserVal($scope.userEmail);
 
-        if($scope.userEmail==""){
+        if(val==true){
 
-
-        }
-        else {
-            
             var data = JSON.stringify({email:$scope.userEmail, id:localStorage.id});
 
             $log.info(data);
@@ -194,7 +177,10 @@ app.controller('dialogController', ['$scope', '$log', '$http', function($scope, 
                 dialog.hide();
 
             });
+
+
         }
+
     }
       
 
