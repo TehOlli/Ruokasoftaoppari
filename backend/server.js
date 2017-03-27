@@ -139,9 +139,9 @@ app.post('/signup', jsonParser, function (req, res) {
 app.post('/login', jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var username = req.body.username;
+    var userEmail = req.body.email;
     
-    User.find({username: username}, function(err, exists){
+    User.find({userEmail: userEmail}, function(err, exists){
         if(exists.length){
                 var token = jwt.sign(newUser, app.get('secret'), {
                     expiresIn: '24h'
