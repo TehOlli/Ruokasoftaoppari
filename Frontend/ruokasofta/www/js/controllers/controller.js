@@ -60,7 +60,31 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
        }
 
 }]);
+app.controller('loginController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
+    $scope.userEmail = "";
+
+    $scope.loginFunction = function(){
+
+        var data = JSON.stringify({email:$scope.userEmail});
+
+        $http.post('http://localhost:8080/login', data).then(function (success){
+
+                $log.info(success)
+
+                myNavigator.pushPage("list.html", {})
+                
+            },function (error){
+
+                $log.info("login error", error)
+
+            });
+
+    }
+
+    
+
+}]);
 //CONTROLLER FOR HANDLING GROUP LIST
 app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 

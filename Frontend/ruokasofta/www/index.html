@@ -45,19 +45,33 @@
     <ons-template id="signup.html">
         <ons-page id="signup"ng-controller="signupController">
             <form name="signupForm">
-            <div class="login-input">
-                <p>
-                    <ons-input type="email" ng-model="email" id="email" modifier="material" placeholder="Email" float></ons-input>
-                </p>
-                <p>
-                    <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float></ons-input>
-                </p>
-                <p>
-                    <ons-button ng-click="signupFunction()" modifier="material">Sign up</ons-button>
-                </p>
-            </div>
+                <div class="login-input">
+                    <p>
+                        <ons-input type="email" ng-model="email" id="email" modifier="material" placeholder="Email" float></ons-input>
+                    </p>
+                    <p>
+                        <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float></ons-input>
+                    </p>
+                    <p>
+                        <ons-button ng-click="signupFunction()" modifier="material">Sign up</ons-button>
+                    </p>
+                    <p class="login">
+                        <a ng-click="dialog2.show();">Already have an account?</a>
+                    </p>
+                </div>
             </form>
-        </ons-page> 
+            <ons-dialog var="dialog2" ng-controller="loginController">
+                <div style="text-align: center; padding: 10px;">
+                    <p>
+                        <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
+                    </p>
+                    <div class="user-list-but">
+                        <ons-button ng-click="loginFunction()">login</ons-button>
+                        <ons-button ng-click="dialog2.hide()">Close</ons-button>
+                    </div>
+                </div>
+            </ons-dialog> 
+        </ons-page>
     </ons-template>
     <ons-template id="list.html">
         <ons-page ng-controller="listController">
