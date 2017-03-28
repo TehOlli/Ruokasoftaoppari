@@ -139,11 +139,17 @@ app.post('/signup', jsonParser, function (req, res) {
 app.post('/login', jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
 
+    console.log("Hello, login here.");
     var userEmail = req.body.email;
+    console.log(userEmail);
+    //var userPassw = req.body.passw;
     
-    User.find({userEmail: userEmail}, function(err, exists){
-        if(exists.length){
-                var token = jwt.sign(newUser, app.get('secret'), {
+    User.findOne({userEmail: userEmail}, function(err, exists){
+        console.log("Exists: " + exists);
+        if(exists){
+            //if(exists.password != userPassw){
+                console.log("User exists");
+                var token = jwt.sign(exists, app.get('secret'), {
                     expiresIn: '24h'
                 });
                 res.json({
@@ -151,8 +157,11 @@ app.post('/login', jsonParser, function(req, res){
                     message: 'Token sent',
                     token: token
                 });
+                //}else{
+                //    res.json({success: false, message: "Login failed. Password wrong."}):
+                //}
         }else{
-            res.json({success: false, message: "Login failed"});
+            res.json({success: false, message: "Login failed. User does not exist."});
         }
     });
     
