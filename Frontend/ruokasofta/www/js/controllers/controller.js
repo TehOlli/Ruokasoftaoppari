@@ -60,6 +60,8 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
        }
 
 }]);
+
+//CONTROLLER FOR HANDLING LOGIN
 app.controller('loginController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
     $scope.userEmail = "";
@@ -70,10 +72,17 @@ app.controller('loginController', ['$scope', '$log', '$http', function($scope, $
 
         $http.post('http://localhost:8080/login', data).then(function (success){
 
-                $log.info(success)
+                 if(success.data.success==false){
+                    ons.notification.alert(success.data.message);
+                 }
+                 else{
+                    localStorage.token = success.data.token;
+                    localStorage.email = $scope.userEmail;
+                    $log.info("login success");
 
-                myNavigator.pushPage("list.html", {})
-                
+                    myNavigator.pushPage("list.html", {})
+                    }
+
             },function (error){
 
                 $log.info("login error", error)
