@@ -107,10 +107,12 @@ app.post('/signup', jsonParser, function (req, res) {
 
     var userName = req.body.username;
     var userEmail = req.body.email;
+    var userPassword = "ongelma";
     console.log("Username is " + userName + "and the email is " + userEmail);
     var newUser = new User({
         username: userName,
-        userEmail: userEmail
+        userEmail: userEmail,
+        userPassword: userPassword
     });
 
     User.find({userEmail: userEmail}, function(err, exists){
@@ -130,6 +132,18 @@ app.post('/signup', jsonParser, function (req, res) {
                     success: true,
                     message: 'Token sent',
                     token: token
+                });
+
+                User.findOne({username: userName}, function(err, user){
+                    if(err) throw err;
+                    user.comparePassword('Ongelma', function(err, isMatch){
+                        if(err) throw err;
+                        console.log("ongelma: ", isMatch);
+                    });
+                    user.comparePassword("flipflop", function(err, isMatch){
+                        if(err) throw err;
+                        console.log("flipflop: ", isMatch);
+                    });
                 });
             });
         }
