@@ -3,6 +3,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
 
        $scope.userName = "";
        $scope.email = "";
+       $scope.password = "";
        
        document.addEventListener('init', function (e) { 
 
@@ -31,11 +32,11 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
 
        $scope.signupFunction = function(){
 
-            var val = validation.signupVal($scope.email, $scope.userName);
+            var val = validation.signupVal($scope.email, $scope.userName, $scope.password);
 
             if(val==true){
 
-                 var data = JSON.stringify({username:$scope.userName, email:$scope.email});
+                 var data = JSON.stringify({username:$scope.userName, email:$scope.email, password:$scope.password});
                 $log.info(data);
 
                  $http.post('http://localhost:8080/signup', data).then(function (success){
@@ -160,7 +161,7 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 
 //CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
 app.controller('dialogController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
-
+myNavigator.bringPageTop('list.html');
     $scope.userEmail = "";
 
     var id = {id: localStorage.id}

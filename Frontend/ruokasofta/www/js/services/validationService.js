@@ -2,10 +2,10 @@ app.service('validation', function() {
     var reg = /^(([^<>()[\]\\.,;:\s@\']+(\.[^<>()[\]\\.,;:\s@\']+)*)|(\'.+\'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zåäöA-ZÅÄÖ\-0-9]+\.)+[a-zåäöA-ZÅÄÖ]{2,}))$/;
     var reg2 = /^[a-zåäö0-9]+$/i;
 
-    this.signupVal = function (email, name) {
+    this.signupVal = function (email, name, pass) {
         var val = true;
 
-        if(email==""||name ==""){
+        if(email==""||name ==""||pass ==""){
             val = false;
             ons.notification.alert("Fill in the information");
         }
