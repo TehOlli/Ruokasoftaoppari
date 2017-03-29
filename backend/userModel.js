@@ -18,7 +18,7 @@ var userSchema = mong.Schema({
         required: true
     },
     groups: [{
-        groupName: String
+        groupID: String
     }]
 });
 

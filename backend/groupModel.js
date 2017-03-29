@@ -1,5 +1,10 @@
 var mong = require('mongoose');
 
+/*
+var members = mong.Schema({
+    memberEmail: String
+},{_id:false});
+*/
 var groupSchema = mong.Schema({
     groupName:{
         type: String,
@@ -14,8 +19,9 @@ var groupSchema = mong.Schema({
         type: String,
         required: true
     },
+    //subSchemaCollection: members
     members: [{
-        userEmail: String
+        memberEmail: String
     }]
 });
 
