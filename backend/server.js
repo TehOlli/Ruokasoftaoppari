@@ -107,7 +107,7 @@ app.post('/signup', jsonParser, function (req, res) {
 
     var userName = req.body.username;
     var userEmail = req.body.email;
-    var userPassword = "ongelma";
+    var userPassword = req.body.password;
     console.log("Username is " + userName + "and the email is " + userEmail);
     var newUser = new User({
         username: userName,
@@ -136,9 +136,9 @@ app.post('/signup', jsonParser, function (req, res) {
 
                 User.findOne({username: userName}, function(err, user){
                     if(err) throw err;
-                    user.comparePassword('Ongelma', function(err, isMatch){
+                    user.comparePassword(userPassword, function(err, isMatch){
                         if(err) throw err;
-                        console.log("ongelma: ", isMatch);
+                        console.log("userPassword: ", isMatch);
                     });
                     user.comparePassword("flipflop", function(err, isMatch){
                         if(err) throw err;
