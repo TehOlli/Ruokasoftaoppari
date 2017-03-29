@@ -52,6 +52,8 @@ passport.use(new Strategy(
   }
 ));
 
+//Bluebird
+mong.Promise = global.Promise;
 mong.connect(config.dbConnection);
 console.log("Mongo connected");
 
