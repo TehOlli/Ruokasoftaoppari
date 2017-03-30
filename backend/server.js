@@ -158,26 +158,30 @@ app.post('/login', jsonParser, function(req, res){
 
     console.log("Hello, login here.");
     var userEmail = req.body.email;
-    var userPassw = req.body.password;
+    var userPassword = req.body.password;
     console.log(userEmail);
-    //var userPassw = req.body.passw;
     
-    User.findOne({userEmail: userEmail}, function(err, exists){
-        console.log("Exists: " + exists);
-        if(exists){
-            //if(exists.password != userPassw){
-                console.log("User exists");
-                var token = jwt.sign(exists, app.get('secret'), {
-                    expiresIn: '24h'
-                });
-                res.json({
-                    success: true,
-                    message: 'Token sent',
-                    token: token
-                });
-                //}else{
-                //    res.json({success: false, message: "Login failed. Password wrong."}):
-                //}
+    User.findOne({userEmail: userEmail}, function(err, user){
+        if(err) throw err;
+        console.log("Exists: " + user);
+        console.log("User exists");
+        if(user){
+            user.comparePassword(userPassword, function(err, isMatch){
+                if(isMatch == true){
+                    console.log("login userPassword: ", isMatch);
+                    var token = jwt.sign(user, app.get('secret'), {
+                        expiresIn: '24h'
+                    });
+                    res.json({
+                        success: true,
+                        message: 'Token sent',
+                        token: token
+                    });
+                }else{
+                    console.log("Password is incorrect.");
+                    res.json({success: false, message: "Email or password is incorrect."});
+                }
+            });
         }else{
             res.json({success: false, message: "Login failed. User does not exist."});
         }
@@ -283,11 +287,9 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
                             console.log("User with that email does not exist");
                             res.json({success:false, message:"User with that email does not exist"});
                         }
-
                     });
                 }
             });
-        
     });
 });
 
@@ -302,9 +304,9 @@ authRouter.post("/joinGroup", jsonParser, function(req, res){
 authRouter.get('/groups', function(req, res){
     if(!req.headers['email']) return res.sendStatus(400);
     userEmail = req.headers['email'];
-    console.log("User email " + userEmail);
+    //console.log("User email " + userEmail);
     Group.find({'members.memberEmail': userEmail}, function(err, groups){
-        console.log("Groups: " + groups);
+        //console.log("Groups: " + groups);
         if(groups == ""){
             res.json(null);
         }else{
