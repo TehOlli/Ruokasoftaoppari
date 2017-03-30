@@ -2,8 +2,8 @@
 app.controller('signupController', ['$scope', '$log', '$http','validation', function($scope, $log, $http, validation) {
 
        $scope.userName = "";
-       $scope.email = "";
-       $scope.password = "";
+       $scope.userEmail = "";
+       $scope.userPassword = "";
        
        document.addEventListener('init', function (e) { 
 
@@ -32,11 +32,11 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
 
        $scope.signupFunction = function(){
 
-            var val = validation.signupVal($scope.email, $scope.userName, $scope.password);
+            var val = validation.signupVal($scope.userEmail, $scope.userName, $scope.userPassword);
 
             if(val==true){
 
-                 var data = JSON.stringify({username:$scope.userName, email:$scope.email, password:$scope.password});
+                 var data = JSON.stringify({username:$scope.userName, email:$scope.userEmail, password:$scope.userPassword});
                 $log.info(data);
 
                  $http.post('http://localhost:8080/signup', data).then(function (success){
@@ -46,7 +46,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
                     }
                     else{
                         localStorage.token = success.data.token;
-                        localStorage.email = $scope.email;
+                        localStorage.email = $scope.userEmail;
                         $log.info("signup success");
 
                         myNavigator.pushPage("list.html", {})
@@ -63,13 +63,14 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
 }]);
 
 //CONTROLLER FOR HANDLING LOGIN
-app.controller('loginController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+app.controller('loginController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
 
     $scope.userEmail = "";
+    $scope.userPassword = "";
 
     $scope.loginFunction = function(){
 
-        var data = JSON.stringify({email:$scope.userEmail});
+        var data = JSON.stringify({email:$scope.userEmail, password:$scope.userPassword});
 
         $http.post('http://localhost:8080/login', data).then(function (success){
 
@@ -90,9 +91,7 @@ app.controller('loginController', ['$scope', '$log', '$http', function($scope, $
 
             });
 
-    }
-
-    
+    } 
 
 }]);
 //CONTROLLER FOR HANDLING GROUP LIST
@@ -111,9 +110,13 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
                 $log.info(error)
 
             });
+
     $scope.saveId= function(id){
+
         localStorage.id = id;
+
        }
+
     $scope.removeToken = function(){
         $log.info("token removed")
         localStorage.removeItem("token");
@@ -161,7 +164,7 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 
 //CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
 app.controller('dialogController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
-myNavigator.bringPageTop('list.html');
+
     $scope.userEmail = "";
 
     var id = {id: localStorage.id}
@@ -190,19 +193,30 @@ myNavigator.bringPageTop('list.html');
 
             $http.post('http://localhost:8080/auth/invitetogroup', data).then(function (success){
 
-                $log.info("add success");
+                    console.log(success);
 
-                $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
-                
-                $scope.users = success;
+                  if(success.data.success==false){
 
-                $log.info(success.data);
+                    ons.notification.alert(success.data.message);
 
-            },function (error){
-            
-                $log.info(error)
+                  }
+                  else{
+                       $log.info("add success");
 
-                });
+                        $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
+                        
+                        $scope.users = success;
+
+                        $log.info(success.data);
+
+                    },function (error){
+                    
+                        $log.info(error)
+
+                    });
+
+                  }
+
                 
 
             },function (error){

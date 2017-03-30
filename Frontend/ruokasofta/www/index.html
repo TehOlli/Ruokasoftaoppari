@@ -47,13 +47,13 @@
             <form name="signupForm">
                 <div class="login-input">
                     <p>
-                        <ons-input type="email" ng-model="email" id="email" modifier="material" placeholder="Email" float></ons-input>
+                        <ons-input type="email" ng-model="userEmail" id="email" modifier="material" placeholder="Email" float></ons-input>
                     </p>
                     <p>
                         <ons-input ng-model="userName" id="username" modifier="material" placeholder="Username" float></ons-input>
                     </p>
                     <p>
-                        <ons-input ng-model="password" id="password" modifier="material" placeholder="password" float></ons-input>
+                        <ons-input type="password" ng-model="userPassword" id="password" modifier="material" placeholder="Password" float></ons-input>
                     </p>
                     <p>
                         <ons-button ng-click="signupFunction()" modifier="material">Sign up</ons-button>
@@ -68,7 +68,10 @@
                     <p>
                         <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
                     </p>
-                    <div class="user-list-but">
+                     <p>
+                        <ons-input ng-model="userPassword" id="password" modifier="material" placeholder="Password"></ons-input>
+                    </p>
+                    <div class="">
                         <ons-button ng-click="loginFunction()">login</ons-button>
                         <ons-button ng-click="dialog2.hide()">Close</ons-button>
                     </div>
