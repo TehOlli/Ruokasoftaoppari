@@ -158,6 +158,7 @@ app.post('/login', jsonParser, function(req, res){
 
     console.log("Hello, login here.");
     var userEmail = req.body.email;
+    var userPassw = req.body.password;
     console.log(userEmail);
     //var userPassw = req.body.passw;
     
@@ -234,14 +235,12 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
 
             console.log("Admin added to group's members array")
         
-        
+            var newGroup = {"groupID": groupID};
+            User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
+                if (err) throw err;
 
-        var newGroup = {"groupID": groupID};
-        User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
-            if (err) throw err;
-
-            console.log("Group added to admin's groups array");
-        });
+                console.log("Group added to admin's groups array");
+            });
         });
 
     });
@@ -257,16 +256,13 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
     //Checks if user is already in that group
     User.findOne({userEmail: userEmail}, function(err, exists1){
         if (err) throw err;
-        if(!exists1){
-            console.log("User does not exist.");
-            res.json({success: false, message: "No user with that email."});
-        }else{
             User.find({userEmail: userEmail, "groups.groupID": groupID}, function(err, exists2){
                 if (err) throw err;
                 console.log("InvitetoGroup exists2:" + exists2);
                 if(exists2.length){
                     console.log("User is already in the group");
                     //console.log(exists2);
+                res.json({success: false, message: "User is already in the group."});
                 }else{
                     var newGroup = {"groupID": groupID};
                     User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: newGroup}}, function(err, user){
@@ -279,18 +275,19 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
 
                             var newMember = {"memberEmail":userEmail};
                             Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
+                                if (err) throw err;
                                 console.log("User added to group members");
                                 //console.log(group);
                             });
                         }else{
-                            console.log("Else fired");
-                            res.json({success:false, message:"User does not exist"});
+                            console.log("User with that email does not exist");
+                            res.json({success:false, message:"User with that email does not exist"});
                         }
 
                     });
                 }
             });
-        }
+        
     });
 });
 
