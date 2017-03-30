@@ -8,7 +8,6 @@ var members = mong.Schema({
 var groupSchema = mong.Schema({
     groupName:{
         type: String,
-        unique: true,
         required: true
     },
     groupAdmin:{
