@@ -80,3 +80,9 @@ body {
     color:blue;
     text-decoration: underline;
 }
+
+.remove-user{
+    font-size: 25px;
+    margin-right: 10px;
+    color:#990000;
+}

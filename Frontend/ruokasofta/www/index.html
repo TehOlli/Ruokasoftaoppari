@@ -159,6 +159,9 @@
                         <div class="center user-list">
                             {{user.username}}
                         </div>
+                        <div class="right user-list">
+                            <ons-icon ng-click="removeUser(user.userEmail)" class="remove-user" icon="md-close-circle"></ons-icon>
+                        </div>
                     </ons-list-item>
                 </ons-list>
                 <div class="user-list-but">

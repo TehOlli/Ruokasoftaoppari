@@ -230,6 +230,43 @@ app.controller('dialogController', ['$scope', '$log', '$http', 'validation', fun
         }
 
     }
+    $scope.removeUser = function(email){
+        
+        var id = {id: localStorage.id}
+        var data = JSON.stringify({email: email, groupid:localStorage.id});
+        console.log(data);
+
+         $http.post('http://localhost:8080/auth/removefromgroup', data).then(function (success){
+
+              if(success.data.success==false){
+
+                    ons.notification.alert(success.data.message);
+
+                  }
+                  else{
+                       $log.info("user remove success");
+
+                        $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
+                        
+                        $scope.users = success;
+
+                        $log.info("user get success");
+
+                    },function (error){
+                    
+                        $log.info(error)
+
+                    });
+
+                  }
+
+            },function (error){
+
+                $log.info("user remove error", error)
+
+            });
+
+    }
       
 
 }]);
