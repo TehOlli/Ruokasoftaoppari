@@ -301,6 +301,20 @@ authRouter.post("/joinGroup", jsonParser, function(req, res){
 
 });
 
+authRouter.post("/removefromgroup", jsonParser, function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupID = req.body.groupId;
+    var userEmail = req.body.email;
+
+    User.update({userEmail:userEmail}, {$pull:{groups: groupID}}, function(err, user){
+        if (err) throw err;
+    });
+    Group.update({groupID:groupID}, {$pull:{members: userEmail}}, function(err, group){
+        if (err) throw err;
+    });
+});
+
 authRouter.get('/groups', function(req, res){
     if(!req.headers['email']) return res.sendStatus(400);
     userEmail = req.headers['email'];
