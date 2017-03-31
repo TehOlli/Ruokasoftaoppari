@@ -309,14 +309,12 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
 
     console.log("Removing " + userEmail + " from " + groupID);
 
-    User.update({userEmail:userEmail}, {$pull:{groups: groupID}}, function(err, user){
+    User.findOneAndUpdate({userEmail:userEmail}, {$pull:{groups:{groupID: groupID}}}, function(err, user){
         if (err) throw err;
-        res.json({success:false, message:err});
         console.log("Removed group from user document");
     
-        Group.update({groupID:groupID}, {$pull:{members: userEmail}}, function(err, group){
+        Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberEmail: userEmail}}}, function(err, group){
             if (err) throw err;
-            res.json({success:false, message:err});
             console.log("Removed user from group document");
         });
     });
