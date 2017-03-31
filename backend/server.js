@@ -316,6 +316,8 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
         Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberEmail: userEmail}}}, function(err, group){
             if (err) throw err;
             console.log("Removed user from group document");
+
+            res.json({success:true, message:"User removed"});
         });
     });
 });
