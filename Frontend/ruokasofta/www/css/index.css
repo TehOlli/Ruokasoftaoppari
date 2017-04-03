@@ -86,3 +86,13 @@ body {
     margin-right: 10px;
     color:#990000;
 }
+
+.leave-group{
+    color: #990000;
+}
+
+.new-user{
+    font-size: 25px;
+    margin-right: 10px;
+    color: #154187;
+}

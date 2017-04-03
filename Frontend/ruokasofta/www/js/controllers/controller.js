@@ -4,8 +4,8 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
        $scope.userName = "";
        $scope.userEmail = "";
        $scope.userPassword = "";
-       var local = "http://localhost:8080/"
-       var proto = "http://proto453.haaga-helia.fi:80/"
+       var local = "http://localhost:8080/";
+       var proto = "http://proto453.haaga-helia.fi:80/";
        
        document.addEventListener('init', function (e) { 
 
@@ -69,8 +69,8 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
 
     $scope.userEmail = "";
     $scope.userPassword = "";
-    var local = "http://localhost:8080/"
-    var proto = "http://proto453.haaga-helia.fi:80/"
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
 
     $scope.loginFunction = function(){
 
@@ -101,8 +101,8 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
 //CONTROLLER FOR HANDLING GROUP LIST
 app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
-    var local = "http://localhost:8080/"
-    var proto = "http://proto453.haaga-helia.fi:80/"
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
 
      $http.get(local + 'auth/groups').then(function (success){
 
@@ -121,6 +121,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     $scope.saveId= function(group){
 
         localStorage.id = group._id;
+        localStorage.admin = group.groupAdmin;
         
 
        }
@@ -139,8 +140,8 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 
     $scope.groupName = "";
     $scope.groupDesc = "";
-    var local = "http://localhost:8080/"
-    var proto = "http://proto453.haaga-helia.fi:80/"
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
 
     $scope.createFunction = function(){
 
@@ -173,11 +174,15 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 }]);
 
 //CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
-app.controller('dialogController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
-
+app.controller('manageController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
+    $scope.admin = false;
     $scope.userEmail = "";
-    var local = "http://localhost:8080/"
-    var proto = "http://proto453.haaga-helia.fi:80/"
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
+
+    if(localStorage.email==localStorage.admin){
+        $scope.admin=true;
+    }
 
     var id = {id: localStorage.id}
 
@@ -214,6 +219,8 @@ app.controller('dialogController', ['$scope', '$log', '$http', 'validation', fun
                   }
                   else{
                        $log.info("add success");
+
+                       $scope.userEmail = "";
 
                         $http.get(local + 'auth/members', {headers: id}).then(function (success){
                         
@@ -277,6 +284,43 @@ app.controller('dialogController', ['$scope', '$log', '$http', 'validation', fun
                 $log.info("user remove error", error)
 
             });
+
+    }
+    $scope.leaveGroup = function(){
+
+         var data = JSON.stringify({email: localStorage.email, groupid:localStorage.id});
+
+        $http.post(local + 'auth/removefromgroup', data).then(function (success){
+
+                $log.info("user remove success");
+
+                myNavigator.pushPage("list.html", {})
+
+         },function (error){
+
+                $log.info("user remove error", error)
+
+            });
+
+
+    }
+
+    $scope.deleteGroup = function(){
+
+         var data = JSON.stringify({groupid:localStorage.id});
+
+        $http.post(local + 'auth/deletegroup', data).then(function (success){
+
+                $log.info("delete group success");
+
+                myNavigator.pushPage("list.html", {})
+
+         },function (error){
+
+                $log.info("delete group", error)
+
+            });
+
 
     }
       

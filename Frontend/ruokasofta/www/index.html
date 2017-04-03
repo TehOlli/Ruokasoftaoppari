@@ -127,7 +127,7 @@
         <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">{{ myNavigator.topPage.data.choice }}</div>
-                <div class="right"><ons-icon ng-click="dialog.show()" class="add-icon" icon="ion-person-add"></ons-icon></div>
+                <div class="right"><ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-person-add"></ons-icon></div>
         </ons-toolbar>      
         <ons-tabbar>
             <ons-tab page="food.html" active="true">
@@ -146,32 +146,71 @@
                 </div>
             </ons-tab>
         </ons-tabbar>
-        <ons-dialog var="dialog" ng-controller="dialogController">
-            <div style="text-align: center; padding: 10px;">
-                 <p>
-                    <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
-                </p>
-                <ons-list>
+        </ons-page> 
+    </ons-template>
+
+    <ons-template id="manage.html">
+        <ons-page ng-controller="manageController">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Group info</div>
+            </ons-toolbar>      
+            <!--<p align="center">
+                <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
+                <ons-button ng-click="adduserFunction()">Add</ons-button>
+            </p>-->
+            <ons-list>
+                    <ons-list-header>Members</ons-list-header>
+                    <ons-list-item modifier="longdivider">
+                        <div class="left">
+                            <ons-icon class="add-user" icon="ion-android-person-add"></ons-icon>
+                        </div>
+                        <div class="center">
+                            <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
+                        </div>
+                        <div class="right">
+                            <ons-icon ng-click="adduserFunction()" class="new-user" icon="ion-plus-circled"></ons-icon>
+                        </div>
+                    </ons-list-item>
                     <ons-list-item ng-repeat="user in users.data" modifier="longdivider">
-                        <div class="left user-list">
+                        <div class="left">
                             <ons-icon class="add-user" icon="md-account"></ons-icon>
                         </div>
-                        <div class="center user-list">
-                            {{user.username}}
+                        <div class="center">
+                            <span class="list-item__title">{{user.username}}</span>
+                            <span class="list-item__subtitle">{{user.userEmail}}</span>             
                         </div>
-                        <div class="right user-list">
+                        <div class="right" ng-show="admin">
                             <ons-icon ng-click="removeUser(user.userEmail)" class="remove-user" icon="md-close-circle"></ons-icon>
                         </div>
                     </ons-list-item>
+                    <ons-list-header>Manage</ons-list-header>
+                    <ons-list-item>
+                        <div class="center">
+                            Notifications
+                        </div>
+                        <div class="right">
+                            <ons-switch></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item ng-click="leaveGroup()" ng-hide="admin">
+                        <div class="left">
+                            <ons-icon class="remove-user" icon="md-alert-circle"></ons-icon>
+                        </div>
+                        <div class="center leave-group">
+                            Leave this group
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item ng-click="deleteGroup()" ng-show="admin">
+                        <div class="left">
+                            <ons-icon class="remove-user" icon="md-alert-circle"></ons-icon>
+                        </div>
+                        <div class="center leave-group">
+                            Delete this group
+                        </div>
+                    </ons-list-item>
                 </ons-list>
-                <div class="user-list-but">
-                    <ons-button ng-click="adduserFunction()">Add</ons-button>
-                    <ons-button ng-click="dialog.hide()">Close</ons-button>
-                </div>
-                </p>
-            </div>
-        </ons-dialog>
-        </ons-page> 
+        </ons-page>
     </ons-template>
 
     <ons-template id="food.html">
