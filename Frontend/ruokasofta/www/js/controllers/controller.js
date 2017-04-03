@@ -4,6 +4,8 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
        $scope.userName = "";
        $scope.userEmail = "";
        $scope.userPassword = "";
+       var local = "http://localhost:8080/"
+       var proto = "http://proto453.haaga-helia.fi:80/"
        
        document.addEventListener('init', function (e) { 
 
@@ -11,7 +13,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
 
                  if(localStorage.token != null){
 
-                      $http.get('http://localhost:8080/auth/').then(function (success){
+                      $http.get(local + 'auth').then(function (success){
 
                         $log.info("token check success");
 
@@ -39,7 +41,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
                  var data = JSON.stringify({username:$scope.userName, email:$scope.userEmail, password:$scope.userPassword});
                 $log.info(data);
 
-                 $http.post('http://localhost:8080/signup', data).then(function (success){
+                 $http.post(local + 'signup', data).then(function (success){
                     
                     if(success.data.success==false){
                         ons.notification.alert(success.data.message);
@@ -67,12 +69,14 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
 
     $scope.userEmail = "";
     $scope.userPassword = "";
+    var local = "http://localhost:8080/"
+    var proto = "http://proto453.haaga-helia.fi:80/"
 
     $scope.loginFunction = function(){
 
         var data = JSON.stringify({email:$scope.userEmail, password:$scope.userPassword});
 
-        $http.post('http://localhost:8080/login', data).then(function (success){
+        $http.post(local + 'login', data).then(function (success){
 
                  if(success.data.success==false){
                     ons.notification.alert(success.data.message);
@@ -97,7 +101,10 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
 //CONTROLLER FOR HANDLING GROUP LIST
 app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
-     $http.get('http://localhost:8080/auth/groups').then(function (success){
+    var local = "http://localhost:8080/"
+    var proto = "http://proto453.haaga-helia.fi:80/"
+
+     $http.get(local + 'auth/groups').then(function (success){
 
                 $scope.groups = success;
 
@@ -111,9 +118,10 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
 
             });
 
-    $scope.saveId= function(id){
+    $scope.saveId= function(group){
 
-        localStorage.id = id;
+        localStorage.id = group._id;
+        
 
        }
 
@@ -131,6 +139,8 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 
     $scope.groupName = "";
     $scope.groupDesc = "";
+    var local = "http://localhost:8080/"
+    var proto = "http://proto453.haaga-helia.fi:80/"
 
     $scope.createFunction = function(){
 
@@ -145,7 +155,7 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 
             $log.info(data);
 
-            $http.post('http://localhost:8080/auth/creategroup', data).then(function (success){
+            $http.post(local + 'auth/creategroup', data).then(function (success){
 
                 $log.info("success");
 
@@ -166,10 +176,12 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 app.controller('dialogController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
 
     $scope.userEmail = "";
+    var local = "http://localhost:8080/"
+    var proto = "http://proto453.haaga-helia.fi:80/"
 
     var id = {id: localStorage.id}
 
-    $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
+    $http.get(local + 'auth/members', {headers: id}).then(function (success){
                 
                 $scope.users = success;
 
@@ -191,7 +203,7 @@ app.controller('dialogController', ['$scope', '$log', '$http', 'validation', fun
 
             $log.info(data);
 
-            $http.post('http://localhost:8080/auth/invitetogroup', data).then(function (success){
+            $http.post(local + 'auth/invitetogroup', data).then(function (success){
 
                     console.log(success);
 
@@ -203,7 +215,7 @@ app.controller('dialogController', ['$scope', '$log', '$http', 'validation', fun
                   else{
                        $log.info("add success");
 
-                        $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
+                        $http.get(local + 'auth/members', {headers: id}).then(function (success){
                         
                         $scope.users = success;
 
@@ -231,12 +243,12 @@ app.controller('dialogController', ['$scope', '$log', '$http', 'validation', fun
 
     }
     $scope.removeUser = function(email){
-        
+
         var id = {id: localStorage.id}
         var data = JSON.stringify({email: email, groupid:localStorage.id});
         console.log(data);
 
-         $http.post('http://localhost:8080/auth/removefromgroup', data).then(function (success){
+         $http.post(local + 'auth/removefromgroup', data).then(function (success){
 
               if(success.data.success==false){
 
@@ -246,7 +258,7 @@ app.controller('dialogController', ['$scope', '$log', '$http', 'validation', fun
                   else{
                        $log.info("user remove success");
 
-                        $http.get('http://localhost:8080/auth/members', {headers: id}).then(function (success){
+                        $http.get(local + 'auth/members', {headers: id}).then(function (success){
                         
                         $scope.users = success;
 

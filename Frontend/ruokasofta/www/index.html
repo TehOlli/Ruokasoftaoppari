@@ -20,7 +20,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://localhost:8080/; img-src 'self' data: content:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://localhost:8080/  http://proto453.haaga-helia.fi/; img-src 'self' data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -86,7 +86,7 @@
             </ons-toolbar>
             <ons-list>
                 <ons-list-header>Groups</ons-list-header>               
-                    <ons-list-item ng-repeat="group in groups.data" ng-click="saveId(group._id); myNavigator.pushPage('group.html', {data: {choice: group.groupName}})" modifier="longdivider" tappable>
+                    <ons-list-item ng-repeat="group in groups.data" ng-click="saveId(group); myNavigator.pushPage('group.html', {data: {choice: group.groupName}})" modifier="longdivider" tappable>
                         <div class="left">
                             <img class="list-item__thumbnail" src="img/cat.jpg">
                         </div>
@@ -175,15 +175,15 @@
     </ons-template>
 
     <ons-template id="food.html">
-        Restaurants
+        <ons-page>Restaurants</ons-page>
     </ons-template>
 
     <ons-template id="map.html">
-        Map
+        <ons-page>Map</ons-page>
     </ons-template>
 
     <ons-template id="chat.html">
-        Chat
+        <ons-page>Chat</ons-page>
     </ons-template>
     </body>
 </html>
