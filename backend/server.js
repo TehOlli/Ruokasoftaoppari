@@ -329,15 +329,15 @@ authRouter.post("/deletegroup", jsonParser, function(req, res){
 
     console.log("Deleting group " + groupID);
 
-    Group.findOne({groupID:groupID}).remove(), function(err, results){
+    Group.remove({_id:groupID}, function(err, results){
         if (err) throw err;
-        
+
         console.log("Deleted group.")
 
         User.update({"groups.groupID":groupID}, {$pull:{groups:{groupID:groupID}}} , function(err, members){
             console.log("Removed group from users' member arrays.")
         });
-    }
+    })
 });
 
 authRouter.get('/groups', function(req, res){
