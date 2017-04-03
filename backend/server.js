@@ -309,17 +309,35 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
 
     console.log("Removing " + userEmail + " from " + groupID);
 
-    User.findOneAndUpdate({userEmail:userEmail}, {$pull:{groups:{groupID: groupID}}}, function(err, user){
+    User.findOneAndUpdate({userEmail:userEmail}, {$pull:{groups:{groupID:groupID}}}, function(err, user){
         if (err) throw err;
         console.log("Removed group from user document");
     
-        Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberEmail: userEmail}}}, function(err, group){
+        Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberEmail:userEmail}}}, function(err, group){
             if (err) throw err;
             console.log("Removed user from group document");
 
             res.json({success:true, message:"User removed"});
         });
     });
+});
+
+authRouter.post("/deletegroup", jsonParser, function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupID = req.body.groupid;
+
+    console.log("Deleting group " + groupID);
+
+    Group.findOne({groupID:groupID}).remove(), function(err, results){
+        if (err) throw err;
+        
+        console.log("Deleted group.")
+
+        User.update({"groups.groupID":groupID}, {$pull:{groups:{groupID:groupID}}} , function(err, members){
+            console.log("Removed group from users' member arrays.")
+        });
+    }
 });
 
 authRouter.get('/groups', function(req, res){
@@ -340,7 +358,7 @@ authRouter.get('/members', function(req, res){
     if(!req.headers['id']) return res.sendStatus(400);
     groupID = req.headers['id'];
     //console.log("GroupID: " + groupID);
-    User.find({"groups.groupID": groupID}, function(err, members){
+    User.find({"groups.groupID":groupID}, function(err, members){
         //console.log("Members are: " + members);
         if(members){
             res.json(members);
