@@ -336,6 +336,8 @@ authRouter.post("/deletegroup", jsonParser, function(req, res){
 
         User.update({"groups.groupID":groupID}, {$pull:{groups:{groupID:groupID}}} , function(err, members){
             console.log("Removed group from users' member arrays.")
+
+            res.json({success:true, message:"Group deleted"});
         });
     })
 });
