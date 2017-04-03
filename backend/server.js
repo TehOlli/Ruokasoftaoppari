@@ -1,7 +1,7 @@
 var express             = require('express');
 var bodyParser          = require('body-parser');
 var app                 = express();
-var port                = process.env.port || 80;
+var port                = process.env.port || 8080;
 var mong                = require('mongoose');
 var User                = require('./userModel');
 var Group               = require('./groupModel');
