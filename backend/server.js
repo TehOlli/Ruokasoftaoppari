@@ -6,7 +6,8 @@ var mong                = require('mongoose');
 var User                = require('./userModel');
 var Group               = require('./groupModel');
 var config              = require('./config');
-var socket              = require('socket.io');
+var http                = require('http').Server(app);
+var io                  = require('socket.io')(http);
 var jwt                 = require('jsonwebtoken');
 var passport            = require('passport');
 var Strategy            = require('passport-http-bearer').Strategy;
@@ -21,6 +22,7 @@ var authRouter          = express.Router();
 var jsonParser          = bodyParser.json();
 var urlencodedParser    = bodyParser.urlencoded({extended: false});
 
+app.use(express.static(__dirname + '/public'));
 app.set('secret', config.secret);
 app.use('/', router);
 app.use('/auth', authRouter);
@@ -95,8 +97,8 @@ authRouter.use(function(req, res, next){
 //==========
 //Socket.io
 //==========
-/*
-io.on('', function(socket){
+
+io.on('connection', function(socket){
     console.log("Socket user connected");
     socket.emit()
 
@@ -104,8 +106,10 @@ io.on('', function(socket){
     socket.on('disconnect', function(){
         console.log('Socket user disconnected');
     });
+
+
 });
-*/
+
 //==========
 //Routes
 //==========
@@ -125,6 +129,8 @@ app.post('/signup', jsonParser, function (req, res) {
     });
 
     User.find({userEmail: userEmail}, function(err, exists){
+        if(err) throw err;
+
         if(exists.length){
             console.log("User with that email already exists");
             console.log("USer exists: " + exists);
