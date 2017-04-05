@@ -37,6 +37,7 @@
         <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/controller.js"></script>
         <script type="text/javascript" src="js/services/validationService.js"></script>
+        <script type="text/javascript" src="js/services/membersService.js"></script>
         <title>Ruokasoftaoppari</title>
     </head>
     <body>
@@ -56,8 +57,9 @@
                         <ons-input type="password" ng-model="userPassword" id="password" modifier="material" placeholder="Password" float></ons-input>
                     </p>
                     <p>
-                        <ons-button ng-click="signupFunction()" modifier="material">Sign up</ons-button>
+                        <ons-button style="width:195px;" ng-click="signupFunction()" modifier="material">Sign up</ons-button>
                     </p>
+                    <hr style="width:220px;">
                     <p class="login">
                         <a ng-click="dialog2.show();">Already have an account?</a>
                     </p>
@@ -127,7 +129,7 @@
         <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">{{ myNavigator.topPage.data.choice }}</div>
-                <div class="right"><ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-person-add"></ons-icon></div>
+                <div class="right"><ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-android-settings"></ons-icon></div>
         </ons-toolbar>      
         <ons-tabbar>
             <ons-tab page="food.html" active="true">

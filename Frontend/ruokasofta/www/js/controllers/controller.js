@@ -174,7 +174,7 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 }]);
 
 //CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
-app.controller('manageController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
+app.controller('manageController', ['$scope', '$log', '$http', 'validation','membersService', function($scope, $log, $http, validation, membersService) {
     $scope.admin = false;
     $scope.userEmail = "";
     var local = "http://localhost:8080/";
@@ -186,16 +186,8 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
 
     var id = {id: localStorage.id}
 
-    $http.get(local + 'auth/members', {headers: id}).then(function (success){
-                
-                $scope.users = success;
-
-                $log.info(success.data);
-
-            },function (error){
-            
-                $log.info(error)
-
+   membersService.async().then(function(d) {
+      $scope.users = d;
     });
 
     $scope.adduserFunction = function(){
@@ -210,8 +202,6 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
 
             $http.post(local + 'auth/invitetogroup', data).then(function (success){
 
-                    console.log(success);
-
                   if(success.data.success==false){
 
                     ons.notification.alert(success.data.message);
@@ -222,21 +212,11 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
 
                        $scope.userEmail = "";
 
-                        $http.get(local + 'auth/members', {headers: id}).then(function (success){
-                        
-                        $scope.users = success;
-
-                        $log.info(success.data);
-
-                    },function (error){
-                    
-                        $log.info(error)
-
-                    });
+                      membersService.async().then(function(d) {
+                        $scope.users = d;
+                      });
 
                   }
-
-                
 
             },function (error){
 
@@ -244,8 +224,6 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
                 dialog.hide();
 
             });
-
-
         }
 
     }
@@ -265,17 +243,9 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
                   else{
                        $log.info("user remove success");
 
-                        $http.get(local + 'auth/members', {headers: id}).then(function (success){
-                        
-                        $scope.users = success;
-
-                        $log.info("user get success");
-
-                    },function (error){
-                    
-                        $log.info(error)
-
-                    });
+                       membersService.async().then(function(d) {
+                            $scope.users = d;
+                        });
 
                   }
 
