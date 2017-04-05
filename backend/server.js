@@ -287,8 +287,8 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
                             Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
                                 if (err) throw err;
                                 console.log("User added to group members");
-                                console.log(group.members);
-                                res.json(group.members);
+
+                                res.json({success:true, message:"User added"});
                             });
                         }else{
                             console.log("User with that email does not exist");
@@ -324,8 +324,7 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
             if (err) throw err;
             console.log("Removed user from group document");
 
-            console.log(group.members);
-            res.json(group.members);
+            res.json({success:true, message:"User removed"});
         });
     });
 });
