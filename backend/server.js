@@ -6,6 +6,7 @@ var mong                = require('mongoose');
 var User                = require('./userModel');
 var Group               = require('./groupModel');
 var config              = require('./config');
+var socket              = require('socket.io');
 var jwt                 = require('jsonwebtoken');
 var passport            = require('passport');
 var Strategy            = require('passport-http-bearer').Strategy;
@@ -14,6 +15,7 @@ var Strategy            = require('passport-http-bearer').Strategy;
 //==========
 //Configuration
 //==========
+
 var router              = express.Router();
 var authRouter          = express.Router();
 var jsonParser          = bodyParser.json();
@@ -62,15 +64,6 @@ console.log("Mongo connected");
 //Router Middleware
 //==========
 
-/*
-app.get('/users', 
-  passport.authenticate('bearer', { session: false }),
-  function(req, res) {
-    res.json(req.user);
-    console.log("wot");
-  });
-*/
-
 authRouter.use(function(req, res, next){
     try{
         var token = req.headers['authorization'].replace(/^Bearer\s/, '');
@@ -99,6 +92,20 @@ authRouter.use(function(req, res, next){
     }
 });
 
+//==========
+//Socket.io
+//==========
+/*
+io.on('', function(socket){
+    console.log("Socket user connected");
+    socket.emit()
+
+
+    socket.on('disconnect', function(){
+        console.log('Socket user disconnected');
+    });
+});
+*/
 //==========
 //Routes
 //==========
@@ -274,14 +281,14 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
                         
                         if(user){
                             console.log("If fired");
-                            res.send(user);
                             //console.log(user);
 
                             var newMember = {"memberEmail":userEmail};
                             Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
                                 if (err) throw err;
                                 console.log("User added to group members");
-                                //console.log(group);
+                                console.log(group.members);
+                                res.json(group.members);
                             });
                         }else{
                             console.log("User with that email does not exist");
@@ -317,7 +324,8 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
             if (err) throw err;
             console.log("Removed user from group document");
 
-            res.json({success:true, message:"User removed"});
+            console.log(group.members);
+            res.json(group.members);
         });
     });
 });
