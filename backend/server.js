@@ -383,5 +383,8 @@ authRouter.get('/members', function(req, res){
     });
 });
 
-app.listen(port);
+//app.listen(port);
+http.listen(port, function(){
+  console.log('listening on *:' + port);
+});
 console.log('Connected on port ' + port);
