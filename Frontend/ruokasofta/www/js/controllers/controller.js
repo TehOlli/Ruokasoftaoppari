@@ -173,10 +173,13 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 
 }]);
 
-app.controller('groupController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
     $scope.chatInput = "";
     $scope.messages = [];
     var socket = io.connect('http://localhost:8080/');
+    socket.on('connect', function() {
+    socket.emit('room', localStorage.id);
+    });
     $scope.sendmesFunction = function(){
         console.log("1")
         socket.emit('message', $scope.chatInput);
@@ -184,8 +187,9 @@ app.controller('groupController', ['$scope', '$log', '$http', function($scope, $
         console.log("2")
     }
     socket.on('message', function(msg){
-        console.log("3")
         $scope.messages.push(msg);
+        $scope.$apply();
+        console.log($scope.messages)
     })
 
    

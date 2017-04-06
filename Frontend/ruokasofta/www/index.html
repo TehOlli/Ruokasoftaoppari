@@ -226,14 +226,16 @@
     </ons-template>
 
     <ons-template id="chat.html">
-        <ons-page ng-controller="groupController">
-            <p align="center">
-                <ons-input ng-model="chatInput" id="chatinput" modifier="material" placeholder="Message" float></ons-input>
-                <ons-button ng-click="sendmesFunction()" modifier="material">create</ons-button>
-            </p>
-            <p ng-repeat="mes in messages">
+        <ons-page ng-controller="groupController" class="chat-page">
+            <div class="chat-input">
+                <input ng-model="chatInput" id="chatinput" modifier="material" placeholder="Enter a message" float>
+                <ons-icon ng-click="sendmesFunction()"  icon="ion-android-send"></ons-icon>
+            </div>
+            <div class="messages">
+            <div ng-repeat="mes in messages track by $index">
                 {{mes}}
-            </p>
+            </div>
+            </div>
         </ons-page>
     </ons-template>
     </body>
