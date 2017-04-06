@@ -104,20 +104,18 @@ io.on("connection", function(socket){
 
     socket.on("room", function(room){
         socket.join(room);  
+        console.log(room);
     });
 
     socket.on("message", function(data){
         console.log("message: " + data.msg);
         console.log(data.room)
-        io.to(data.room).emit(data.msg);
+        io.to(data.room).emit('message', data.msg);
     });
-
 
     socket.on("disconnect", function(){
         console.log("Socket user disconnected");
     });
-
-
 });
 
 //==========
@@ -125,7 +123,7 @@ io.on("connection", function(socket){
 //==========
 
 //User creation
-app.post('/signup', jsonParser, function (req, res) {
+app.post("/signup", jsonParser, function (req, res) {
     if(!req.body) return res.sendStatus(400);
 
     var userName = req.body.username;
