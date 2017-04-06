@@ -1,16 +1,16 @@
-var express             = require('express');
-var bodyParser          = require('body-parser');
+var express             = require("express");
+var bodyParser          = require("body-parser");
 var app                 = express();
 var port                = process.env.port || 8080;
-var mong                = require('mongoose');
-var User                = require('./userModel');
-var Group               = require('./groupModel');
-var config              = require('./config');
-var http                = require('http').Server(app);
-var io                  = require('socket.io')(http);
-var jwt                 = require('jsonwebtoken');
-var passport            = require('passport');
-var Strategy            = require('passport-http-bearer').Strategy;
+var mong                = require("mongoose");
+var User                = require("./userModel");
+var Group               = require("./groupModel");
+var config              = require("./config");
+var http                = require("http").Server(app);
+var io                  = require("socket.io")(http);
+var jwt                 = require("jsonwebtoken");
+var passport            = require("passport");
+var Strategy            = require("passport-http-bearer").Strategy;
 
 
 //==========
@@ -29,20 +29,20 @@ app.use('/auth', authRouter);
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     next();
 });
 authRouter.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email, id");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     next();
 });
 
 authRouter.options("/*", function(req, res, next){
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email, id");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     res.sendStatus(200);
 });
 
@@ -68,16 +68,16 @@ console.log("Mongo connected");
 
 authRouter.use(function(req, res, next){
     try{
-        var token = req.headers['authorization'].replace(/^Bearer\s/, '');
+        var token = req.headers["authorization"].replace(/^Bearer\s/, '');
     }catch(e){
         console.log(e.message);
     }
     if(token){
-        jwt.verify(token, app.get('secret'), function(err, decoded){
+        jwt.verify(token, app.get("secret"), function(err, decoded){
             if(err){
                 return res.status(403).send({ 
                     success: false, 
-                    message: 'Token authentication failed.'
+                    message: "Token authentication failed."
                 });
                 console.log("kaikki hajos");
             }else{
@@ -89,7 +89,7 @@ authRouter.use(function(req, res, next){
     }else{
         return res.status(403).send({
            success: false,
-           message: 'No token was provided.', 
+           message: "No token was provided.", 
         });
     }
 });
@@ -98,13 +98,15 @@ authRouter.use(function(req, res, next){
 //Socket.io
 //==========
 
-io.on('connection', function(socket){
-    console.log("Socket user connected");
-    socket.emit()
+io.on("connection", function(socket){
+    console.log("Socket user connected.");
+    socket.on("message", function(msg){
+        console.log("message: " + msg);
+    });
 
 
-    socket.on('disconnect', function(){
-        console.log('Socket user disconnected');
+    socket.on("disconnect", function(){
+        console.log("Socket user disconnected");
     });
 
 
@@ -385,6 +387,5 @@ authRouter.get('/members', function(req, res){
 
 //app.listen(port);
 http.listen(port, function(){
-  console.log('listening on *:' + port);
+  console.log("Connected on port " + port);
 });
-console.log('Connected on port ' + port);
