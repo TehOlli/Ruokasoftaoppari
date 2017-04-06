@@ -182,7 +182,7 @@ app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', f
     });
     $scope.sendmesFunction = function(){
         console.log("1")
-        socket.emit('message', $scope.chatInput);
+        socket.emit('message', {room: localStorage.id, msg:$scope.chatInput});
         $scope.chatInput = "";
         console.log("2")
     }
