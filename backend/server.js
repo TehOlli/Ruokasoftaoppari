@@ -32,6 +32,7 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     next();
 });
+
 authRouter.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email, id");
@@ -100,9 +101,14 @@ authRouter.use(function(req, res, next){
 
 io.on("connection", function(socket){
     console.log("Socket user connected.");
+
+    socket.on("room", function(room){
+        socket.join(room);
+    });
+
     socket.on("message", function(msg){
         console.log("message: " + msg);
-        io.emit('message', msg);
+        io.to(room).emit(msg);
     });
 
 
