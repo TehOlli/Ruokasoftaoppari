@@ -103,12 +103,13 @@ io.on("connection", function(socket){
     console.log("Socket user connected.");
 
     socket.on("room", function(room){
-        socket.join(room);
+        socket.join(room);  
     });
 
-    socket.on("message", function(msg){
-        console.log("message: " + msg);
-        io.to(room).emit(msg);
+    socket.on("message", function(data){
+        console.log("message: " + data.msg);
+        console.log(data.room)
+        io.to(data.room).emit(data.msg);
     });
 
 
