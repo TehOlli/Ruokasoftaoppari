@@ -173,6 +173,26 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 
 }]);
 
+app.controller('groupController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+    $scope.chatInput = "";
+    $scope.messages = [];
+    var socket = io.connect('http://localhost:8080/');
+    $scope.sendmesFunction = function(){
+        console.log("1")
+        socket.emit('message', $scope.chatInput);
+        $scope.chatInput = "";
+        console.log("2")
+    }
+    socket.on('message', function(msg){
+        console.log("3")
+        $scope.messages.push(msg);
+    })
+
+   
+      
+
+}]);
+
 //CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
 app.controller('manageController', ['$scope', '$log', '$http', 'validation','membersService', function($scope, $log, $http, validation, membersService) {
     $scope.admin = false;

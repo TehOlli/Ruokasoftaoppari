@@ -39,9 +39,7 @@
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/membersService.js"></script>
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
-        <script>
-            var socket = io.connect('http://localhost:8080/');
-        </script>
+        
         <title>Ruokasoftaoppari</title>
     </head>
     <body>
@@ -228,7 +226,15 @@
     </ons-template>
 
     <ons-template id="chat.html">
-        <ons-page>Chat</ons-page>
+        <ons-page ng-controller="groupController">
+            <p align="center">
+                <ons-input ng-model="chatInput" id="chatinput" modifier="material" placeholder="Message" float></ons-input>
+                <ons-button ng-click="sendmesFunction()" modifier="material">create</ons-button>
+            </p>
+            <p ng-repeat="mes in messages">
+                {{mes}}
+            </p>
+        </ons-page>
     </ons-template>
     </body>
 </html>
