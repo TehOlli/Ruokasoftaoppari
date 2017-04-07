@@ -111,6 +111,7 @@ io.on("connection", function(socket){
         console.log("message: " + data.msg);
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
+        console.log("socket.id: " + socket.id);
         io.to(data.room).emit({'message': data.msg, 'username': data.username});
     });
 
@@ -187,6 +188,8 @@ app.post('/login', jsonParser, function(req, res){
         if(err) throw err;
         console.log("Exists: " + user);
         console.log("User exists");
+        var username = user.username;
+        console.log("Login username: " + username);
         if(user){
             user.comparePassword(userPassword, function(err, isMatch){
                 if(isMatch == true){
@@ -197,7 +200,8 @@ app.post('/login', jsonParser, function(req, res){
                     res.json({
                         success: true,
                         message: 'Token sent',
-                        token: token
+                        token: token,
+                        username: username
                     });
                 }else{
                     console.log("Password is incorrect.");
