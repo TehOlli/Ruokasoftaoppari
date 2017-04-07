@@ -111,8 +111,8 @@ io.on("connection", function(socket){
         console.log("message: " + data.msg);
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
-        console.log("socket.id: " + socket.id);
-        io.to(data.room).emit('message', {'msg': data.msg, 'username': data.username});
+        socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username});
+        //callback(true);
     });
 
     socket.on("disconnect", function(){
