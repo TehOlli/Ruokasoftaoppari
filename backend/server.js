@@ -112,7 +112,7 @@ io.on("connection", function(socket){
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
         console.log("socket.id: " + socket.id);
-        io.to(data.room).emit({'message': data.msg, 'username': data.username});
+        io.to(data.room).emit('message', {'msg': data.msg, 'username': data.username});
     });
 
     socket.on("disconnect", function(){
