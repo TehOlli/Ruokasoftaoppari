@@ -109,8 +109,9 @@ io.on("connection", function(socket){
 
     socket.on("message", function(data){
         console.log("message: " + data.msg);
-        console.log(data.room)
-        io.to(data.room).emit('message', data.msg);
+        console.log("room: " + data.room);
+        console.log("sender: " + data.username);
+        io.to(data.room).emit({'message': data.msg, 'username': data.username});
     });
 
     socket.on("disconnect", function(){
