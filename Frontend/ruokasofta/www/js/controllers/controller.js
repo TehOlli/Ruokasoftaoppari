@@ -49,6 +49,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
                     else{
                         localStorage.token = success.data.token;
                         localStorage.email = $scope.userEmail;
+                        localStorage.name = $scope.userName;
                         $log.info("signup success");
 
                         myNavigator.pushPage("list.html", {})
@@ -84,7 +85,8 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
                  else{
                     localStorage.token = success.data.token;
                     localStorage.email = $scope.userEmail;
-                    $log.info("login success");
+                    localStorage.name = success.data.username;
+                    $log.info("login success", success);
 
                     myNavigator.pushPage("list.html", {})
                     }
@@ -181,15 +183,18 @@ app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', f
     socket.emit('room', localStorage.id);
     });
     $scope.sendmesFunction = function(){
-        console.log("1")
-        socket.emit('message', {room: localStorage.id, msg:$scope.chatInput});
-        $scope.chatInput = "";
-        console.log("2")
+        if(!$scope.chatInput==""){
+            console.log(localStorage.name);
+            socket.emit('message', {room: localStorage.id, msg:$scope.chatInput, username:localStorage.name});
+            $scope.chatInput = "";
+
+        }
     }
     socket.on('message', function(msg){
+        console.log("asdasds");
         $scope.messages.push(msg);
         $scope.$apply();
-        console.log($scope.messages)
+        console.log(msg)
     })
 
    

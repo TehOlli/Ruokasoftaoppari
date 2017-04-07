@@ -233,7 +233,8 @@
             </div>
             <div class="messages">
             <div ng-repeat="mes in messages track by $index">
-                {{mes}}
+                <span>{{mes.username}}</span>
+                <p>{{mes.msg}}</p>
             </div>
             </div>
         </ons-page>
