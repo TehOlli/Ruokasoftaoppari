@@ -178,12 +178,14 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
     $scope.chatInput = "";
     $scope.messages = [];
+
     var socket = io.connect('http://localhost:8080/');
-    socket.on('connect', function() {
-    socket.emit('room', localStorage.id);
+        socket.on('connect', function() {
+        socket.emit('room', localStorage.id);
     });
     $scope.sendmesFunction = function(){
         if(!$scope.chatInput==""){
+            $scope.messages.push({username: localStorage.name, msg: $scope.chatInput});
             console.log(localStorage.name);
             socket.emit('message', {room: localStorage.id, msg:$scope.chatInput, username:localStorage.name});
             $scope.chatInput = "";

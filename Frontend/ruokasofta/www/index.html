@@ -232,10 +232,7 @@
                 <ons-icon ng-click="sendmesFunction()"  icon="ion-android-send"></ons-icon>
             </div>
             <div class="messages">
-            <div ng-repeat="mes in messages track by $index">
-                <span>{{mes.username}}</span>
-                <p>{{mes.msg}}</p>
-            </div>
+                <span class="message" ng-repeat="mes in messages track by $index"><span>{{mes.username}}</span>{{mes.msg}}</span>
             </div>
         </ons-page>
     </ons-template>

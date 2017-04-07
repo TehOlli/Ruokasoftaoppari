@@ -120,30 +120,27 @@ body {
 }
 
 .messages{
-    position:fixed;
-    bottom:15%;
-    max-width: 95%;
+    position:absolute;
+    bottom:8%;
+    width:95%;
     left:2.5%;
 }
 
-.messages div{
+.message{
+    display:table;
     background-color: white;
     padding:5px;
-    border-radius: 5px;
     margin-bottom:5px;
-    word-wrap: break-word   
+    word-break:break-all;
+    white-space: normal;
 }
 
-.messages div p{
-    margin:5px 0;
-}
-
-.messages div span{
-    font-size: 0.7em;
+.message span{
+    display:table;
+    margin-bottom:5px;
+    font-size:0.7em;
     color:#154187;
 }
-
-
 
 .chat-page .page__content{
     background-color: #b7b7b7 !important;
