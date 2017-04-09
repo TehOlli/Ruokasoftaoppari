@@ -122,8 +122,8 @@ body {
 .messages{
     position:absolute;
     bottom:8%;
-    width:95%;
-    left:2.5%;
+    width:92%;
+    left:4%;
 }
 
 .message{
@@ -134,8 +134,18 @@ body {
     word-break:break-all;
     white-space: normal;
     clear:both;
-    border-radius: 5px;
+    border-radius: 0 5px 5px 5px;
     max-width:80%;
+}
+
+.message:before{
+  content: ' ';
+  position: absolute;
+  left:-9px;
+  width: 0;
+  height: 0;
+  border: 5px solid;
+  border-color: white white transparent transparent;
 }
 
 .own-message{
@@ -150,13 +160,12 @@ body {
     border-radius: 5px 0 5px 5px;
     max-width:80%;
 }
-.own-message:before {
+.own-message:before{
   content: ' ';
   position: absolute;
+  right:-9px;
   width: 0;
   height: 0;
-  right:-9px;
-  top: 0;
   border: 5px solid;
   border-color: #6da5ff transparent transparent #6da5ff;
 }
