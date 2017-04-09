@@ -5,6 +5,7 @@ var port                = process.env.port || 8080;
 var mong                = require("mongoose");
 var User                = require("./userModel");
 var Group               = require("./groupModel");
+var Message             = require("./messageModel");
 var config              = require("./config");
 var http                = require("http").Server(app);
 var io                  = require("socket.io")(http);
@@ -59,8 +60,13 @@ passport.use(new Strategy(
 
 //Bluebird
 mong.Promise = global.Promise;
-mong.connect(config.dbConnection);
-console.log("Mongo connected");
+mong.connect(config.dbConnection, function(err){
+    if(err){
+        if(err) throw err;
+    }else{
+        console.log("Mongo connected");
+    }
+});
 
 
 //==========
@@ -111,7 +117,23 @@ io.on("connection", function(socket){
         console.log("message: " + data.msg);
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
-        socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username});
+        console.log("email: " + data.email);
+
+        var newMessage = new Message({
+            groupID: data.room,
+            message: data.msg,
+            author: data.email
+        });
+        console.log("Saving message...");
+        newMessage.save(function(err, results){
+            if(err){
+                throw err;
+            }else{
+                console.log("Saved message: ");
+                console.log(results);
+                socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username});
+            }
+        })
         //callback(true);
     });
 
