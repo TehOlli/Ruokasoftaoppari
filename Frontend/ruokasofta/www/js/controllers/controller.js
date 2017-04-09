@@ -185,9 +185,9 @@ app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', f
     });
     $scope.sendmesFunction = function(){
         if(!$scope.chatInput==""){
-            $scope.messages.push({username: localStorage.name, msg: $scope.chatInput});
-            console.log(localStorage.name);
-            socket.emit('message', {room: localStorage.id, msg:$scope.chatInput, username:localStorage.name});
+            $scope.messages.push({username: localStorage.name, msg: $scope.chatInput, own:true});
+            console.log(localStorage.email);
+            socket.emit('message', {room: localStorage.id, msg:$scope.chatInput, username:localStorage.name, email:localStorage.email});
             $scope.chatInput = "";
 
         }

@@ -133,6 +133,32 @@ body {
     margin-bottom:5px;
     word-break:break-all;
     white-space: normal;
+    clear:both;
+    border-radius: 5px;
+    max-width:80%;
+}
+
+.own-message{
+    display:table;
+    background-color: #6da5ff;
+    padding:5px;
+    margin-bottom:5px;
+    word-break:break-all;
+    white-space: normal;
+    float:right;
+    clear:both;
+    border-radius: 5px 0 5px 5px;
+    max-width:80%;
+}
+.own-message:before {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  right:-9px;
+  top: 0;
+  border: 5px solid;
+  border-color: #6da5ff transparent transparent #6da5ff;
 }
 
 .message span{
