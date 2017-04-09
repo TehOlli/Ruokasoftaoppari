@@ -187,13 +187,12 @@ app.post('/login', jsonParser, function(req, res){
     User.findOne({userEmail: userEmail}, function(err, user){
         if(err) throw err;
         console.log("Exists: " + user);
-        console.log("User exists");
-        var username = user.username;
-        console.log("Login username: " + username);
+
         if(user){
             user.comparePassword(userPassword, function(err, isMatch){
                 if(isMatch == true){
                     console.log("login userPassword: ", isMatch);
+
                     var token = jwt.sign(user, app.get('secret'), {
                         expiresIn: '24h'
                     });
@@ -201,7 +200,7 @@ app.post('/login', jsonParser, function(req, res){
                         success: true,
                         message: 'Token sent',
                         token: token,
-                        username: username
+                        username: user.username
                     });
                 }else{
                     console.log("Password is incorrect.");
