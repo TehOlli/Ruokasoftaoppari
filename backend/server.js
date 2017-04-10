@@ -121,12 +121,16 @@ io.on("connection", function(socket){
 
         var newMessage = new Message({
             groupID: data.room,
-            message: data.msg,
-            author: data.email
+            msg: data.msg,
+            author: data.email,
+            username: data.username
         });
+        console.log("newMessage: " + newMessage);
+
         console.log("Saving message...");
         newMessage.save(function(err, results){
             if(err){
+                
                 throw err;
             }else{
                 console.log("Saved message: ");

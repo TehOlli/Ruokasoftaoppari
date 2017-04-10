@@ -5,7 +5,7 @@ var messageSchema = mong.Schema({
         type: String,
         required: true
     },
-    message:{
+    msg:{
         type: String,
         required: true
     },
@@ -13,6 +13,10 @@ var messageSchema = mong.Schema({
         type: String,
         required: true
         //ref
+    },
+    username:{
+        type: String,
+        required: true
     }
 });
 
