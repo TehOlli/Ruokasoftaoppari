@@ -389,6 +389,19 @@ authRouter.post("/deletegroup", jsonParser, function(req, res){
     })
 });
 
+authRouter.get("/getmessages", function(req, res){
+    if(!req.headers['id']) return res.sendStatus(400);
+
+    var groupID = req.headers['id'];
+
+    console.log("Fetching messages for group " + groupID);
+
+    Message.find({groupID:groupID}, function(err, results){
+        console.log("Messages: " + results);
+        res.json(results);
+    });
+});
+
 authRouter.get('/groups', function(req, res){
     if(!req.headers['email']) return res.sendStatus(400);
     userEmail = req.headers['email'];
