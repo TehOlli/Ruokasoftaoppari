@@ -118,12 +118,14 @@ io.on("connection", function(socket){
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
         console.log("email: " + data.email);
+        console.log("time: " + data.time);
 
         var newMessage = new Message({
             groupID: data.room,
             msg: data.msg,
             author: data.email,
-            username: data.username
+            username: data.username,
+            time: data.time
         });
         console.log("newMessage: " + newMessage);
 

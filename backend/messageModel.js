@@ -17,6 +17,10 @@ var messageSchema = mong.Schema({
     username:{
         type: String,
         required: true
+    },
+    time:{
+        type: String,
+        required: true
     }
 });
 
