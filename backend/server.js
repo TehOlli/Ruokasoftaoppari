@@ -137,7 +137,7 @@ io.on("connection", function(socket){
             }else{
                 console.log("Saved message: ");
                 console.log(results);
-                socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username});
+                socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username, 'time': data.time});
             }
         })
         //callback(true);
