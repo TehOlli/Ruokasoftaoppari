@@ -118,6 +118,7 @@ io.on("connection", function(socket){
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
         console.log("email: " + data.email);
+        console.log("date: " + data.date);
         console.log("time: " + data.time);
 
         var newMessage = new Message({
@@ -125,6 +126,7 @@ io.on("connection", function(socket){
             msg: data.msg,
             author: data.email,
             username: data.username,
+            date: data.date,
             time: data.time
         });
         console.log("newMessage: " + newMessage);
@@ -137,7 +139,7 @@ io.on("connection", function(socket){
             }else{
                 console.log("Saved message: ");
                 console.log(results);
-                socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username, 'time': data.time});
+                socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username, 'date': data.date,'time': data.time});
             }
         })
         //callback(true);
