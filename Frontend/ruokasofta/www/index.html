@@ -231,10 +231,11 @@
                 <input ng-model="chatInput" id="chatinput" modifier="material" placeholder="Enter a message" float>
                 <ons-icon ng-click="sendmesFunction()"  icon="ion-android-send"></ons-icon>
             </div>
+            
             <div class="messages">
                 <div ng-repeat="mes in messages track by $index">
-                     <span ng-if="!mes.own" class="message"><span>{{mes.username}}</span>{{mes.msg}}</span>
-                     <span ng-if="mes.own" class="own-message"><span></span>{{mes.msg}}</span>
+                     <span ng-if="!mes.own" class="message"><span class="username">{{mes.username}}</span>{{mes.msg}}<span class="time">{{mes.time}}</span></span>
+                     <span ng-if="mes.own" class="own-message"><span></span>{{mes.msg}}<span class="time">{{mes.time}}</span></span>
                 </div>
             </div>
         </ons-page>

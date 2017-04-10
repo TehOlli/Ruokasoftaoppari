@@ -178,6 +178,22 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
     $scope.chatInput = "";
     $scope.messages = [];
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
+    var id = {id: localStorage.id};
+
+    $http.get(local + 'auth/getmessages', {headers: id}).then(function (success){
+
+                $log.info(success.data);
+                for(var x in success.data){
+                    $scope.messages.push(success.data[x]);
+                }
+
+            },function (error){
+            
+                $log.info(error)
+
+            });
 
     var socket = io.connect('http://localhost:8080/');
         socket.on('connect', function() {
@@ -185,15 +201,17 @@ app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', f
     });
     $scope.sendmesFunction = function(){
         if(!$scope.chatInput==""){
-            $scope.messages.push({username: localStorage.name, msg: $scope.chatInput, own:true});
-            console.log(localStorage.email);
-            socket.emit('message', {room: localStorage.id, msg:$scope.chatInput, username:localStorage.name, email:localStorage.email});
+            var t = new Date();
+            var time = t.getHours() + "." + t.getMinutes();
+            var date = t.getDate() + "." + t.getMonth() + "." + t.getFullYear(); 
+            console.log(time, date);
+            $scope.messages.push({username: localStorage.name, msg: $scope.chatInput, own:true, time:time});
+            socket.emit('message', {room: localStorage.id, msg:$scope.chatInput, username:localStorage.name, email:localStorage.email, time:time, date:date});
             $scope.chatInput = "";
 
         }
     }
     socket.on('message', function(msg){
-        console.log("asdasds");
         $scope.messages.push(msg);
         $scope.$apply();
         console.log(msg)

@@ -170,7 +170,7 @@ body {
   border-color: #6da5ff transparent transparent #6da5ff;
 }
 
-.message span{
+.username{
     display:table;
     margin-bottom:5px;
     font-size:0.7em;
@@ -181,3 +181,8 @@ body {
     background-color: #b7b7b7 !important;
 }
 
+.time{
+    font-size: 0.6em;
+    color: #424242;
+    margin-left:5px;
+}
