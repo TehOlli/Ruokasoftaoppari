@@ -244,6 +244,9 @@
             <div id="chatwindow">
             <div id="messagewindow" scroll-glue>
                 <div ng-repeat="mes in messages track by $index" style="margin-bottom:10px;">
+                    <div class="date" ng-if="messages[$index-1].date!=messages[$index].date">
+                        <span>{{mes.date}}</span>
+                    </div>
                     <div class="message" ng-if="!mes.own">
                         <p class="username">{{mes.username}}</p>
                         <span class="time">{{mes.time}}</span>

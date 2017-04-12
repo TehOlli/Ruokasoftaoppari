@@ -288,3 +288,15 @@ body {
     margin-left:5px;
     color:#154187;
 }
+
+.date{
+    text-align: center;
+    background-color: #154187;
+    width:30%;
+    margin:auto;
+    margin-top:10px;
+    padding:2px;
+    border-radius: 4px;
+    color:white;
+
+}
