@@ -181,14 +181,13 @@ app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', f
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
     var id = {id: localStorage.id};
-
     $http.get(local + 'auth/getmessages', {headers: id}).then(function (success){
 
                 $log.info(success.data);
                 for(var x in success.data){
                     $scope.messages.push(success.data[x]);
                 }
-
+                
             },function (error){
             
                 $log.info(error)

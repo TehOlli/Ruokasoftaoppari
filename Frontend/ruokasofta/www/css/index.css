@@ -96,7 +96,7 @@ body {
     margin-right: 10px;
     color: #154187;
 }
-.chat-input{
+/*.chat-input{
     position:fixed;
     bottom:8%;
     left:2.5%;
@@ -175,7 +175,7 @@ body {
     margin-bottom:5px;
     font-size:0.7em;
     color:#154187;
-}
+}*/
 
 .chat-page .page__content{
     background-color: #b7b7b7 !important;
@@ -184,5 +184,107 @@ body {
 .time{
     font-size: 0.6em;
     color: #424242;
+    margin-left:7px;
+}
+#chatwindow{
+    position:absolute; top:0;left:0;right:0;bottom:0; /* if you wish to use all of your space, use
+    position:absolute; top:0;left:0;right:0;bottom:0;
+    or drop the chatdwindow div */
+}
+#messagewindow, #inputcontainer{
+    position:absolute;
+    left:0;
+    right:0;
+}
+#messagewindow{   
+    overflow:auto;
+    top:0;
+    bottom:10%;
+}
+#inputcontainer{
+    display:block;
+    bottom:0;
+    padding:.5em;
+}
+
+#inputcontainer > p{
+    margin:0;
+}
+.message{
+    display:table;
+    background-color: white;
+    padding:5px;
+    margin:5px 0 0 15px;
+    word-break:break-all;
+    white-space: normal;
+    clear:both;
+    border-radius: 0 5px 5px 5px;
+    max-width:80%;
+}
+.message-text{
+    margin:5px 0 0 0;
+    
+}
+.message:before{
+  content: ' ';
+  position: absolute;
+  left:5px;
+  width: 0;
+  height: 0;
+  border: 5px solid;
+  border-color: white white transparent transparent;
+}
+.username{
+     margin:0;
+    display:inline;
+    font-size:0.7em;
+    color:#154187;
+}
+
+.own-message{
+    display:table;
+    background-color: #6da5ff;
+    padding:5px;
+    margin:5px 15px 0 0;
+    word-break:break-all;
+    white-space: normal;
+    float:right;
+    clear:both;
+    border-radius: 5px 0 5px 5px;
+    max-width:80%;
+}
+.own-message-text{
+    margin:5px 0 0 0;
+    
+}
+
+.own-message .time{
+    margin-left:0;
+}
+
+.own-message:before{
+  content: ' ';
+  position: absolute;
+  right:5px;
+  width: 0;
+  height: 0;
+  border: 5px solid;
+  border-color: #6da5ff transparent transparent #6da5ff;
+}
+.chat-input{
+    background-color: white;
+}
+
+.chat-input input{
+     height:35px;
+    width:90% !important;
+    font-size:1em;
+    border:none;
+    padding-left:3px;
+}
+
+.chat-input ons-icon{
+    font-size:25px;
     margin-left:5px;
+    color:#154187;
 }
