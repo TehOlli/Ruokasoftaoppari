@@ -88,6 +88,7 @@ authRouter.use(function(req, res, next){
                 });
                 console.log("kaikki hajos");
             }else{
+                console.log("Token authenticated.")
                 req.decoded = decoded;
                 next();
             }
@@ -134,8 +135,10 @@ io.on("connection", function(socket){
         console.log("Saving message...");
         newMessage.save(function(err, results){
             if(err){
-                
-                throw err;
+                return res.status(503).send({ 
+                    success: false, 
+                    message: "Unable to save to database."
+                });
             }else{
                 console.log("Saved message: ");
                 console.log(results);
@@ -169,39 +172,45 @@ app.post("/signup", jsonParser, function (req, res) {
     });
 
     User.find({userEmail: userEmail}, function(err, exists){
-        if(err) throw err;
-
-        if(exists.length){
-            console.log("User with that email already exists");
-            console.log("USer exists: " + exists);
-            res.json({success: false, message: "User with that email already exists"});
+        if(err){
+            res.json({success:false, message: "Couldn't access database."})
+            console.log("Couldn't access database.")
         }else{
-            newUser.save(function(err, results){
-                if (err) throw err;
-                console.log(results);
-                console.log("Does not exist " + exists);
-                
-                var token = jwt.sign(newUser, app.get('secret'), {
-                    expiresIn: '24h'
-                });
-                res.json({
-                    success: true,
-                    message: 'Token sent',
-                    token: token
-                });
+            if(exists.length){
+                console.log("User with that email already exists");
+                console.log("User exists: " + exists);
+                res.json({success: false, message: "User with that email already exists"});
+            }else{
+                newUser.save(function(err, results){
+                    if (err){
+                        res.json({success: false, message: "Couldn't save user to database."})
+                        console.log("Couldn't save to database.");
+                    }else{
+                        console.log(results);
+                        
+                        var token = jwt.sign(newUser, app.get('secret'), {
+                            expiresIn: '24h'
+                        });
+                        res.json({
+                            success: true,
+                            message: 'Token sent',
+                            token: token
+                        });
 
-                User.findOne({username: userName}, function(err, user){
-                    if(err) throw err;
-                    user.comparePassword(userPassword, function(err, isMatch){
-                        if(err) throw err;
-                        console.log("userPassword: ", isMatch);
-                    });
-                    user.comparePassword("flipflop", function(err, isMatch){
-                        if(err) throw err;
-                        console.log("flipflop: ", isMatch);
-                    });
+                        User.findOne({username: userName}, function(err, user){
+                            if(err){
+                                res.json({success:false, message: "Couldn't confirm password."})
+                                console.log("Couldn't confirm password");
+                            }else{
+                                user.comparePassword(userPassword, function(err, isMatch){
+                                    if(err) throw err;
+                                    console.log("userPassword: ", isMatch);
+                                });
+                            }
+                        });
+                    }
                 });
-            });
+            }
         }
     });
 });
@@ -215,30 +224,33 @@ app.post('/login', jsonParser, function(req, res){
     console.log(userEmail);
     
     User.findOne({userEmail: userEmail}, function(err, user){
-        if(err) throw err;
-        console.log("Exists: " + user);
-
-        if(user){
-            user.comparePassword(userPassword, function(err, isMatch){
-                if(isMatch == true){
-                    console.log("login userPassword: ", isMatch);
-
-                    var token = jwt.sign(user, app.get('secret'), {
-                        expiresIn: '24h'
-                    });
-                    res.json({
-                        success: true,
-                        message: 'Token sent',
-                        token: token,
-                        username: user.username
-                    });
-                }else{
-                    console.log("Password is incorrect.");
-                    res.json({success: false, message: "Email or password is incorrect."});
-                }
-            });
+        if(err){
+            res.json({success: false, message: "Couldn't access database."})
+            console.log("Couldn't access database.");
         }else{
-            res.json({success: false, message: "Login failed. User does not exist."});
+            console.log("Exists: " + user);
+            if(user){
+                user.comparePassword(userPassword, function(err, isMatch){
+                    if(isMatch == true){
+                        console.log("login userPassword: ", isMatch);
+
+                        var token = jwt.sign(user, app.get('secret'), {
+                            expiresIn: '24h'
+                        });
+                        res.json({
+                            success: true,
+                            message: 'Token sent',
+                            token: token,
+                            username: user.username
+                        });
+                    }else{
+                        console.log("Password is incorrect.");
+                        res.json({success: false, message: "Email or password is incorrect."});
+                    }
+                });
+            }else{
+                res.json({success: false, message: "Login failed. User does not exist."});
+            }
         }
     });
     
@@ -261,6 +273,62 @@ authRouter.get('/users', function(req,res){
     });
 });
 
+authRouter.post('/changeusername', function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var userEmail = req.body.email;
+    var userPassword = req.body.password;
+    var newUsername = req.body.username;
+
+    User.findOne({userEmail:userEmail}, function(err, user){
+        if(err){
+            
+        }else{
+            user.comparePassword(userPassword, function(err, isMatch){
+                if(isMatch == true){
+                    console.log("userPassword: ", isMatch);
+
+                    User.findOneAndUpdate({userEmail:userEmail}, {$set:{username:newUsername}}, function(err, results){
+                        console.log("Username changed " + results);
+                        res.json({success: true, message: "Username changed."});
+                    });
+                }else{
+                    res.json({success: false, message: "Password wrong."});
+                }
+            });
+        }
+    });
+});
+
+authRouter.post('/changepassword', function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var userEmail = rqe.body.email;
+    var oldPassword = req.body.oldpassword;
+    var newPassword = req.body.newpassword;
+
+    User.findOne({userEmail:userEmail}, function(err, user){
+        if(err){
+                
+        }else{
+            user.comparePassword(oldPassword, function(err, isMatch){
+                if(isMatch == true){
+                    console.log("userPassword: ", isMatch);
+
+                    user.userPassword = newPassword;
+                    user.save(function(err, results){
+                        if(err){
+
+                        }else{
+                            console.log("Password changed: " + results);
+                        }
+                    });
+
+                }else{
+                    res.json({success:false, message: "Password wrong."});
+                }
+});
+
 //Group creation
 authRouter.post('/creategroup', jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
@@ -276,32 +344,40 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
     });
 
     newGroup.save(function(err, results){
-        if (err) throw err;
-        console.log("Results " + results);
-        var groupID = results._id;
-        console.log("GroupID: " + groupID);
-        console.log("GroupAdmin: " + groupAdmin);
-        
-        res.json({
-            success: true,
-            message: 'Group created',
-        });
-        
-        console.log("mitäs helvettiä groupAdmin:" +groupAdmin);
-        var newMember = {"memberEmail":groupAdmin};
-        Group.findOneAndUpdate({_id: groupID}, {$push:{members: newMember}}, function(err, group){
-            if (err) throw err;
-
-            console.log("Admin added to group's members array")
-        
-            var newGroup = {"groupID": groupID};
-            User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
-                if (err) throw err;
-
-                console.log("Group added to admin's groups array");
+        if (err){
+            res.json({success: false, message: "Couldn't save to database."})
+            console.log("Couldn't save new group to database.");
+        }else{
+            console.log("Results " + results);
+            var groupID = results._id;
+            console.log("GroupID: " + groupID);
+            console.log("GroupAdmin: " + groupAdmin);
+            
+            res.json({
+                success: true,
+                message: 'Group created',
             });
-        });
-
+            
+            console.log("mitäs helvettiä groupAdmin:" +groupAdmin);
+            var newMember = {"memberEmail":groupAdmin};
+            Group.findOneAndUpdate({_id: groupID}, {$push:{members: newMember}}, function(err, group){
+                if (err){
+                    res.json({success:false, message: "Couldn't add member to group's array in database."})
+                    console.log("Couldn't add member to group's array in database.")
+                }else{
+                    console.log("Admin added to group's members array")
+                }         
+                var newGroup = {"groupID": groupID};
+                User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
+                    if (err){
+                        res.json({success:false, message: "Couldn't add group to user's array in database."});
+                        console.log("Couldn't add group to user's array in database.")
+                    }else{
+                        console.log("Group added to admin's groups array");
+                    }
+                });
+            });
+        }
     });
 });
 
