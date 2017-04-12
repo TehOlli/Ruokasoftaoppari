@@ -327,6 +327,9 @@ authRouter.post('/changepassword', function(req, res){
                 }else{
                     res.json({success:false, message: "Password wrong."});
                 }
+            }
+            )};
+    });
 });
 
 //Group creation
@@ -470,7 +473,7 @@ authRouter.post("/deletegroup", jsonParser, function(req, res){
 
             res.json({success:true, message:"Group deleted"});
         });
-    })
+    });
 });
 
 authRouter.get("/getmessages", function(req, res){
