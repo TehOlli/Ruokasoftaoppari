@@ -89,12 +89,13 @@
         <ons-page ng-controller="listController">
             <ons-toolbar>
                 <div class="center">Home</div>
+                <div class="right"><ons-icon ng-click="myNavigator.pushPage('settings.html')" class="add-icon" icon="ion-android-settings"></ons-icon></div>
             </ons-toolbar>
             <ons-list>
                 <ons-list-header>Groups</ons-list-header>               
-                    <ons-list-item ng-repeat="group in groups.data" ng-click="saveId(group); myNavigator.pushPage('group.html', {data: {choice: group.groupName}})" modifier="longdivider" tappable>
+                    <ons-list-item class="group-item" ng-repeat="group in groups.data" ng-click="saveId(group); myNavigator.pushPage('group.html', {data: {choice: group.groupName}})" tappable>
                         <div class="left">
-                            <img class="list-item__thumbnail" src="img/cat.jpg">
+                            <div></div>
                         </div>
                         <div class="center">
                             <span class="list-item__title">{{group.groupName}}</span><span class="list-item__subtitle">{{group.groupDesc}}</span>
@@ -107,6 +108,19 @@
                 </ons-fab>
                 <ons-button ng-click="removeToken(); myNavigator.pushPage('signup.html')" modifier="material">delete token</ons-button>
             </div>
+        </ons-page>
+    </ons-template>
+    <ons-template id="settings.html">
+        <ons-page ng-controller="settingsController">
+            <ons-toolbar>
+                <div class="left"><ons-back-button>Back</ons-back-button></div>
+                <div class="center">Settings</div>
+            </ons-toolbar>
+            <ons-list>
+                <ons-list-header>Personal information</ons-list-header>
+                
+            </ons-list>      
+            
         </ons-page>
     </ons-template>
     <ons-template id="create.html">
@@ -165,6 +179,13 @@
                 <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
                 <ons-button ng-click="adduserFunction()">Add</ons-button>
             </p>-->
+            <div class="group-header">
+                <div class="group-inner">
+                    <div></div>
+                    <h3>Ruokaryhmä</h3>
+                    <p>Ruokaryhmän kuvaus ja muuta sellaista</p>
+                </div>
+            </div>
             <ons-list>
                     <ons-list-header>Members</ons-list-header>
                     <ons-list-item modifier="longdivider">
@@ -242,30 +263,30 @@
             </div>
             </div>-->
             <div id="chatwindow">
-            <div id="messagewindow" scroll-glue>
-                <div ng-repeat="mes in messages track by $index" style="margin-bottom:10px;">
-                    <div class="date" ng-if="messages[$index-1].date!=messages[$index].date">
-                        <span>{{mes.date}}</span>
-                    </div>
-                    <div class="message" ng-if="!mes.own">
-                        <p class="username">{{mes.username}}</p>
-                        <span class="time">{{mes.time}}</span>
-                        <p class="message-text">{{mes.msg}}</p>
-                    </div>
-                    <div class="own-message" ng-if="mes.own">
-                        <span class="time">{{mes.time}}</span>
-                        <p class="message-text">{{mes.msg}}</p>
+                <div id="messagewindow" scroll-glue>
+                    <div ng-repeat="mes in messages track by $index" style="margin-bottom:10px;">
+                        <div class="date" ng-if="messages[$index-1].date!=messages[$index].date">
+                            <span>{{mes.date}}</span>
+                        </div>
+                        <div class="message" ng-if="!mes.own">
+                            <p class="username">{{mes.username}}</p>
+                            <span class="time">{{mes.time}}</span>
+                            <p class="message-text">{{mes.msg}}</p>
+                        </div>
+                        <div class="own-message" ng-if="mes.own">
+                            <span class="time">{{mes.time}}</span>
+                            <p class="message-text">{{mes.msg}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="inputcontainer">
-                <form ng-submit="sendmesFunction()">
-                    <div class="chat-input">
-                        <ons-icon icon="ion-android-chat"></ons-icon>
-                        <input type="text" ng-model="chatInput" placeholder="Send a message" class="" />
-                    </div>
-                </form>
-            </div>
+                <div id="inputcontainer">
+                    <form ng-submit="sendmesFunction()">
+                        <div class="chat-input">
+                            <ons-icon icon="ion-android-chat"></ons-icon>
+                            <input type="text" ng-model="chatInput" placeholder="Send a message" class="" />
+                        </div>
+                    </form>
+                </div>
             </div>
         </ons-page>
     </ons-template>

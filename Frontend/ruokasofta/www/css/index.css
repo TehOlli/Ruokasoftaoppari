@@ -96,89 +96,9 @@ body {
     margin-right: 10px;
     color: #154187;
 }
-/*.chat-input{
-    position:fixed;
-    bottom:8%;
-    left:2.5%;
-    width:95%;
-    box-shadow: 0px 0px 5px #606060;
-    border-radius: 3px;
-    background-color: white;
-    
-}
-.chat-input input{
-    height:35px;
-    width:90%;
-    font-size:1em;
-    border:none;
-    border-radius: 5px;
-    padding-left:3px;
-}
-
-.chat-input ons-icon{
-    font-size:25px;
-}
-
-.messages{
-    position:absolute;
-    bottom:8%;
-    width:92%;
-    left:4%;
-}
-
-.message{
-    display:table;
-    background-color: white;
-    padding:5px;
-    margin-bottom:5px;
-    word-break:break-all;
-    white-space: normal;
-    clear:both;
-    border-radius: 0 5px 5px 5px;
-    max-width:80%;
-}
-
-.message:before{
-  content: ' ';
-  position: absolute;
-  left:-9px;
-  width: 0;
-  height: 0;
-  border: 5px solid;
-  border-color: white white transparent transparent;
-}
-
-.own-message{
-    display:table;
-    background-color: #6da5ff;
-    padding:5px;
-    margin-bottom:5px;
-    word-break:break-all;
-    white-space: normal;
-    float:right;
-    clear:both;
-    border-radius: 5px 0 5px 5px;
-    max-width:80%;
-}
-.own-message:before{
-  content: ' ';
-  position: absolute;
-  right:-9px;
-  width: 0;
-  height: 0;
-  border: 5px solid;
-  border-color: #6da5ff transparent transparent #6da5ff;
-}
-
-.username{
-    display:table;
-    margin-bottom:5px;
-    font-size:0.7em;
-    color:#154187;
-}*/
 
 .chat-page .page__content{
-    background-color: #b7b7b7 !important;
+    background-color: #e0e0e0 !important;
 }
 
 .time{
@@ -299,4 +219,42 @@ body {
     border-radius: 4px;
     color:white;
 
+}
+
+.group-item .left div{
+    background: url('../img/cat.jpg');
+    background-size: cover; 
+    width:50px; 
+    height:50px; 
+    border-radius:50%;
+}
+
+.group-item .center{
+    margin-left:10px;
+}
+
+.group-header{
+    margin:auto;
+    background: url('../img/cat.jpg');
+    background-size:cover;
+}
+.group-inner{
+    background-color: rgba(0, 0, 0, 0.5);
+    padding:10px 0; 
+    text-align: center; 
+    color:white;
+}
+
+.group-inner div{
+    margin:auto; 
+    background: url('../img/cat.jpg'); 
+    width:100px; 
+    height:100px; 
+    background-size:cover; 
+    border-radius: 50%; 
+    box-shadow: 0 0 1px gray
+}
+
+.group-inner h3, .group-inner p{
+    margin:10px auto;
 }

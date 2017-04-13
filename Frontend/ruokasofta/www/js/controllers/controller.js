@@ -174,6 +174,12 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
       
 
 }]);
+app.controller('settingsController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
+
+}]);
 
 app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
     $scope.chatInput = "";
