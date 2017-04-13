@@ -403,38 +403,45 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
 
     //Checks if user is already in that group
-    User.findOne({userEmail: userEmail}, function(err, exists1){
-        if (err) throw err;
-            User.find({userEmail: userEmail, "groups.groupID": groupID}, function(err, exists2){
-                if (err) throw err;
-                console.log("InvitetoGroup exists2:" + exists2);
-                if(exists2.length){
-                    console.log("User is already in the group");
-                    //console.log(exists2);
-                res.json({success: false, message: "User is already in the group."});
-                }else{
-                    var newGroup = {"groupID": groupID};
-                    User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: newGroup}}, function(err, user){
-                        if (err) throw err;
-                        
+    User.find({userEmail: userEmail, "groups.groupID": groupID}, function(err, exists2){
+        if (err){
+            res.json({success: false, message: "Cannot access database."});
+            console.log("/invitetogroup: Cannot access database to search for user.")
+        }else{
+            console.log("InvitetoGroup exists2:" + exists2);
+            if(exists2.length){
+                console.log("User is already in the group");
+                //console.log(exists2);
+                res.json({success: false, message: "That user is already in the group."});
+            }else{
+                var newGroup = {"groupID": groupID};
+                User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: newGroup}}, function(err, user){
+                    if (err){
+                        res.json({success: false, message: "Cannot access database."});
+                        console.log("/invitetogroup: Cannot access database to update user.");
+                    }else{     
                         if(user){
-                            console.log("If fired");
-                            //console.log(user);
+                            console.log("User exists.");
 
                             var newMember = {"memberEmail":userEmail};
                             Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
-                                if (err) throw err;
-                                console.log("User added to group members");
+                                if (err){
+                                    res.json({success: false, message: "Cannot access database."});
+                                    console.log("/invitetogroup: Cannot access database to update group.");
+                                }else{
+                                    console.log("User added to group members");
 
-                                res.json({success:true, message:"User added"});
+                                    res.json({success:true, message:"User added"});
+                                }
                             });
                         }else{
                             console.log("User with that email does not exist");
                             res.json({success:false, message:"User with that email does not exist"});
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
+        }
     });
 });
 
