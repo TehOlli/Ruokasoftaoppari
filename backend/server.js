@@ -11,7 +11,10 @@ var http                = require("http").Server(app);
 var io                  = require("socket.io")(http);
 var jwt                 = require("jsonwebtoken");
 var passport            = require("passport");
-var Strategy            = require("passport-http-bearer").Strategy;
+var multer              = require('multer');
+var upload              = multer({dest:'./uploads/'});
+var fs                  = require('fs');
+//var Strategy            = require("passport-http-bearer").Strategy;
 
 
 //==========
@@ -47,7 +50,7 @@ authRouter.options("/*", function(req, res, next){
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     res.sendStatus(200);
 });
-
+/*
 passport.use(new Strategy(
   function(token, done) {
     User.findOne({ token: token }, function (err, user) {
@@ -57,7 +60,7 @@ passport.use(new Strategy(
     });
   }
 ));
-
+*/
 //Bluebird
 mong.Promise = global.Promise;
 mong.connect(config.dbConnection, function(err){
@@ -327,8 +330,16 @@ authRouter.post('/changepassword', function(req, res){
                 }else{
                     res.json({success:false, message: "Password wrong."});
                 }
-            }
-            )};
+            });
+        }
+    });
+});
+
+authRouter.post('/setavatar', upload.single('avatar'), function(req, res){
+    fs.rename(req.file.path+req.file.name, req.file.path+userEmail, function(err, results){
+        if(err) throw err;
+        console.log("Multer renamed stuff: " + results);
+        res.json({success: true, message: "Avatar saved."});
     });
 });
 
