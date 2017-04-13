@@ -535,6 +535,26 @@ authRouter.get('/members', function(req, res){
     });
 });
 
+authRouter.get('/profile', function(req, res){
+    if(!req.headers['email']) return res.sendStatus(400);
+
+    userEmail = req.headers['email'];
+
+    User.findOne({useEmail:userEmail}, function(err, profile){
+        if(err){
+            res.json({success: false, message: "Cannot access database."});
+            console.log("/profile: Cannot access database to find user.");
+        }else{
+            if(profile){
+                res.json(profile);
+            }else{
+                res.json({success: false, message: "No user by that email!"});
+                console.log("/profile: Couldn't find user by that email.");
+            }
+        }
+    });
+});
+
 //app.listen(port);
 http.listen(port, function(){
   console.log("Connected on port " + port);
