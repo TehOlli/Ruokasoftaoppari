@@ -276,11 +276,12 @@ authRouter.get('/users', function(req,res){
     });
 });
 
-authRouter.post('/changeusername', function(req, res){
+authRouter.post('/changeusername', jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var userEmail = req.body.email;
     var newUsername = req.body.username;
+    console.log(userEmail + " " + newUsername);
 
     User.findOne({userEmail:userEmail}, function(err, user){
         if(err){
@@ -294,12 +295,13 @@ authRouter.post('/changeusername', function(req, res){
     });
 });
 
-authRouter.post('/changepassword', function(req, res){
+authRouter.post('/changepassword', jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var userEmail = rqe.body.email;
     var oldPassword = req.body.oldpassword;
     var newPassword = req.body.newpassword;
+    console.log(userEmail + " " + oldPassword);
 
     User.findOne({userEmail:userEmail}, function(err, user){
         if(err){
@@ -326,7 +328,10 @@ authRouter.post('/changepassword', function(req, res){
     });
 });
 
-authRouter.post('/setavatar', upload.single('avatar'), function(req, res){
+authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req, res){
+    if(!req.body) return res.sendStatus(400);
+    
+    var userEmail = req.body.email;
     fs.rename(req.file.path+req.file.name, req.file.path+userEmail, function(err, results){
         if(err) throw err;
         console.log("Multer renamed stuff: " + results);
