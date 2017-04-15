@@ -176,8 +176,31 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
 }]);
 app.controller('settingsController', ['$scope', '$log', '$http', function($scope, $log, $http) {
 
+    $scope.username = "";
+    $scope.email = "";
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
+
+    $http.get(local + 'auth/profile').then(function(success){
+        $scope.username = success.data.username;
+        $scope.email = success.data.userEmail;  
+
+
+    },function(error){
+        console.log(error);
+
+    })
+
+    $scope.saveProfile = function(){
+        var data=JSON.stringify({username:$scope.username, email:$scope.email});
+        console.log(data);
+        $http.post(local + 'auth/changeusername', data).then(function (success){
+            console.log("username change success");
+
+        },function (error){
+            console.log(error);
+        })
+    }
 
 }]);
 

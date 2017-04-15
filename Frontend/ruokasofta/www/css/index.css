@@ -258,3 +258,44 @@ body {
 .group-inner h3, .group-inner p{
     margin:10px auto;
 }
+
+.text-input--material:focus{
+        background-image: linear-gradient(#154187, #154187), linear-gradient(to top, transparent 1px, #afafaf 1px);
+
+}
+
+.profile-header{
+    background-color:#194da0;
+    padding:10px;
+    height:100px;
+    color:white;
+    text-align: center;
+}
+
+.profile-img{
+    background: url('../img/cat.jpg'); 
+    height:100px; width:100px; 
+    background-size: cover; 
+    border-radius: 50%; 
+    box-shadow: 0 0 1px black;
+    margin: -50px auto auto auto;
+}
+.profile-info p{
+    text-align:center;
+}
+.profile-info p ons-input{
+    width:75% !important;
+}
+.profile-info p input{
+    width:100% !important;
+}
+
+.profile-info p .text-input__container{
+    width:100%;
+}
+
+.profile-info span {
+    font-size: 0.8em;
+    color:gray;
+    margin-left: 10px;
+}

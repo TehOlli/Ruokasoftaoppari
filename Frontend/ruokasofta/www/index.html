@@ -116,11 +116,28 @@
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">Settings</div>
             </ons-toolbar>
-            <ons-list>
-                <ons-list-header>Personal information</ons-list-header>
-                
-            </ons-list>      
-            
+             <div class="profile-header">
+             </div>
+             <div class="profile-img"></div>
+                <div class="profile-info">
+                    <span>Personal Information</span>
+                    <p>
+                        <ons-input ng-model="email" modifier="material" placeholder="Email" disabled></ons-input>
+                    </p>
+                    <p>
+                        <ons-input ng-model="username" modifier="material" placeholder="Username"></ons-input>
+                    </p> 
+                    <span>Change password</span>   
+                    <p>
+                        <ons-input  modifier="material" placeholder="Current password"></ons-input>
+                    </p>
+                    <p>
+                        <ons-input  modifier="material" placeholder="New password"></ons-input>
+                    </p>
+                    <p>
+                        <ons-button ng-click="saveProfile();" modifier="material">Save</ons-button>
+                    </p>
+                </div>        
         </ons-page>
     </ons-template>
     <ons-template id="create.html">
