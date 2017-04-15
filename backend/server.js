@@ -280,24 +280,15 @@ authRouter.post('/changeusername', function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var userEmail = req.body.email;
-    var userPassword = req.body.password;
     var newUsername = req.body.username;
 
     User.findOne({userEmail:userEmail}, function(err, user){
         if(err){
             
         }else{
-            user.comparePassword(userPassword, function(err, isMatch){
-                if(isMatch == true){
-                    console.log("userPassword: ", isMatch);
-
-                    User.findOneAndUpdate({userEmail:userEmail}, {$set:{username:newUsername}}, function(err, results){
-                        console.log("Username changed " + results);
-                        res.json({success: true, message: "Username changed."});
-                    });
-                }else{
-                    res.json({success: false, message: "Password wrong."});
-                }
+            User.findOneAndUpdate({userEmail:userEmail}, {$set:{username:newUsername}}, function(err, results){
+                console.log("Username changed " + results);
+                res.json({success: true, message: "Username changed."});
             });
         }
     });
@@ -462,15 +453,23 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
     console.log("Removing " + userEmail + " from " + groupID);
 
     User.findOneAndUpdate({userEmail:userEmail}, {$pull:{groups:{groupID:groupID}}}, function(err, user){
-        if (err) throw err;
-        console.log("Removed group from user document");
-    
-        Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberEmail:userEmail}}}, function(err, group){
-            if (err) throw err;
-            console.log("Removed user from group document");
+        if (err){
+            res.json({success:false, message: "Couldn't access database."});
+            console.log("/removefromgroup: Couldn't access database to update user.")
+        }else{
+            console.log("Removed group from user document");
+        
+            Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberEmail:userEmail}}}, function(err, group){
+                if (err){
+                    res.json({success:false, message: "Couldn't access database."});
+                    console.log("/removefromgroup: Couldn't access database to update group.");
+                }else{
+                    console.log("Removed user from group document");
 
-            res.json({success:true, message:"User removed"});
-        });
+                    res.json({success:true, message:"User removed"});
+                }
+            });
+        }
     });
 });
 
