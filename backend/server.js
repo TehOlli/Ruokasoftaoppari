@@ -540,7 +540,7 @@ authRouter.get('/profile', function(req, res){
 
     userEmail = req.headers['email'];
 
-    User.findOne({useEmail:userEmail}, function(err, profile){
+    User.findOne({userEmail:userEmail}, 'username userEmail groups', function(err, profile){
         if(err){
             res.json({success: false, message: "Cannot access database."});
             console.log("/profile: Cannot access database to find user.");
