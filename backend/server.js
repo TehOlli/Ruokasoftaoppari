@@ -336,10 +336,11 @@ authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req,
     console.log("Path: " + req.file.path);
 
     userEmail = req.headers['email'];
-    fs.rename(req.file.path, req.file.destination+userEmail, function(err, results){
+    fs.rename(req.file.path, req.file.destination + "avatars/" + userEmail, function(err, results){
         if(err){
             res.json({success: false, message: "Failed to save avatar."});
             console.log("/setavatar: renaming borked up");
+            console.log(err);
         }else{
             res.json({success: true, message: "Avatar saved."});
         };
