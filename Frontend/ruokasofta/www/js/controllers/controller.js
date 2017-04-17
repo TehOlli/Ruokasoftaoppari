@@ -178,6 +178,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', function($scope
 
     $scope.username = "";
     $scope.email = "";
+    $scope.form = "";
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
     $http.get(local + 'auth/profile').then(function(success){
@@ -193,19 +194,30 @@ app.controller('settingsController', ['$scope', '$log', '$http', function($scope
     $scope.uploadFile = function(files){
         var form = new FormData();
         form.append("avatar", files[0]);
-        console.log(form.get("avatar"));
-        var data = form;
-        console.log(data);
-        var content = {headers:{'content-type':undefined}}
+        $scope.form = form;
 
-        $http.post(local + 'auth/setavatar', data, content).then(function(success){
-            console.log("file send success")
-        },function(error){
-            console.log("file send error", error)
-        })
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+
+        reader.onload = function (e){
+            document.getElementById("profile-img").style.background = "url(" + e.target.result + ")";
+            document.getElementById("profile-img").style.backgroundSize = "cover";
+        }
+
+
     }
 
     $scope.saveProfile = function(){
+
+        if($scope.form!=""){
+            var header = {headers:{'content-type':undefined}}
+
+            $http.post(local + 'auth/setavatar', $scope.form, header).then(function(success){
+                console.log("file send success")
+            },function(error){
+                console.log("file send error", error)
+            })
+        }
         var data=JSON.stringify({username:$scope.username, email:$scope.email});
         console.log(data);
         $http.post(local + 'auth/changeusername', data).then(function (success){

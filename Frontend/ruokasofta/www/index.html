@@ -118,8 +118,8 @@
             </ons-toolbar>
              <div class="profile-header">
              </div>
-             <div class="profile-img">
-                 <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;"/>
+             <div id="profile-img" class="profile-img">
+                 <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;" accept="image/*"/>
                  <div onclick="document.getElementById('hidden-input').click();"><ons-icon icon="ion-android-add-circle"></ons-icon></div>
              </div>
                 <div class="profile-info">
