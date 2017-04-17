@@ -180,7 +180,6 @@ app.controller('settingsController', ['$scope', '$log', '$http', function($scope
     $scope.email = "";
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
-
     $http.get(local + 'auth/profile').then(function(success){
         $scope.username = success.data.username;
         $scope.email = success.data.userEmail;  
@@ -189,7 +188,21 @@ app.controller('settingsController', ['$scope', '$log', '$http', function($scope
     },function(error){
         console.log(error);
 
-    })
+    });
+
+    $scope.uploadFile = function(files){
+        var form = new FormData();
+        form.append("avatar", files[0]);
+        console.log(form.get("avatar"));
+        var data = form;
+        console.log(data);
+
+        $http.post(local + 'auth/setavatar', data).then(function(success){
+            console.log("file send success")
+        },function(error){
+            console.log("file send error", error)
+        })
+    }
 
     $scope.saveProfile = function(){
         var data=JSON.stringify({username:$scope.username, email:$scope.email});
