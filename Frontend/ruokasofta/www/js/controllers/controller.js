@@ -196,8 +196,9 @@ app.controller('settingsController', ['$scope', '$log', '$http', function($scope
         console.log(form.get("avatar"));
         var data = form;
         console.log(data);
+        var content = {headers:{'content-type':undefined}}
 
-        $http.post(local + 'auth/setavatar', data).then(function(success){
+        $http.post(local + 'auth/setavatar', data, content).then(function(success){
             console.log("file send success")
         },function(error){
             console.log("file send error", error)
