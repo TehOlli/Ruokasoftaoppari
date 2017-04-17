@@ -118,7 +118,10 @@
             </ons-toolbar>
              <div class="profile-header">
              </div>
-             <div class="profile-img"></div>
+             <div class="profile-img">
+                 <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;"/>
+                 <div onclick="document.getElementById('hidden-input').click();"><ons-icon icon="ion-android-add-circle"></ons-icon></div>
+             </div>
                 <div class="profile-info">
                     <span>Personal Information</span>
                     <p>
@@ -134,7 +137,6 @@
                     <p>
                         <ons-input  modifier="material" placeholder="New password"></ons-input>
                     </p>
-                    <input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
                     <p>
                         <ons-button ng-click="saveProfile();" modifier="material">Save</ons-button>
                     </p>
