@@ -332,18 +332,19 @@ authRouter.post('/changepassword', jsonParser, function(req, res){
 authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    console.log("Name: " + req.file.name);
+    console.log("Name: " + req.file.originalname);
     console.log("Path: " + req.file.path);
 
-    res.json({success: true, message: "Avatar saved."});
-    //var userEmail = req.body.email;
-    /*
-    fs.rename(req.file.path+req.file.name, req.file.path+userEmail, function(err, results){
-        if(err) throw err;
-        console.log("Multer renamed stuff: " + results);
-        
+    userEmail = req.headers['email'];
+    fs.rename(req.file.path, req.file.destination+userEmail, function(err, results){
+        if(err){
+            res.json({success: false, message: "Failed to save avatar."});
+            console.log("/setavatar: renaming borked up");
+        }else{
+            res.json({success: true, message: "Avatar saved."});
+        };
     });
-    */
+    
 });
 
 //Group creation
