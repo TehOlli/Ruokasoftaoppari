@@ -305,7 +305,8 @@ authRouter.post('/changepassword', jsonParser, function(req, res){
 
     User.findOne({userEmail:userEmail}, function(err, user){
         if(err){
-                
+            res.json({success: false, message:"Couldn't access database."});
+            console.log("/changepassword: Couldn't access database to find user.");
         }else{
             user.comparePassword(oldPassword, function(err, isMatch){
                 if(isMatch == true){
@@ -330,13 +331,19 @@ authRouter.post('/changepassword', jsonParser, function(req, res){
 
 authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req, res){
     if(!req.body) return res.sendStatus(400);
-    
-    var userEmail = req.body.email;
+
+    console.log("Name: " + req.file.name);
+    console.log("Path: " + req.file.path);
+
+    res.json({success: true, message: "Avatar saved."});
+    //var userEmail = req.body.email;
+    /*
     fs.rename(req.file.path+req.file.name, req.file.path+userEmail, function(err, results){
         if(err) throw err;
         console.log("Multer renamed stuff: " + results);
-        res.json({success: true, message: "Avatar saved."});
+        
     });
+    */
 });
 
 //Group creation
