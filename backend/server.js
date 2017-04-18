@@ -12,7 +12,7 @@ var io                  = require("socket.io")(http);
 var jwt                 = require("jsonwebtoken");
 var passport            = require("passport");
 var multer              = require('multer');
-var upload              = multer({dest:'./uploads/'});
+var upload              = multer({dest:'./public/uploads/'});
 var fs                  = require('fs');
 //var Strategy            = require("passport-http-bearer").Strategy;
 
