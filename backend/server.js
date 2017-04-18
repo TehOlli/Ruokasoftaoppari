@@ -89,7 +89,8 @@ authRouter.use(function(req, res, next){
                     success: false, 
                     message: "Token authentication failed."
                 });
-                console.log("kaikki hajos");
+                console.log("authRouter Middleware: jwt.verify portion failed.");
+                console.log(err);
             }else{
                 console.log("Token authenticated.")
                 req.decoded = decoded;
@@ -142,6 +143,7 @@ io.on("connection", function(socket){
                     success: false, 
                     message: "Unable to save to database."
                 });
+                console.log(err);
             }else{
                 console.log("Saved message: ");
                 console.log(results);
@@ -176,8 +178,9 @@ app.post("/signup", jsonParser, function (req, res) {
 
     User.find({userEmail: userEmail}, function(err, exists){
         if(err){
-            res.json({success:false, message: "Couldn't access database."})
-            console.log("Couldn't access database.")
+            res.json({success:false, message: "Couldn't access database."});
+            console.log("Couldn't access database.");
+            console.log(err);
         }else{
             if(exists.length){
                 console.log("User with that email already exists");
@@ -204,6 +207,7 @@ app.post("/signup", jsonParser, function (req, res) {
                             if(err){
                                 res.json({success:false, message: "Couldn't confirm password."})
                                 console.log("Couldn't confirm password");
+                                console.log(err);
                             }else{
                                 user.comparePassword(userPassword, function(err, isMatch){
                                     if(err) throw err;
@@ -230,6 +234,7 @@ app.post('/login', jsonParser, function(req, res){
         if(err){
             res.json({success: false, message: "Couldn't access database."})
             console.log("Couldn't access database.");
+            console.log(err);
         }else{
             console.log("Exists: " + user);
             if(user){
@@ -285,7 +290,7 @@ authRouter.post('/changeusername', jsonParser, function(req, res){
 
     User.findOne({userEmail:userEmail}, function(err, user){
         if(err){
-            
+            console.log(err);
         }else{
             User.findOneAndUpdate({userEmail:userEmail}, {$set:{username:newUsername}}, function(err, results){
                 console.log("Username changed " + results);
@@ -307,6 +312,7 @@ authRouter.post('/changepassword', jsonParser, function(req, res){
         if(err){
             res.json({success: false, message:"Couldn't access database."});
             console.log("/changepassword: Couldn't access database to find user.");
+            console.log(err);
         }else{
             user.comparePassword(oldPassword, function(err, isMatch){
                 if(isMatch == true){
@@ -315,7 +321,7 @@ authRouter.post('/changepassword', jsonParser, function(req, res){
                     user.userPassword = newPassword;
                     user.save(function(err, results){
                         if(err){
-
+                            console.log(err);
                         }else{
                             console.log("Password changed: " + results);
                         }
@@ -330,6 +336,7 @@ authRouter.post('/changepassword', jsonParser, function(req, res){
 });
 
 authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req, res){
+    if(!req.file) return res.sendStatus(400);
     if(!req.body) return res.sendStatus(400);
 
     console.log("Name: " + req.file.originalname);
@@ -345,7 +352,23 @@ authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req,
             res.json({success: true, message: "Avatar saved."});
         };
     });
-    
+});
+
+authRouter.post("/setgroupimage", jsonParser, upload.single('groupimg'), function(req, res){
+    if(!req.file) return res.sendStatus(400);
+    if(!req.body) return res.sendStatus(400);
+
+    console.log("Name: " + req.file.originalname);
+    console.log("Path: " + req.file.path);
+
+    var groupID = req.body('groupid');
+    fs.rename(req.file.path, req.file.destination + "groups/" + groupID, function(err, results){
+        if(err){
+            res.json({success: false, message: "Failed to save group image."});
+            console.log("/setgroupimage: renaming borked up");
+            console.log(err);
+        }
+    });
 });
 
 //Group creation
@@ -364,8 +387,9 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
 
     newGroup.save(function(err, results){
         if (err){
-            res.json({success: false, message: "Couldn't save to database."})
+            res.json({success: false, message: "Couldn't save to database."});
             console.log("Couldn't save new group to database.");
+            console.log(err);
         }else{
             console.log("Results " + results);
             var groupID = results._id;
@@ -381,8 +405,9 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
             var newMember = {"memberEmail":groupAdmin};
             Group.findOneAndUpdate({_id: groupID}, {$push:{members: newMember}}, function(err, group){
                 if (err){
-                    res.json({success:false, message: "Couldn't add member to group's array in database."})
-                    console.log("Couldn't add member to group's array in database.")
+                    res.json({success:false, message: "Couldn't add member to group's array in database."});
+                    console.log("Couldn't add member to group's array in database.");
+                    console.log(err);
                 }else{
                     console.log("Admin added to group's members array")
                 }         
@@ -390,7 +415,8 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
                 User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
                     if (err){
                         res.json({success:false, message: "Couldn't add group to user's array in database."});
-                        console.log("Couldn't add group to user's array in database.")
+                        console.log("Couldn't add group to user's array in database.");
+                        console.log(err);
                     }else{
                         console.log("Group added to admin's groups array");
                     }
@@ -412,6 +438,7 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
         if (err){
             res.json({success: false, message: "Cannot access database."});
             console.log("/invitetogroup: Cannot access database to search for user.")
+            console.log(err);
         }else{
             console.log("InvitetoGroup exists2:" + exists2);
             if(exists2.length){
@@ -424,6 +451,7 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
                     if (err){
                         res.json({success: false, message: "Cannot access database."});
                         console.log("/invitetogroup: Cannot access database to update user.");
+                        console.log(err);
                     }else{     
                         if(user){
                             console.log("User exists.");
@@ -433,6 +461,7 @@ authRouter.post("/invitetogroup", jsonParser, function(req, res){
                                 if (err){
                                     res.json({success: false, message: "Cannot access database."});
                                     console.log("/invitetogroup: Cannot access database to update group.");
+                                    console.log(err);
                                 }else{
                                     console.log("User added to group members");
 
@@ -469,7 +498,8 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
     User.findOneAndUpdate({userEmail:userEmail}, {$pull:{groups:{groupID:groupID}}}, function(err, user){
         if (err){
             res.json({success:false, message: "Couldn't access database."});
-            console.log("/removefromgroup: Couldn't access database to update user.")
+            console.log("/removefromgroup: Couldn't access database to update user.");
+            console.log(err);
         }else{
             console.log("Removed group from user document");
         
@@ -477,6 +507,7 @@ authRouter.post("/removefromgroup", jsonParser, function(req, res){
                 if (err){
                     res.json({success:false, message: "Couldn't access database."});
                     console.log("/removefromgroup: Couldn't access database to update group.");
+                    console.log(err);
                 }else{
                     console.log("Removed user from group document");
 
@@ -525,12 +556,15 @@ authRouter.get('/groups', function(req, res){
     userEmail = req.headers['email'];
     //console.log("User email " + userEmail);
     Group.find({'members.memberEmail': userEmail}, function(err, groups){
-        //console.log("Groups: " + groups);
-        if(groups == ""){
-            res.json(null);
+        if(err){
+            console.log(err);
         }else{
-            res.json(groups);
-        };
+            if(groups == ""){
+                res.json(null);
+            }else{
+                res.json(groups);
+            };
+        }
     });
 });
 
@@ -539,11 +573,14 @@ authRouter.get('/members', function(req, res){
     groupID = req.headers['id'];
     //console.log("GroupID: " + groupID);
     User.find({"groups.groupID":groupID}, function(err, members){
-        //console.log("Members are: " + members);
-        if(members){
-            res.json(members);
+        if(err){
+            console.log(err);
         }else{
-            res.json(null);
+            if(members){
+                res.json(members);
+            }else{
+                res.json(null);
+            }
         }
     });
 });
