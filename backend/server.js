@@ -343,7 +343,7 @@ authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req,
     console.log("Path: " + req.file.path);
 
     userEmail = req.headers['email'];
-    fs.rename(req.file.path, req.file.destination + "avatars/" + userEmail +".jpg", function(err, results){
+    fs.rename(req.file.path, req.file.destination + "avatars/" + userEmail + ".jpg", function(err, results){
         if(err){
             res.json({success: false, message: "Failed to save avatar."});
             console.log("/setavatar: renaming borked up");
@@ -362,11 +362,13 @@ authRouter.post("/setgroupimage", jsonParser, upload.single('groupimg'), functio
     console.log("Path: " + req.file.path);
 
     var groupID = req.body('groupid');
-    fs.rename(req.file.path, req.file.destination + "groups/" + groupID, function(err, results){
+    fs.rename(req.file.path, req.file.destination + "groups/" + groupID + ".jpg", function(err, results){
         if(err){
             res.json({success: false, message: "Failed to save group image."});
             console.log("/setgroupimage: renaming borked up");
             console.log(err);
+        }else{
+            res.json({success: true, message: "Group image saved."});
         }
     });
 });
