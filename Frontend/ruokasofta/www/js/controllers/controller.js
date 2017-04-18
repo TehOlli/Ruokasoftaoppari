@@ -41,7 +41,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
                  var data = JSON.stringify({username:$scope.userName, email:$scope.userEmail, password:$scope.userPassword});
                 $log.info(data);
 
-                 $http.post(local + 'signup', data).then(function (success){
+                 $http.post(proto + 'signup', data).then(function (success){
                     
                     if(success.data.success==false){
                         ons.notification.alert(success.data.message);
@@ -174,16 +174,21 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
       
 
 }]);
-app.controller('settingsController', ['$scope', '$log', '$http', function($scope, $log, $http) {
-
+app.controller('settingsController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
+    
     $scope.username = "";
     $scope.email = "";
     $scope.form = "";
+    var usernamecheck = "";
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
     $http.get(local + 'auth/profile').then(function(success){
         $scope.username = success.data.username;
-        $scope.email = success.data.userEmail;  
+        usernamecheck = success.data.username;
+        $scope.email = success.data.userEmail;
+        var time = Date.now();
+        document.getElementById("profile-img").style.background = "url(" + local + "uploads/avatars/" + $scope.email + "?" + time + ")";
+        document.getElementById("profile-img").style.backgroundSize = "cover";  
 
 
     },function(error){
@@ -213,19 +218,27 @@ app.controller('settingsController', ['$scope', '$log', '$http', function($scope
             var header = {headers:{'content-type':undefined}}
 
             $http.post(local + 'auth/setavatar', $scope.form, header).then(function(success){
-                console.log("file send success")
+                console.log("file send success");
             },function(error){
                 console.log("file send error", error)
             })
+            $scope.form = "";
         }
-        var data=JSON.stringify({username:$scope.username, email:$scope.email});
-        console.log(data);
-        $http.post(local + 'auth/changeusername', data).then(function (success){
-            console.log("username change success");
+        var val = validation.changenameVal($scope.username, usernamecheck);
+        if(val==true){
+            var data=JSON.stringify({username:$scope.username, email:$scope.email});
 
-        },function (error){
-            console.log(error);
-        })
+            console.log(data);
+
+            $http.post(local + 'auth/changeusername', data).then(function (success){
+                console.log("username change success");
+                usernamecheck=$scope.username;
+
+            },function (error){
+                console.log(error);
+            })
+        }
+        
     }
 
 }]);

@@ -40,4 +40,37 @@ app.service('validation', function() {
         return val;
         
     }
+
+    this.changenameVal = function (name, namec) {
+        var val = true;
+
+        if(name==namec){
+            val = false;
+        }
+
+        else if(name==""){
+            val = false;
+            ons.notification.alert("Enter username");
+        }
+        else if(!reg2.test(name)){
+            val = false;
+            ons.notification.alert("Username can only contain letters and numbers");
+        }
+        return val;
+        
+    }
+    this.changepassVal = function (oldpass, newpass) {
+        var val = true;
+
+        if(oldpass==newpass){
+            val = false;
+            ons.notification.alert("New and old passwords can't be the same");
+        }
+        else if(!reg3.test(newpass)){
+            val = false;
+            ons.notification.alert("Password must contain at least 6 characters, 1 number and 1 alphabet");
+        }
+        return val;
+        
+    }
 });
