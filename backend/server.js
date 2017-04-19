@@ -303,7 +303,7 @@ authRouter.post('/changeusername', jsonParser, function(req, res){
 authRouter.post('/changepassword', jsonParser, function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var userEmail = rqe.body.email;
+    var userEmail = req.body.email;
     var oldPassword = req.body.oldpassword;
     var newPassword = req.body.newpassword;
     console.log(userEmail + " " + oldPassword);
@@ -342,7 +342,7 @@ authRouter.post('/setavatar', jsonParser, upload.single('avatar'), function(req,
     console.log("Name: " + req.file.originalname);
     console.log("Path: " + req.file.path);
 
-    userEmail = req.headers['email'];
+    var userEmail = req.headers['email'];
     fs.rename(req.file.path, req.file.destination + "avatars/" + userEmail + ".jpg", function(err, results){
         if(err){
             res.json({success: false, message: "Failed to save avatar."});
