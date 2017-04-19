@@ -61,8 +61,10 @@ app.service('validation', function() {
     }
     this.changepassVal = function (oldpass, newpass) {
         var val = true;
-
-        if(oldpass==newpass){
+        if(oldpass==""||newpass==""){
+            val = false;
+        }
+        else if(oldpass==newpass){
             val = false;
             ons.notification.alert("New and old passwords can't be the same");
         }

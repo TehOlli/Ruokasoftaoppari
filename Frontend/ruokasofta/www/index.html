@@ -132,10 +132,10 @@
                     </p> 
                     <span>Change password</span>   
                     <p>
-                        <ons-input  modifier="material" placeholder="Current password"></ons-input>
+                        <ons-input  type="password" ng-model="oldpass" modifier="material" placeholder="Current password"></ons-input>
                     </p>
                     <p>
-                        <ons-input  modifier="material" placeholder="New password"></ons-input>
+                        <ons-input  type="password" ng-model="newpass" modifier="material" placeholder="New password"></ons-input>
                     </p>
                     <p>
                         <ons-button ng-click="saveProfile();" modifier="material">Save</ons-button>
@@ -149,6 +149,10 @@
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">Create a group</div>
             </ons-toolbar>
+            <div id="profile-img" class="profile-img">
+                 <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;" accept="image/*"/>
+                 <div onclick="document.getElementById('hidden-input').click();"><ons-icon icon="ion-android-add-circle"></ons-icon></div>
+             </div>
              <div class="create-input">
                 <p>
                     <ons-input ng-model="groupName" id="groupname" modifier="material" placeholder="Name" float></ons-input>

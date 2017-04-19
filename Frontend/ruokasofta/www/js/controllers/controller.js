@@ -41,7 +41,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
                  var data = JSON.stringify({username:$scope.userName, email:$scope.userEmail, password:$scope.userPassword});
                 $log.info(data);
 
-                 $http.post(proto + 'signup', data).then(function (success){
+                 $http.post(local + 'signup', data).then(function (success){
                     
                     if(success.data.success==false){
                         ons.notification.alert(success.data.message);
@@ -174,10 +174,13 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
       
 
 }]);
+
 app.controller('settingsController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
     
     $scope.username = "";
     $scope.email = "";
+    $scope.oldpass = "";
+    $scope.newpass = "";
     $scope.form = "";
     var usernamecheck = "";
     var local = "http://localhost:8080/";
@@ -187,7 +190,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation', f
         usernamecheck = success.data.username;
         $scope.email = success.data.userEmail;
         var time = Date.now();
-        document.getElementById("profile-img").style.background = "url(" + local + "uploads/avatars/" + $scope.email + "?" + time + ")";
+        document.getElementById("profile-img").style.background = "url(" + local + "uploads/avatars/" + $scope.email + ".jpg" + "?" + time + ")";
         document.getElementById("profile-img").style.backgroundSize = "cover";  
 
 
@@ -236,6 +239,19 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation', f
 
             },function (error){
                 console.log(error);
+            })
+        }
+        var val = validation.changepassVal($scope.oldpass, $scope.newpass);
+        if(val==true){
+            var data = JSON.stringify({oldpassword: $scope.oldpass, newpassword: $scope.newpass, email:$scope.email});
+            console.log(data);
+
+            $http.post(local + 'auth/changepassword', data).then(function(success){
+                console.log("password change success")
+                $scope.newpass="";
+                $scope.oldpass="";
+            },function(error){
+                console.log("password change error", error)
             })
         }
         

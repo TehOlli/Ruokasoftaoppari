@@ -40,10 +40,20 @@ body {
 .create-group{
     margin-top:30px;
 }
-
-.create-input{
-    text-align: center;
+.create-input p{
+    text-align:center;
 }
+.create-input p ons-input{
+    width:75% !important;
+}
+.create-input p input{
+    width:100% !important;
+}
+
+.create-input p .text-input__container{
+    width:100%;
+}
+
 .toolbar{
     background-color: #154187 !important;
 }
