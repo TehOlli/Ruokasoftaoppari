@@ -324,6 +324,7 @@ authRouter.post('/changepassword', jsonParser, function(req, res){
                             console.log(err);
                         }else{
                             console.log("Password changed: " + results);
+                            res.json({success: true, message: "Password changed."});
                         }
                     });
 
