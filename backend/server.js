@@ -362,7 +362,7 @@ authRouter.post("/setgroupimage", jsonParser, upload.single('groupimg'), functio
     console.log("Name: " + req.file.originalname);
     console.log("Path: " + req.file.path);
 
-    var groupID = req.body('groupid');
+    var groupID = req.headers['id'];
     fs.rename(req.file.path, req.file.destination + "groups/" + groupID + ".jpg", function(err, results){
         if(err){
             res.json({success: false, message: "Failed to save group image."});
