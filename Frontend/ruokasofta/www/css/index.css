@@ -245,24 +245,29 @@ body {
 
 .group-header{
     margin:auto;
-    background: url('../img/cat.jpg');
+    background-color: #154187;
     background-size:cover;
 }
 .group-inner{
-    background-color: rgba(0, 0, 0, 0.5);
     padding:10px 0; 
     text-align: center; 
     color:white;
 }
 
-.group-inner div{
+.group-img{
     margin:auto; 
-    background: url('../img/cat.jpg'); 
+    background-color: #b3b3b3;
     width:100px; 
     height:100px; 
     background-size:cover; 
     border-radius: 50%; 
-    box-shadow: 0 0 1px gray
+    box-shadow: 0 0 1px gray;
+    color:rgba(255,255,255,0.8); 
+    font-size:3em;
+}
+
+.group-img div ons-icon{
+    padding-top:25px;
 }
 
 .group-inner h3, .group-inner p{
@@ -301,7 +306,7 @@ body {
 }
 
 .profile-img div ons-icon{
-    padding-top:27px;
+    padding-top:25px;
 }
 
 .profile-info p{
@@ -322,4 +327,34 @@ body {
     font-size: 0.8em;
     color:gray;
     margin-left: 10px;
+}
+
+.create-group-header{
+    background-color:#194da0;
+    padding:10px;
+    height:100px;
+    color:white;
+    text-align: center;
+}
+
+.create-group-img{
+    background-color:white;
+    height:100px; width:100px; 
+    background-size: cover; 
+    border-radius: 50%; 
+    box-shadow: 0 0 1px black;
+    margin: -50px auto auto auto;
+}
+.create-group-img div{
+    width:100%; 
+    height:100%; 
+    background-color: rgba(0,0,0,0.3); 
+    border-radius: 50%; 
+    text-align: center; 
+    color:rgba(255,255,255,0.8); 
+    font-size:3em;
+}
+
+.create-group-img div ons-icon{
+    padding-top:25px;
 }

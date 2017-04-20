@@ -75,4 +75,13 @@ app.service('validation', function() {
         return val;
         
     }
+    this.groupVal = function (name, desc) {
+        var val = true;
+        if(name==""||desc==""){
+            ons.notification.alert("fill in the information");
+            val = false;
+        }
+        return val;
+        
+    }
 });

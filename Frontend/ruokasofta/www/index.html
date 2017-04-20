@@ -149,7 +149,9 @@
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">Create a group</div>
             </ons-toolbar>
-            <div id="profile-img" class="profile-img">
+            <div class="create-group-header">
+             </div>
+            <div id="create-group-img" class="create-group-img">
                  <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;" accept="image/*"/>
                  <div onclick="document.getElementById('hidden-input').click();"><ons-icon icon="ion-android-add-circle"></ons-icon></div>
              </div>
@@ -205,7 +207,10 @@
             </p>-->
             <div class="group-header">
                 <div class="group-inner">
-                    <div></div>
+                    <div id="group-img" class="group-img">
+                        <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;" accept="image/*"/>
+                        <div onclick="document.getElementById('hidden-input').click();"><ons-icon icon="ion-android-add-circle"></ons-icon></div>
+                    </div>
                     <h3>Ruokaryhmä</h3>
                     <p>Ruokaryhmän kuvaus ja muuta sellaista</p>
                 </div>

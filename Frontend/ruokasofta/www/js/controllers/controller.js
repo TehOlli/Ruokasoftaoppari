@@ -138,29 +138,40 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
 }]);
 
 //CONTROLLER FOR HANDLING CREATE A GROUP
-app.controller('createController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+app.controller('createController', ['$scope', '$log', '$http','validation', function($scope, $log, $http, validation) {
 
     $scope.groupName = "";
     $scope.groupDesc = "";
+    $scope.form = "";
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
 
+    $scope.uploadFile = function(files){
+        var form = new FormData();
+        form.append("groupimg", files[0]);
+        $scope.form = form;
+
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+
+        reader.onload = function (e){
+            document.getElementById("create-group-img").style.background = "url(" + e.target.result + ")";
+            document.getElementById("create-group-img").style.backgroundSize = "cover";
+        }
+    }
+
     $scope.createFunction = function(){
 
-        if($scope.groupName==""||$scope.groupDesc==""){
+        var val = validation.groupVal($scope.groupName, $scope.groupDesc);
+        if(val==true){
 
-            ons.notification.alert("Fill in the information");
-
-        }
-        else {
-            
             var data = JSON.stringify({groupname:$scope.groupName, description:$scope.groupDesc, email:localStorage.email});
 
             $log.info(data);
 
             $http.post(local + 'auth/creategroup', data).then(function (success){
 
-                $log.info("success");
+                $log.info(success);
 
                 myNavigator.pushPage("list.html", {})
 
@@ -169,12 +180,25 @@ app.controller('createController', ['$scope', '$log', '$http', function($scope, 
                 $log.info("error", error)
 
             });
+
         }
+        if($scope.form!=""){
+            var header = {headers:{'content-type':undefined}}
+
+            $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
+                console.log("file send success");
+            },function(error){
+                console.log("file send error", error)
+            })
+            $scope.form = "";
+        }
+    
     }
       
 
 }]);
 
+//CONRTOLLER FOR HANDLING USER INFORMATION
 app.controller('settingsController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
     
     $scope.username = "";
@@ -185,6 +209,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation', f
     var usernamecheck = "";
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
+
     $http.get(local + 'auth/profile').then(function(success){
         $scope.username = success.data.username;
         usernamecheck = success.data.username;
@@ -259,6 +284,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation', f
 
 }]);
 
+//CONTROLLER FOR HANDLING A GROUP
 app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
     $scope.chatInput = "";
     $scope.messages = [];
@@ -324,6 +350,28 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
    membersService.async().then(function(d) {
       $scope.users = d;
     });
+
+   $scope.uploadFile = function(files){
+        var form = new FormData();
+        form.append("groupimg", files[0]);
+        $scope.form = form;
+        
+        var header = {headers:{'content-type':undefined, 'id':localStorage.id}}
+
+            $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
+                console.log("file send success");
+            },function(error){
+                console.log("file send error", error)
+            })
+            $scope.form = "";
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+
+        reader.onload = function (e){
+            document.getElementById("group-img").style.background = "url(" + e.target.result + ")";
+            document.getElementById("group-img").style.backgroundSize = "cover";
+        }
+    }
 
     $scope.adduserFunction = function(){
 
