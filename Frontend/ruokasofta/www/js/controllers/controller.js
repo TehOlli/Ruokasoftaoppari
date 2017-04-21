@@ -105,6 +105,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
 
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
+    $scope.imgurl = "http://localhost:8080/";
 
      $http.get(local + 'auth/groups').then(function (success){
 
@@ -171,7 +172,18 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
 
             $http.post(local + 'auth/creategroup', data).then(function (success){
 
-                $log.info(success);
+                $log.info("group create success");
+
+                if($scope.form!=""){
+                    var header = {headers:{'content-type':undefined, 'id':success.data.group._id}}
+
+                    $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
+                        console.log("file send success");
+                    },function(error){
+                        console.log("file send error", error)
+                    })
+                    $scope.form = "";
+                }
 
                 myNavigator.pushPage("list.html", {})
 
@@ -181,16 +193,6 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
 
             });
 
-        }
-        if($scope.form!=""){
-            var header = {headers:{'content-type':undefined}}
-
-            $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
-                console.log("file send success");
-            },function(error){
-                console.log("file send error", error)
-            })
-            $scope.form = "";
         }
     
     }

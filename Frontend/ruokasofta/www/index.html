@@ -95,7 +95,7 @@
                 <ons-list-header>Groups</ons-list-header>               
                     <ons-list-item class="group-item" ng-repeat="group in groups.data" ng-click="saveId(group); myNavigator.pushPage('group.html', {data: {choice: group.groupName}})" tappable>
                         <div class="left">
-                            <div></div>
+                            <div style="background: url({{imgurl}}uploads/groups/{{group._id}}.jpg); background-size:cover;"></div>
                         </div>
                         <div class="center">
                             <span class="list-item__title">{{group.groupName}}</span><span class="list-item__subtitle">{{group.groupDesc}}</span>
