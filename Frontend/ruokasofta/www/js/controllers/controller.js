@@ -341,6 +341,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
 
+
     if(localStorage.email==localStorage.admin){
         $scope.admin=true;
     }
@@ -349,6 +350,9 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
 
    membersService.async().then(function(d) {
       $scope.users = d;
+      var time = Date.now();
+    document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
+    document.getElementById("group-img").style.backgroundSize = "cover";
     });
 
    $scope.uploadFile = function(files){
@@ -360,17 +364,13 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
 
             $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
                 console.log("file send success");
+                var time = Date.now();
+                document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
+                document.getElementById("group-img").style.backgroundSize = "cover";
             },function(error){
                 console.log("file send error", error)
             })
             $scope.form = "";
-        var reader = new FileReader();
-        reader.readAsDataURL(files[0]);
-
-        reader.onload = function (e){
-            document.getElementById("group-img").style.background = "url(" + e.target.result + ")";
-            document.getElementById("group-img").style.backgroundSize = "cover";
-        }
     }
 
     $scope.adduserFunction = function(){
