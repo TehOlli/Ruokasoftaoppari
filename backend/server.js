@@ -399,11 +399,6 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
             console.log("GroupID: " + groupID);
             console.log("GroupAdmin: " + groupAdmin);
             
-            res.json({
-                success: true,
-                message: 'Group created',
-            });
-            
             console.log("mitäs helvettiä groupAdmin:" +groupAdmin);
             var newMember = {"memberEmail":groupAdmin};
             Group.findOneAndUpdate({_id: groupID}, {$push:{members: newMember}}, function(err, group){
@@ -412,18 +407,24 @@ authRouter.post('/creategroup', jsonParser, function(req, res){
                     console.log("Couldn't add member to group's array in database.");
                     console.log(err);
                 }else{
-                    console.log("Admin added to group's members array")
-                }         
-                var newGroup = {"groupID": groupID};
-                User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
-                    if (err){
-                        res.json({success:false, message: "Couldn't add group to user's array in database."});
-                        console.log("Couldn't add group to user's array in database.");
-                        console.log(err);
-                    }else{
-                        console.log("Group added to admin's groups array");
-                    }
-                });
+                    console.log("Admin added to group's members array")         
+                    var newGroup = {"groupID": groupID};
+                    User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
+                        if (err){
+                            res.json({success:false, message: "Couldn't add group to user's array in database."});
+                            console.log("Couldn't add group to user's array in database.");
+                            console.log(err);
+                        }else{
+                            console.log("Group added to admin's groups array");
+                            console.log("Luotu ryhmä: " + group);
+                            res.json({
+                                success: true,
+                                message: 'Group created',
+                                group
+                            });
+                        }
+                    });
+                }
             });
         }
     });
