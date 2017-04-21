@@ -47,6 +47,6 @@ userSchema.methods.comparePassword = function(candidatePassword, cb){
 }
 
 
-var User = mong.model('users', userSchema);
+var User = mong.model('User', userSchema);
 
 module.exports = User;

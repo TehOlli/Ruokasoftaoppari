@@ -1,4 +1,5 @@
 var mong = require('mongoose');
+var bodyParser = require("body-parser");
 
 /*
 var members = mong.Schema({
@@ -24,6 +25,6 @@ var groupSchema = mong.Schema({
     }]
 });
 
-var Group = mong.model('groups', groupSchema);
+var Group = mong.model('Group', groupSchema);
 
 module.exports = Group;
