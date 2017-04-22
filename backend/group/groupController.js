@@ -1,8 +1,9 @@
 var Group               = require("./groupModel");
-var User                = require("../userModel");
+var User                = require("../user/userModel");
+var Message             = require("../messageModel");
 var fs                  = require('fs');
 
-exports.getList = function(req, res){
+exports.getGroups = function(req, res){
     if(!req.headers['email']) return res.sendStatus(400);
 
     Group.find({'members.memberEmail': req.headers['email']}, function(err, groups){
@@ -159,6 +160,30 @@ exports.removefromGroup = function(req, res){
     });
 };
 
+exports.deleteGroup = function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupID = req.body.groupid;
+
+    console.log("Deleting group " + groupID);
+
+    Group.remove({_id:groupID}, function(err, results){
+        if (err){
+            res.json({success:false, message:"Failed to delete group."});
+            console.log("Failed to delete group.");
+            console.log(err);
+        }else{
+            console.log("Deleted group.")
+
+            User.update({"groups.groupID":groupID}, {$pull:{groups:{groupID:groupID}}} , function(err, members){
+                console.log("Removed group from users' member arrays.")
+
+                res.json({success:true, message:"Group deleted"});
+            });
+        }
+    });
+};
+
 exports.setGroupImage = function(req, res){
     if(!req.file) return res.sendStatus(400);
     if(!req.body) return res.sendStatus(400);
@@ -176,5 +201,18 @@ exports.setGroupImage = function(req, res){
             res.json({success: true, message: "Group image saved."});
             console.log("Kuva tallennettu");
         }
+    });
+};
+
+exports.getMessages = function(req, res){
+    if(!req.headers['id']) return res.sendStatus(400);
+
+    var groupID = req.headers['id'];
+
+    console.log("Fetching messages for group " + groupID);
+
+    Message.find({groupID:groupID}, function(err, results){
+        console.log("Messages: " + results);
+        res.json(results);
     });
 };
