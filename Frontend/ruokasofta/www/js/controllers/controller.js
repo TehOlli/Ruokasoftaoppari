@@ -287,7 +287,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation', f
 }]);
 
 //CONTROLLER FOR HANDLING A GROUP
-app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
+app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
     $scope.chatInput = "";
     $scope.messages = [];
     $scope.msgdate = "01.01.1970";
@@ -334,6 +334,38 @@ app.controller('groupController', ['$scope', '$log', '$http', '$anchorScroll', f
    
       
 
+}]);
+app.controller('mapController', ['$scope', '$log', '$http', '$timeout', function($scope, $log, $http, $timeout) {
+ 
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
+    
+    document.addEventListener('init', function (e) { 
+
+            if (e.target.id == 'mappage') {
+
+                var helsinki = {lat: 60.1699, lng: 24.9384};
+                var infowindow = new google.maps.InfoWindow({
+                    content: "Haloo toimiiks tää?"
+                });
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 10,
+                    center: helsinki
+                });
+                var marker = new google.maps.Marker({
+                    position: helsinki,
+                    map: map,
+                    title:"Moi"
+                });
+                 marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+
+            }
+        });
+    
+    
 }]);
 
 //CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
