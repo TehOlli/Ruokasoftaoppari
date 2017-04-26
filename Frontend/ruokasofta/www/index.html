@@ -41,7 +41,7 @@
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/membersService.js"></script>
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc-cuAPltUAzINMTaGCNFJ71gLtLqrWPc" async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc-cuAPltUAzINMTaGCNFJ71gLtLqrWPc&libraries=places&type=restaurant"async defer></script>
         
         <title>Ruokasoftaoppari</title>
     </head>
@@ -276,7 +276,16 @@
 
     <ons-template id="map.html">
         <ons-page id="mappage" ng-controller="mapController">
-            <div ng-click="mapResize()" id="map" style="height:100%;" ></div>
+            <div class="map-settings">
+                <p>
+               <ons-input type="checkbox" input-id="check-1" ng-model="close">Show what's close</ons-input>
+               </p>
+               <p>
+               <ons-input type="checkbox" input-id="check-2" ng-model="list">Show from my list</ons-input>
+               </p>
+            </div>
+            <input placeholder="Search restaurants" id="mapinput">
+            <div id="map"></div>
         </ons-page>
     </ons-template>
 

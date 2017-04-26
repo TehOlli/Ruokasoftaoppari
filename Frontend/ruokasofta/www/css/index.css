@@ -356,3 +356,27 @@ body {
 .create-group-img div ons-icon{
     padding-top:25px;
 }
+
+.map-settings{
+    height:15%;
+    width:100%;
+}
+.map-settings p{
+    margin:0;
+    padding:10px;
+}
+
+.map-settings .input-label{
+    padding-left:10px;
+}
+
+#mapinput{
+    margin-top:10px;
+    height:32px;
+    border:none;
+    padding-left:10px;
+}
+
+#map{
+    height:85%;
+}
