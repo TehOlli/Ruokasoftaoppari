@@ -38,7 +38,7 @@ exports.signUp = function(req, res){
                     }else{
                         console.log(results);
                         
-                        var token = jwt.sign(newUser, app.get('secret'), {
+                        var token = jwt.sign({userEmail: newUser.userEmail}, app.get('secret'), {
                             expiresIn: '24h'
                         });
                         res.json({
@@ -85,8 +85,8 @@ exports.login = function(req, res){
                 user.comparePassword(userPassword, function(err, isMatch){
                     if(isMatch == true){
                         console.log("login userPassword: ", isMatch);
-
-                        var token = jwt.sign(user, app.get('secret'), {
+                        console.log("userEmail: " + user.userEmail);
+                        var token = jwt.sign({userEmail: user.userEmail}, app.get('secret'), {
                             expiresIn: '24h'
                         });
                         res.json({
