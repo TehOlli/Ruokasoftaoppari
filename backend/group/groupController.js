@@ -151,7 +151,16 @@ exports.joinGroup = function(req, res){
     var userEmail = req.body.email;
     var groupID = req.body.id;
 
-    User.findOneAndUpdate({})
+    User.findOneAndUpdate({userEmail:userEmail, invites: groupID}, {$pull:{invites:groupID}, $push:{groups:groupID}}, function(err, user){
+        if(err){
+            res.json({success: false, message: "Couldn't access database."});
+            console.log("/joinGroup: Couldn't access database to accept invite")
+        }else{
+            console.log("Joined group.");
+            console.log(user);
+            res.json({success: true, message: "Joined group."});
+        }
+    })
 };
 
 exports.removefromGroup = function(req, res){
