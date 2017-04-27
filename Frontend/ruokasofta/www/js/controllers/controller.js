@@ -102,29 +102,46 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
 }]);
 //CONTROLLER FOR HANDLING GROUP LIST
 app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
-
+    $scope.invites = [];
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
     $scope.imgurl = "http://localhost:8080/";
 
+    $http.get(local + 'auth/invites').then(function(success){
+        console.log("invite get success");
+        $scope.invites = success.data.invites;
+
+    }),function (error){
+        console.log("invite get error");
+
+    }
+
      $http.get(local + 'auth/groups').then(function (success){
+        $scope.groups = success;
+        $log.info($scope.groups.data);
+        $log.info("group get success");
 
-                $scope.groups = success;
+    },function (error){
+        $log.info(error)
 
-                $log.info($scope.groups.data);
+    });
 
-                $log.info("group get success");
+    $scope.joinGroup = function(group){
+        var data = {id:group._id}
+        $http.post(local +  'auth/joingroup', data).then(function(success){
+            console.log(success);
 
-            },function (error){
+        }),function (error){
             
-                $log.info(error)
-
-            });
+            console.log(error);
+        }
+    }
 
     $scope.saveId= function(group){
 
         localStorage.id = group._id;
         localStorage.admin = group.groupAdmin;
+        localStorage.groupname = group.groupName;
         
 
        }
@@ -179,7 +196,12 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
 
                     $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
                         console.log("create file send success");
-                        myNavigator.resetToPage("list.html")
+                        ons.notification.alert({
+                            message: "Group has been created",
+                            callback: function(){
+                                myNavigator.resetToPage("list.html")
+                            }
+                        })
                     },function(error){
                         console.log("file send error", error)
                     })
@@ -533,7 +555,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
 
         if(val==true){
 
-            var data = JSON.stringify({email:$scope.userEmail, id:localStorage.id});
+            var data = JSON.stringify({email:$scope.userEmail, id:localStorage.id, name:localStorage.groupname});
 
             $log.info(data);
 

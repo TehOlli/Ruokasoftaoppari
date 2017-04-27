@@ -90,7 +90,10 @@
         <ons-page ng-controller="listController">
             <ons-toolbar>
                 <div class="center">Home</div>
-                <div class="right"><ons-icon ng-click="myNavigator.pushPage('settings.html')" class="add-icon" icon="ion-android-settings"></ons-icon></div>
+                <div class="right">
+                    <ons-icon ng-click="myNavigator.pushPage('settings.html')" class="add-icon" icon="ion-android-settings"></ons-icon>
+                    <ons-icon ng-click="dialog3.show(); inviteFunction()" class="add-icon" icon="ion-android-notifications"></ons-icon>
+                </div>
             </ons-toolbar>
             <ons-list>
                 <ons-list-header>Groups</ons-list-header>               
@@ -109,6 +112,23 @@
                 </ons-fab>
                 <ons-button ng-click="removeToken(); myNavigator.pushPage('signup.html')" modifier="material">delete token</ons-button>
             </div>
+            <ons-dialog var="dialog3">             
+                    <div style="text-align:center;">
+                        <h4 style="background-color: #154187; color:white; margin:0 auto; padding:10px;">Pending invites</h4>
+                        <ons-list>
+                            <ons-list-item ng-repeat="invite in invites">
+                                <div class="left">
+                                    <p>nimi</p>
+                                </div>
+                                <div class="right">
+                                    <ons-icon style="margin-right:20px; color:#154187;" ng-click="joinGroup(invite)" class="add-icon" icon="ion-checkmark"></ons-icon>
+                                    <ons-icon style="color: #990000;"ng-click="" class="add-icon" icon="ion-android-cancel"></ons-icon>
+                                </div>
+                            </ons-list-item>
+                        </ons-list>
+                        <ons-button style="margin-bottom:10px;" ng-click="dialog3.hide()">Close</ons-button>
+                    </div>
+            </ons-dialog> 
         </ons-page>
     </ons-template>
     <ons-template id="settings.html">
