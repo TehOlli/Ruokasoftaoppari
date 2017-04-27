@@ -148,8 +148,9 @@ exports.invitetoGroup = function(req, res){
 
 exports.joinGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
+    if(!req.headers['id']) return res.sendStatus(400);
 
-    var userEmail = req.body.email;
+    var groupID = req.headers['email'];
     var groupID = req.body.id;
 
     User.findOneAndUpdate({userEmail:userEmail, invites: groupID}, {$pull:{invites:groupID}, $push:{groups:groupID}}, function(err, user){

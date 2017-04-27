@@ -195,7 +195,7 @@ authRouter.post('/creategroup', jsonParser, group.createGroup);
 
 authRouter.post("/invitetogroup", jsonParser, group.invitetoGroup);
 
-authRouter.post("/joinGroup", jsonParser, group.joinGroup);
+authRouter.post("/joingroup", jsonParser, group.joinGroup);
 
 authRouter.post("/removefromgroup", jsonParser, group.removefromGroup);
 
