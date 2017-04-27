@@ -175,13 +175,22 @@ authRouter.get('/', function(req, res){
     console.log("Token authenticated");
 });
 
+
+//User routes
 authRouter.post('/changeusername', jsonParser, user.changeUsername);
 
 authRouter.post('/changepassword', jsonParser, user.changePassword);
 
 authRouter.post('/setavatar', jsonParser, upload.single('avatar'), user.setAvatar);
 
-//Group
+authRouter.get('/members', user.getUsers);
+
+authRouter.get('/profile', user.getProfile);
+
+authRouter.get('/invites', user.getInvites);
+
+
+//Group routes
 authRouter.post('/creategroup', jsonParser, group.createGroup);
 
 authRouter.post("/invitetogroup", jsonParser, group.invitetoGroup);
@@ -198,9 +207,6 @@ authRouter.get("/getmessages", group.getMessages);
 
 authRouter.get('/groups', group.getGroups);
 
-authRouter.get('/members', user.getUsers);
-
-authRouter.get('/profile', user.getProfile);
 
 //app.listen(port);
 http.listen(port, function(){

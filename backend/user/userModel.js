@@ -18,7 +18,10 @@ var userSchema = mong.Schema({
         required: true
     },
     groups: [{
-        groupID: String
+        type: Schema.Types.ObjectId, ref: 'Group'
+    }],
+    invites: [{
+        type: Schema.Types.ObjectId, ref: 'Group'
     }]
 });
 

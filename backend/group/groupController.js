@@ -92,6 +92,25 @@ exports.invitetoGroup = function(req, res){
                 //console.log(exists2);
                 res.json({success: false, message: "That user is already in the group."});
             }else{
+                var invite = {groupID: groupID};
+                User.findOneAndUpdate({userEmail: userEmail}, {$push:{invites: invite}}, function(err, user){
+                    if(err){
+                        res.json({success: false, message: "Cannot access database."});
+                        console.log("/invitetogroup: Cannot access database to update user.");
+                        console.log(err);
+                    }else{
+                        if(user){
+                            console.log("User exists");
+                            console.log("Invite sent");
+
+                            res.json({success: false, message: "Invite sent."});
+                        }
+                    }
+                });
+
+
+
+                /*
                 var newGroup = {"groupID": groupID};
                 User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: newGroup}}, function(err, user){
                     if (err){
@@ -120,13 +139,19 @@ exports.invitetoGroup = function(req, res){
                         }
                     }
                 });
+                */
             }
         }
     });
 };
 
 exports.joinGroup = function(req, res){
+    if(!req.body) return res.sendStatus(400);
 
+    var userEmail = req.body.email;
+    var groupID = req.body.id;
+
+    User.findOneAndUpdate({})
 };
 
 exports.removefromGroup = function(req, res){

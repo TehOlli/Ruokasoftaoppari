@@ -210,6 +210,7 @@ exports.getProfile = function(req, res){
         if(err){
             res.json({success: false, message: "Cannot access database."});
             console.log("/profile: Cannot access database to find user.");
+            console.log(err);
         }else{
             if(profile){
                 res.json(profile);
@@ -220,3 +221,24 @@ exports.getProfile = function(req, res){
         }
     });
 };
+
+exports.getInvites = function(req, res){
+    if(!req.headers['email']) return res.sendStatus(400);
+
+    userEmail = req.headers['email'];
+
+    User.findOne({userEmail:userEmail}, 'invites', function(err, invites){
+        if(err){
+            res.json({success: false, message: "Couldn't access database."});
+            console.log("/getinvites: Cannot access database to get invites.");
+            console.log(err);
+        }else{
+            if(invites){
+                res.json(invites);
+            }else{
+                res.json({success: false, message: "No invites found."});
+                console.log("/getInvites: No invites found.");
+            }
+        }
+    });
+}
