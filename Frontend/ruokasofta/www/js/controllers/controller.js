@@ -75,7 +75,7 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
 
     $scope.loginFunction = function(){
 
-        var data = JSON.stringify({email:$scope.userEmail, password:$scope.userPassword});
+        var data = {email:$scope.userEmail, password:$scope.userPassword};
 
         $http.post(local + 'login', data).then(function (success){
 
@@ -110,6 +110,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     $http.get(local + 'auth/invites').then(function(success){
         console.log("invite get success");
         $scope.invites = success.data.invites;
+        console.log($scope.invites);
 
     }),function (error){
         console.log("invite get error");
@@ -127,12 +128,13 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     });
 
     $scope.joinGroup = function(group){
-        var data = {id:group._id}
+        var data = {id:group.groupID};
+        console.log(data);
         $http.post(local +  'auth/joingroup', data).then(function(success){
             console.log(success);
 
         }),function (error){
-            
+
             console.log(error);
         }
     }
