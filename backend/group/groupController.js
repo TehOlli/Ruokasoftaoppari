@@ -76,6 +76,7 @@ exports.invitetoGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var groupID = req.body.id;
+    var groupName = req.body.name;
     var userEmail = req.body.email;
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
 
@@ -92,7 +93,7 @@ exports.invitetoGroup = function(req, res){
                 //console.log(exists2);
                 res.json({success: false, message: "That user is already in the group."});
             }else{
-                var invite = {groupID: groupID};
+                var invite = {groupID: groupID, groupName: groupName};
                 User.findOneAndUpdate({userEmail: userEmail}, {$push:{invites: invite}}, function(err, user){
                     if(err){
                         res.json({success: false, message: "Cannot access database."});

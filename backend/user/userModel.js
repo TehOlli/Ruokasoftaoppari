@@ -23,7 +23,8 @@ var userSchema = mong.Schema({
     }],
     invites: [{
         //type: Schema.Types.ObjectId, ref: 'Group'
-        groupID: String
+        groupID: String,
+        groupName: String
     }]
 });
 
