@@ -148,7 +148,7 @@ exports.invitetoGroup = function(req, res){
 
 exports.joinGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
-    if(!req.headers['id']) return res.sendStatus(400);
+    if(!req.headers['email']) return res.sendStatus(400);
 
     var groupID = req.headers['email'];
     var groupID = req.body.id;
