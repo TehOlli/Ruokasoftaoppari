@@ -103,7 +103,7 @@ exports.invitetoGroup = function(req, res){
                             console.log("User exists");
                             console.log("Invite sent");
 
-                            res.json({success: false, message: "Invite sent."});
+                            res.json({success: true, message: "Invite sent."});
                         }
                     }
                 });
