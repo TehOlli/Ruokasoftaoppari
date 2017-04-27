@@ -178,14 +178,14 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
                     var header = {headers:{'content-type':undefined, 'id':success.data.group._id}}
 
                     $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
-                        console.log("file send success");
+                        console.log("create file send success");
+                        myNavigator.resetToPage("list.html")
                     },function(error){
                         console.log("file send error", error)
                     })
                     $scope.form = "";
                 }
 
-                myNavigator.pushPage("list.html", {})
 
             },function (error){
 
@@ -201,7 +201,7 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
 }]);
 
 //CONRTOLLER FOR HANDLING USER INFORMATION
-app.controller('settingsController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
+app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$q', function($scope, $log, $http, validation, $q) {
     
     $scope.username = "";
     $scope.email = "";
@@ -230,11 +230,12 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation', f
         var form = new FormData();
         form.append("avatar", files[0]);
         $scope.form = form;
-
+        console.log("upload file");
         var reader = new FileReader();
         reader.readAsDataURL(files[0]);
 
         reader.onload = function (e){
+            console.log("reader onload");
             document.getElementById("profile-img").style.background = "url(" + e.target.result + ")";
             document.getElementById("profile-img").style.backgroundSize = "cover";
         }
@@ -244,44 +245,87 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation', f
 
     $scope.saveProfile = function(){
 
-        if($scope.form!=""){
-            var header = {headers:{'content-type':undefined}}
+        function imgUpload(){
+            var deffered = $q.defer();
+            if($scope.form!=""){
+                var header = {headers:{'content-type':undefined}}
 
-            $http.post(local + 'auth/setavatar', $scope.form, header).then(function(success){
-                console.log("file send success");
-            },function(error){
-                console.log("file send error", error)
-            })
-            $scope.form = "";
+                $http.post(local + 'auth/setavatar', $scope.form, header).then(function(success){
+                    console.log("user file send success");
+                },function(error){
+                    console.log("file send error", error)
+                })
+                $scope.form = "";
+
+                deffered.resolve("sent");
+            }
+            else{
+
+                deffered.resolve("sent");
+            }
+
+            return deffered.promise;
+            
         }
-        var val = validation.changenameVal($scope.username, usernamecheck);
-        if(val==true){
-            var data=JSON.stringify({username:$scope.username, email:$scope.email});
 
-            console.log(data);
+        function nameChange(){
+            var deffered = $q.defer();
+            var val = validation.changenameVal($scope.username, usernamecheck);
+            if(val==true){
+                var data=JSON.stringify({username:$scope.username, email:$scope.email});
 
-            $http.post(local + 'auth/changeusername', data).then(function (success){
-                console.log("username change success");
-                usernamecheck=$scope.username;
+                console.log(data);
 
-            },function (error){
-                console.log(error);
-            })
+                $http.post(local + 'auth/changeusername', data).then(function (success){
+                    console.log("username change success");
+                    usernamecheck=$scope.username;
+
+                },function (error){
+                    console.log(error);
+                })
+                deffered.resolve("changed");
+            }
+            else {
+                deffered.resolve("changed");
+            }
+            
+            return deffered.promise;
         }
-        var val = validation.changepassVal($scope.oldpass, $scope.newpass);
-        if(val==true){
-            var data = JSON.stringify({oldpassword: $scope.oldpass, newpassword: $scope.newpass, email:$scope.email});
-            console.log(data);
 
-            $http.post(local + 'auth/changepassword', data).then(function(success){
-                console.log("password change success")
-                $scope.newpass="";
-                $scope.oldpass="";
-            },function(error){
-                console.log("password change error", error)
-            })
+        function passChange(){
+            var deffered = $q.defer();
+            var val = validation.changepassVal($scope.oldpass, $scope.newpass);
+            if(val==true){
+                var data = JSON.stringify({oldpassword: $scope.oldpass, newpassword: $scope.newpass, email:$scope.email});
+                console.log(data);
+
+                $http.post(local + 'auth/changepassword', data).then(function(success){
+                    console.log("password change success")
+                    $scope.newpass="";
+                    $scope.oldpass="";
+                },function(error){
+                    console.log("password change error", error)
+                })
+                deffered.resolve("changed");
+            }
+            else{
+                deffered.resolve("changed");
+            }
+            return deffered.promise;
         }
-        
+
+        imgUpload().then(function(x){
+            nameChange().then(function(x){
+                passChange().then(function(x){
+                     ons.notification.alert({
+                        message: "Changes have been saved",
+                        callback: function(){
+                            myNavigator.popPage();
+                        }
+                    })
+                });
+            });
+        });        
     }
 
 }]);
@@ -458,6 +502,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
     var id = {id: localStorage.id}
 
    membersService.async().then(function(d) {
+       console.log(d);
       $scope.users = d;
       var time = Date.now();
     document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
@@ -472,7 +517,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
         var header = {headers:{'content-type':undefined, 'id':localStorage.id}}
 
             $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
-                console.log("file send success");
+                console.log("group file send success");
                 var time = Date.now();
                 document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
                 document.getElementById("group-img").style.backgroundSize = "cover";
@@ -571,17 +616,39 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
 
          var data = JSON.stringify({groupid:localStorage.id});
 
-        $http.post(local + 'auth/deletegroup', data).then(function (success){
+         function confDelete(){
+
+             $http.post(local + 'auth/deletegroup', data).then(function (success){
 
                 $log.info("delete group success");
+                    ons.notification.alert({
+                            message: "Group has been deleted",
+                            callback: function(){
+                                myNavigator.resetToPage("list.html")
+                            }
+                        })
 
-                myNavigator.pushPage("list.html", {})
 
-         },function (error){
+            },function (error){
 
                 $log.info("delete group", error)
 
             });
+        
+             
+         }
+        ons.notification.confirm({
+            message: "Are you sure?",
+            callback: function(x){
+                switch(x){
+                    case 0:
+                        break;
+                    case 1:
+                        confDelete();
+                        break;
+                }
+            }
+        })
 
 
     }
