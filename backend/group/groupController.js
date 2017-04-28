@@ -3,19 +3,7 @@ var User                = require("../user/userModel");
 var Message             = require("../messageModel");
 var fs                  = require('fs');
 
-exports.getGroups = function(req, res){
-    if(!req.headers['email']) return res.sendStatus(400);
 
-    Group.find({'members.memberEmail': req.headers['email']}, function(err, groups){
-        if(err){
-            res.json({success:false, message: "Couldn't access database."});
-            console.log("Couldn't get list of groups.");
-            console.log(err);
-        }else{
-            res.json(groups);
-        }     
-    });
-};
 
 exports.createGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
@@ -38,10 +26,7 @@ exports.createGroup = function(req, res){
         }else{
             console.log("Results " + results);
             var groupID = results._id;
-            console.log("GroupID: " + groupID);
-            console.log("GroupAdmin: " + groupAdmin);
             
-            console.log("mitäs helvettiä groupAdmin:" +groupAdmin);
             var newMember = {"memberEmail":groupAdmin};
             Group.findOneAndUpdate({_id: groupID}, {$push:{members: newMember}}, function(err, group){
                 if (err){
@@ -68,6 +53,76 @@ exports.createGroup = function(req, res){
                     });
                 }
             });
+        }
+    });
+};
+
+exports.alterGroup = function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupID = req.body.id;
+    var groupName = req.body.name;
+    var groupDesc = req.body.desc;
+
+    if(groupName && groupDesc){
+        Group.findOneAndUpdate({groupID:groupID}, {groupName:groupName, groupDesc:groupDesc}, function(err, grouo){
+            if(err){
+                res.json({success:false, message:"Update failed."});
+                console.log("/alterGroup: couldn't update group");
+            }else{
+                res.json({success:true, message: "Changed group name and description."});
+            }
+        });
+    }else if(groupName){
+        Group.findOneAndUpdate({groupID:groupID}, {groupName:groupName}, function(err, group){
+            if(err){
+                res.json({success:false, message:"Update failed."});
+                console.log("/alterGroup: couldn't update group");
+            }else{
+                res.json({success:true, message: "Changed group name."});
+            }
+        });
+    }else if(groupDesc){
+        Group.findOneAndUpdate({groupID:groupID}, {groupDesc:groupDesc}, function(err, group){
+            if(err){
+                res.json({success:false, message:"Update failed."});
+                console.log("/alterGroup: couldn't update group");               
+            }else{
+                res.json({success:true, message: "Changed group description."});
+            }
+        });
+    }
+};
+
+exports.getGroups = function(req, res){
+    if(!req.headers['email']) return res.sendStatus(400);
+
+    Group.find({'members.memberEmail': req.headers['email']}, function(err, groups){
+        if(err){
+            res.json({success:false, message: "Couldn't access database."});
+            console.log("Couldn't get list of groups.");
+            console.log(err);
+        }else{
+            res.json(groups);
+        }     
+    });
+};
+
+exports.getGroup = function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupID = req.body.id;
+
+    Group.findOne({groupID:groupID}, function(err){
+        if(err){
+            res.json({success: false, message: "Couldn't fetch group."})
+            console.log("/getGroup: couldn't fetch group.");
+        }else{
+            if(group){
+                res.json(group);
+            }else{
+                res.json({success:false, message: "That group does not exist."});
+            }
         }
     });
 };

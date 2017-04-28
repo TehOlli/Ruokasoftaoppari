@@ -193,6 +193,12 @@ authRouter.get('/invites', user.getInvites);
 //Group routes
 authRouter.post('/creategroup', jsonParser, group.createGroup);
 
+authRouter.post('/altergroup', jsonParser, group.alterGroup);
+
+authRouter.get('/groups', group.getGroups);
+
+authRouter.get('/getgroup', jsonParser, group.getGroup);
+
 authRouter.post("/invitetogroup", jsonParser, group.invitetoGroup);
 
 authRouter.post("/acceptinv", jsonParser, group.acceptInvitation);
@@ -207,7 +213,7 @@ authRouter.post("/deletegroup", jsonParser, group.deleteGroup);
 
 authRouter.get("/getmessages", group.getMessages);
 
-authRouter.get('/groups', group.getGroups);
+
 
 
 //app.listen(port);

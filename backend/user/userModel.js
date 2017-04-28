@@ -28,11 +28,11 @@ var userSchema = mong.Schema({
     }]
 });
 
+//Hashes the user's password before Mongoose does a .save if it's been modified.
 userSchema.pre('save', function(next){
     var user = this;
 
     if(!user.isModified('userPassword')) return next();
-    console.log("is modified");
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt){
         if(err) return next(err);
         console.log(salt);
