@@ -150,21 +150,12 @@ exports.invitetoGroup = function(req, res){
     });
 };
 
-exports.joinGroup = function(req, res){
+exports.acceptInvitation = function(req, res){
     if(!req.body) return res.sendStatus(400);
     if(!req.headers['email']) return res.sendStatus(400);
 
     var userEmail = req.headers['email'];
     var groupID = req.body.id;
-
-    console.log(userEmail);
-    console.log(groupID);
-
-    User.findOne({userEmail:userEmail, 'invites.groupID':groupID}, function(err, results){
-        if(err) throw err;
-        console.log("userEmail:userEmail, 'invites.groupID':groupID")
-        console.log(results);
-    });
 
     var group = {groupID: groupID};
     User.findOneAndUpdate({userEmail:userEmail, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}, $push:{groups:group}}, function(err, user){
@@ -173,20 +164,49 @@ exports.joinGroup = function(req, res){
             console.log("/joinGroup: Couldn't access database to accept invite");
             console.log(err);
         }else{
+            console.log(user);
             var newMember = {"memberEmail":userEmail};
             Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
                 if (err){
                     res.json({success: false, message: "Cannot access database."});
-                    console.log("/invitetogroup: Cannot access database to update group.");
+                    console.log("/acceptInvitation: Cannot access database to update group.");
                     console.log(err);
                 }else{
-                    console.log("Joined group.");
-                    console.log(user);
-                    res.json({success: true, message: "Joined group."});
+                    if(user){
+                        console.log("Joined group.");
+                        console.log(user);
+                        res.json({success: true, message: "Joined group."});
+                    }else{
+                        console.log("/acceptInvitation: that user does not exist");
+                    }
                 }
             });            
         }
     })
+};
+
+exports.declineInvitation = function(req, res){
+    if(!req.body) return res.sendStatus(400);
+    if(!req.headers['email']) return res.sendStatus(400);
+
+    var userEmail = req.headers['email'];
+    var groupID = req.body.id;
+
+    User.findOneAndUpdate({userEmail:userEmail, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}}, function(err, user){
+        if(err){
+            res.json({success: false, message: "Couldn't access database."});
+            console.log("/declineInvitation: Couldn't access database to decline invite");
+            console.log(err);
+        }else{
+            if(user){
+                res.json({success: true, message: "Declined invitation."});
+                console.log("Declined invitation.");
+            }else{
+                console.log("/declineInvitation: that user does not exist");
+            }
+            
+        }
+    }) 
 };
 
 exports.removefromGroup = function(req, res){
