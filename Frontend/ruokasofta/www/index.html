@@ -118,7 +118,10 @@
                         <ons-list>
                             <ons-list-item ng-repeat="invite in invites">
                                 <div class="left">
-                                    nimi
+                                    <img class="list-item__thumbnail" src="{{imgurl}}uploads/groups/{{invite.groupID}}.jpg">
+                                </div>
+                                <div class="center">
+                                    {{invite.groupName}}
                                 </div>
                                 <div class="right">
                                     <ons-icon style="margin-right:20px; color:#154187;" ng-click="acceptInvite(invite)" class="add-icon" icon="ion-checkmark"></ons-icon>

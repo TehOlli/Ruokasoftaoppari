@@ -115,10 +115,10 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
         $scope.invites = success.data.invites;
         console.log($scope.invites);
 
-        }),function (error){
+        },function (error){
             console.log("invite get error");
 
-        }
+        });
     }
 
     function groupsFunction(){
@@ -141,10 +141,10 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
             invitesFunction();
             groupsFunction();
 
-        }),function (error){
+        },function (error){
 
             console.log(error);
-        }
+        });
     }
 
     $scope.declineInvite = function(group){
@@ -154,10 +154,10 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
             console.log(success);
             invitesFunction();
 
-        }),function (error){
+        },function (error){
 
             console.log(error);
-        }
+        })
 
     }
 
@@ -231,6 +231,14 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
                         console.log("file send error", error)
                     })
                     $scope.form = "";
+                }
+                else{
+                    ons.notification.alert({
+                        message: "Group has been created",
+                        callback: function(){
+                            myNavigator.resetToPage("list.html")
+                        }
+                    })
                 }
 
 
