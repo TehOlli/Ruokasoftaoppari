@@ -109,9 +109,9 @@ exports.getGroups = function(req, res){
 };
 
 exports.getGroup = function(req, res){
-    if(!req.body) return res.sendStatus(400);
+    if(!req.headers['id']) return res.sendStatus(400);
 
-    var groupID = req.body.id;
+    var groupID = req.headers['id'];
     console.log(groupID);
 
     Group.findOne({groupID:groupID}, function(err, group){
@@ -324,6 +324,7 @@ exports.deleteGroup = function(req, res){
 exports.setGroupImage = function(req, res){
     if(!req.file) return res.sendStatus(400);
     if(!req.body) return res.sendStatus(400);
+    if(!req.headers['id']) return res.sendStatus(400);
 
     console.log("Name: " + req.file.originalname);
     console.log("Path: " + req.file.path);
