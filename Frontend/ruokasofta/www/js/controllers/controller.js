@@ -163,7 +163,6 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
 
 
     $scope.saveId= function(group){
-
         localStorage.id = group._id;
         localStorage.admin = group.groupAdmin;
         localStorage.groupname = group.groupName;
@@ -542,19 +541,32 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', function
     
 }]);
 
-//CONTROLLER FOR HANDLING ADDING/VIEWING MEMEBERS
+//CONTROLLER FOR HANDLING GROUP
 app.controller('manageController', ['$scope', '$log', '$http', 'validation','membersService', function($scope, $log, $http, validation, membersService) {
     $scope.admin = false;
     $scope.userEmail = "";
+    $scope.groupName = "";
+    $scope.groupDesc = "";
+    $scope.name = true;
+    $scope.desc = true;
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
 
+    var header = {id: localStorage.id}
+
+    $http.get(local + 'auth/getgroup', {headers:header}).then(function(success){
+        console.log("group info get success");
+        $scope.groupName = success.data.groupName;
+        $scope.groupDesc = success.data.groupDesc;
+
+    }, function(error){
+        console.log("group info get error");
+    });
 
     if(localStorage.email==localStorage.admin){
         $scope.admin=true;
     }
 
-    var id = {id: localStorage.id}
 
    membersService.async().then(function(d) {
        console.log(d);
@@ -563,6 +575,21 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
     document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
     document.getElementById("group-img").style.backgroundSize = "cover";
     });
+
+   $scope.alterGroup = function(){
+       var data = {id: localStorage.id, name: $scope.groupName, desc: $scope.groupDesc};
+       console.log(data);
+       $http.post(local + 'auth/altergroup', data).then(function(success){
+           console.log("group alter success");
+           $scope.name = true;
+           $scope.desc = true;
+
+
+       },function(error){
+           console.log("group alter error");
+
+       });
+   }
 
    $scope.uploadFile = function(files){
         var form = new FormData();

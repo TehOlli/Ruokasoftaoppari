@@ -238,8 +238,17 @@
                         <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;" accept="image/*"/>
                         <div onclick="document.getElementById('hidden-input').click();"><ons-icon icon="ion-android-add-circle"></ons-icon></div>
                     </div>
-                    <h3>Ruokaryhmä</h3>
-                    <p>Ruokaryhmän kuvaus ja muuta sellaista</p>
+                    <h3 ng-show="name">{{groupName}} <ons-icon style="padding-left:5px;" ng-click="name=false" icon="ion-edit"></ons-icon></h3>
+                    <p ng-hide="name">
+                        <input ng-model="groupName">
+                        <ons-icon style="padding-left:5px;" ng-click="alterGroup(groupName)" icon="ion-android-checkmark-circle">
+                    </p>           
+                    <p ng-show="desc">{{groupDesc}} <ons-icon style="padding-left:5px;" ng-click="desc=false" icon="ion-edit"></ons-icon></p>
+                    <p ng-hide="desc">
+                        <input ng-model="groupdesc">
+                        <ons-icon style="padding-left:5px;" ng-click="alterGroup()" icon="ion-android-checkmark-circle">
+                    </p>
+                    
                 </div>
             </div>
             <ons-list>
