@@ -114,7 +114,7 @@ exports.getGroup = function(req, res){
     var groupID = req.headers['id'];
     console.log(groupID);
 
-    Group.findOne({groupID:groupID}, function(err, group){
+    Group.findOne({_id:groupID}, function(err, group){
         if(err){
             res.json({success: false, message: "Couldn't fetch group."})
             console.log("/getGroup: couldn't fetch group.");
