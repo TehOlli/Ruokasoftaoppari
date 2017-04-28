@@ -87,7 +87,6 @@ exports.invitetoGroup = function(req, res){
             console.log("/invitetogroup: Cannot access database to search for user.")
             console.log(err);
         }else{
-            console.log("InvitetoGroup exists2:" + exists2);
             if(exists2.length){
                 console.log("User is already in the group");
                 //console.log(exists2);
@@ -105,6 +104,11 @@ exports.invitetoGroup = function(req, res){
                             console.log("Invite sent");
 
                             res.json({success: true, message: "Invite sent."});
+                        }else{
+                            console.log("User does not exist.");
+                            console.log(user);
+
+                            res.json({success: false, message: "No user with that email exists."});
                         }
                     }
                 });
