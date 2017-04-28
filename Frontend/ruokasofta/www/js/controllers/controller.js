@@ -106,38 +106,61 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
     $scope.imgurl = "http://localhost:8080/";
+    groupsFunction();
+    invitesFunction();
 
-    $http.get(local + 'auth/invites').then(function(success){
+    function invitesFunction(){
+        $http.get(local + 'auth/invites').then(function(success){
         console.log("invite get success");
         $scope.invites = success.data.invites;
         console.log($scope.invites);
 
-    }),function (error){
-        console.log("invite get error");
+        }),function (error){
+            console.log("invite get error");
 
+        }
     }
 
-     $http.get(local + 'auth/groups').then(function (success){
+    function groupsFunction(){
+        $http.get(local + 'auth/groups').then(function (success){
         $scope.groups = success;
         $log.info($scope.groups.data);
         $log.info("group get success");
 
-    },function (error){
-        $log.info(error)
+        },function (error){
+            $log.info(error)
 
-    });
+        });
+    }
 
-    $scope.joinGroup = function(group){
+    $scope.acceptInvite = function(group){
         var data = {id:group.groupID};
         console.log(data);
-        $http.post(local +  'auth/joingroup', data).then(function(success){
+        $http.post(local +  'auth/acceptinv', data).then(function(success){
             console.log(success);
+            invitesFunction();
+            groupsFunction();
 
         }),function (error){
 
             console.log(error);
         }
     }
+
+    $scope.declineInvite = function(group){
+        var data = {id:group.groupID};
+        console.log(data);
+        $http.post(local +  'auth/declineinv', data).then(function(success){
+            console.log(success);
+            invitesFunction();
+
+        }),function (error){
+
+            console.log(error);
+        }
+
+    }
+
 
     $scope.saveId= function(group){
 
@@ -569,14 +592,11 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
 
                   }
                   else{
-                       $log.info("add success");
+                       $log.info(success);
 
                        $scope.userEmail = "";
 
-                      membersService.async().then(function(d) {
-                        $scope.users = d;
-                      });
-
+                       ons.notification.alert("Invite has been sent");
                   }
 
             },function (error){
@@ -625,7 +645,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
 
                 $log.info("user remove success");
 
-                myNavigator.pushPage("list.html", {})
+                myNavigator.resetToPage("list.html")
 
          },function (error){
 

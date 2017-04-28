@@ -121,10 +121,13 @@
                                     nimi
                                 </div>
                                 <div class="right">
-                                    <ons-icon style="margin-right:20px; color:#154187;" ng-click="joinGroup(invite)" class="add-icon" icon="ion-checkmark"></ons-icon>
-                                    <ons-icon style="color: #990000;"ng-click="" class="add-icon" icon="ion-android-cancel"></ons-icon>
+                                    <ons-icon style="margin-right:20px; color:#154187;" ng-click="acceptInvite(invite)" class="add-icon" icon="ion-checkmark"></ons-icon>
+                                    <ons-icon style="color: #990000;"ng-click="declineInvite(invite)" class="add-icon" icon="ion-android-cancel"></ons-icon>
                                 </div>
                             </ons-list-item>
+                            <div ng-if="!invites.length" style="text-align: center; color:gray;">
+                                <p>No pending invites</p>
+                            </div>
                         </ons-list>
                         <ons-button style="margin-bottom:10px;" ng-click="dialog3.hide()">Close</ons-button>
                     </div>
