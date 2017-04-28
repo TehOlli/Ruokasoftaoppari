@@ -112,13 +112,15 @@ exports.getGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var groupID = req.body.id;
+    console.log(groupID);
 
-    Group.findOne({groupID:groupID}, function(err){
+    Group.findOne({groupID:groupID}, function(err, group){
         if(err){
             res.json({success: false, message: "Couldn't fetch group."})
             console.log("/getGroup: couldn't fetch group.");
         }else{
             if(group){
+                console.log(group);
                 res.json(group);
             }else{
                 res.json({success:false, message: "That group does not exist."});
