@@ -113,8 +113,12 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
         $http.get(local + 'auth/invites').then(function(success){
         console.log("invite get success");
         $scope.invites = success.data.invites;
-        console.log($scope.invites);
-
+        if($scope.invites.length){
+            document.getElementById('invite-icon').style.color = "red";
+        }
+        else{
+            document.getElementById('invite-icon').style.color = "white";
+        }
         },function (error){
             console.log("invite get error");
 
@@ -433,6 +437,7 @@ app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', fu
       
 
 }]);
+
 app.controller('mapController', ['$scope', '$log', '$http', '$timeout', function($scope, $log, $http, $timeout) {
  
     var local = "http://localhost:8080/";
@@ -542,7 +547,7 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', function
 }]);
 
 //CONTROLLER FOR HANDLING GROUP
-app.controller('manageController', ['$scope', '$log', '$http', 'validation','membersService', function($scope, $log, $http, validation, membersService) {
+app.controller('manageController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
     $scope.admin = false;
     $scope.userEmail = "";
     $scope.groupName = "";
@@ -552,12 +557,16 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
 
+    getMembers();
     var header = {id: localStorage.id}
 
     $http.get(local + 'auth/getgroup', {headers:header}).then(function(success){
         console.log("group info get success");
         $scope.groupName = success.data.groupName;
         $scope.groupDesc = success.data.groupDesc;
+        var time = Date.now();
+        document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
+        document.getElementById("group-img").style.backgroundSize = "cover";
 
     }, function(error){
         console.log("group info get error");
@@ -567,23 +576,31 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
         $scope.admin=true;
     }
 
+   function getMembers(){
+       var id = {id: localStorage.id}
+       $http.get(local + 'auth/members', {headers: id}).then(function(success){
+        $scope.users = success
 
-   membersService.async().then(function(d) {
-       console.log(d);
-      $scope.users = d;
-      var time = Date.now();
-    document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
-    document.getElementById("group-img").style.backgroundSize = "cover";
-    });
+       },function(error){
 
-   $scope.alterGroup = function(){
-       var data = {id: localStorage.id, name: $scope.groupName, desc: $scope.groupDesc};
-       console.log(data);
-       $http.post(local + 'auth/altergroup', data).then(function(success){
+       });
+   }
+
+   $scope.alterName = function(){
+       var data = {id: localStorage.id, name:$scope.groupName};
+       $scope.alterGroup(data);
+       $scope.name = true;
+   }
+
+   $scope.alterDesc = function(){
+       var data = {id: localStorage.id, desc:$scope.groupDesc};
+       $scope.alterGroup(data);
+       $scope.desc = true;
+   }
+
+   $scope.alterGroup = function(x){
+       $http.post(local + 'auth/altergroup', x).then(function(success){
            console.log("group alter success");
-           $scope.name = true;
-           $scope.desc = true;
-
 
        },function(error){
            console.log("group alter error");
@@ -659,9 +676,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','mem
                   else{
                        $log.info("user remove success");
 
-                       membersService.async().then(function(d) {
-                            $scope.users = d;
-                        });
+                       getMembers();
 
                   }
 
