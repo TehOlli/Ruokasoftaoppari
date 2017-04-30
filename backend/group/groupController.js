@@ -64,17 +64,25 @@ exports.alterGroup = function(req, res){
     var groupName = req.body.name;
     var groupDesc = req.body.desc;
 
+    console.log("GroupID: " + groupID);
+    console.log("GroupName: " + groupName);
+    console.log("GroupDesc: " + groupDesc);
+
     if(groupName && groupDesc){
-        Group.findOneAndUpdate({groupID:groupID}, {groupName:groupName, groupDesc:groupDesc}, function(err, grouo){
+        Group.findOneAndUpdate({_id:groupID}, {groupName:groupName, groupDesc:groupDesc}, function(err, group){
             if(err){
                 res.json({success:false, message:"Update failed."});
                 console.log("/alterGroup: couldn't update group");
             }else{
-                res.json({success:true, message: "Changed group name and description."});
+                if(group){
+                    res.json({success:true, message: "Changed group name and description."});
+                }else{
+                    console.log("Something went wrong.");
+                }
             }
         });
     }else if(groupName){
-        Group.findOneAndUpdate({groupID:groupID}, {groupName:groupName}, function(err, group){
+        Group.findOneAndUpdate({_id:groupID}, {groupName:groupName}, function(err, group){
             if(err){
                 res.json({success:false, message:"Update failed."});
                 console.log("/alterGroup: couldn't update group");
@@ -83,7 +91,7 @@ exports.alterGroup = function(req, res){
             }
         });
     }else if(groupDesc){
-        Group.findOneAndUpdate({groupID:groupID}, {groupDesc:groupDesc}, function(err, group){
+        Group.findOneAndUpdate({_id:groupID}, {groupDesc:groupDesc}, function(err, group){
             if(err){
                 res.json({success:false, message:"Update failed."});
                 console.log("/alterGroup: couldn't update group");               
