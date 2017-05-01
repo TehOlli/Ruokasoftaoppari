@@ -154,7 +154,7 @@ io.on("connection", function(socket){
 //User creation & login
 app.post("/signup", user.signUp);
 
-app.post('/login', jsonParser, user.login);
+app.post('/login', user.login);
 
 //==========
 //Authenticated Routes
