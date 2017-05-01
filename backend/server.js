@@ -13,8 +13,10 @@ var multer              = require('multer');
 var upload              = multer({dest:'./public/uploads/'});
 var group               = require("./group/groupController");
 var user                = require("./user/userController");
-//var Strategy          = require("passport-http-bearer").Strategy;
 
+var User                = require("./user/userModel");
+var passport            = require('passport');
+var Strategy            = require('passport-google-oauth20').Strategy;
 
 //==========
 //Configuration
@@ -29,6 +31,7 @@ app.use(express.static(__dirname + '/public'));
 app.set('secret', config.secret);
 app.use('/', router);
 app.use('/auth', authRouter);
+app.use(bodyParser.json());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email");
@@ -49,17 +52,19 @@ authRouter.options("/*", function(req, res, next){
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     res.sendStatus(200);
 });
-/*
-passport.use(new Strategy(
-  function(token, done) {
-    User.findOne({ token: token }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      return done(null, user, { scope: 'all' });
+
+passport.use(new GoogleStrategy({
+    clientID: config.GOOGLE_CLIENT_ID,
+    clientSecret: config.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http.//localhost:8080/auth/google/return"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return cb(err, user);
     });
   }
 ));
-*/
+
 //Bluebird
 mong.Promise = global.Promise;
 mong.connect(config.dbConnection, function(err){
@@ -104,6 +109,8 @@ authRouter.use(function(req, res, next){
         });
     }
 });
+
+
 
 //==========
 //Socket.io
@@ -165,6 +172,66 @@ io.on("connection", function(socket){
 app.post("/signup", jsonParser, user.signUp);
 
 app.post('/login', jsonParser, user.login);
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/return', passport.authenticate('google', { session: false, failureRedirect: '/flub' }), function(req, res) {
+        console.log("Hell yeah.");
+
+        var userEmail = req.user.email;
+
+
+        User.findOne({UserEmail:userEmail}, function(err, exists){
+            if(err){
+                console.log("Couldn't access database.");
+                res.json("Couldn't access database.");
+            }else{
+                if(exists){
+                    var token = jwt.sign({userEmail: user.userEmail}, app.get('secret'), {
+                        expiresIn: '24h'
+                    });
+                    res.json({
+                        success: true,
+                        message: 'Token sent',
+                        token: token,
+                        username: user.username
+                    });
+                }else{
+                    var newUser = new User({
+                        username: userName,
+                        userEmail: userEmail,
+                    });
+
+                    newUser.save(function(err, user){
+                        if(err){
+                            console.log("Couldn't save user to database.");
+                            res.json("Couldn't save user to database.");
+                        }else{
+                            var token = jwt.sign({userEmail: newUser.userEmail}, app.get('secret'), {
+                                expiresIn: '24h'
+                            });
+                            res.json({
+                                success: true,
+                                message: 'Token sent',
+                                token: token
+                            });
+                        }
+                    });
+                }
+            }
+        });       
+                        
+                        
+
+});
+
+app.post('/hello', function(req, res){
+    if(req.body.name){
+        res.send("Hello, " + req.body.name + "!");
+    }else{
+        res.send("Hello, stranger!");
+    }
+});
 //==========
 //Authenticated Routes
 //==========
@@ -212,6 +279,8 @@ authRouter.post("/setgroupimage", jsonParser, upload.single('groupimg'), group.s
 authRouter.post("/deletegroup", jsonParser, group.deleteGroup);
 
 authRouter.get("/getmessages", group.getMessages);
+
+
 
 
 
