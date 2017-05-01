@@ -390,11 +390,37 @@ body {
     padding-left:10px;
 }
 
+#restaurant{
+    width:100%;
+    text-align:center;
+}
+.restaurant-search{
+    width:100%;
+    background-color: #194da0;
+}
 #mapinput{
-    margin-top:10px;
-    height:32px;
+    height:50px;
     border:none;
-    padding-left:10px;
+    background-color: #194da0;
+    color:white;
+    margin:auto;
+    width:95%;
+    font-size:1em;
+}
+*::-webkit-input-placeholder {
+    color: white;
+}
+*:-moz-placeholder {
+    /* FF 4-18 */
+    color: white;
+}
+*::-moz-placeholder {
+    /* FF 19+ */
+    color: white;
+}
+*:-ms-input-placeholder {
+    /* IE 10+ */
+    color: white;
 }
 
 #map{

@@ -388,7 +388,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
 
 }]);
 
-//CONTROLLER FOR HANDLING A GROUP
+//CONTROLLER FOR HANDLING CHAT
 app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
     $scope.chatInput = "";
     $scope.messages = [];
@@ -438,7 +438,34 @@ app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', fu
 
 }]);
 
-app.controller('mapController', ['$scope', '$log', '$http', '$timeout', function($scope, $log, $http, $timeout) {
+//CONTROLLER FOR HANDLING RESTAURANT LIST
+app.controller('restaurantController', ['$scope', '$log', '$http','places', function($scope, $log, $http, places) {
+    var local = "http://localhost:8080/";
+    var proto = "http://proto453.haaga-helia.fi:80/";
+    $scope.restaurants = [];
+
+    document.addEventListener('init', function (e) { 
+
+        if (e.target.id == 'restaurant') {
+            var options = {
+                types: ['establishment']
+            };
+
+            var input = document.getElementById('mapinput');
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                    console.log(place);
+                    places.addToList(place);
+                    $scope.restaurants.push(place);
+                    $scope.$apply();
+                });
+        }
+     });
+}]);
+
+//CONTROLLER FOR HANDLING MAP
+app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places', function($scope, $log, $http, $timeout, places) {
  
     var local = "http://localhost:8080/";
     var proto = "http://proto453.haaga-helia.fi:80/";
@@ -509,6 +536,15 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', function
                         y=markers;
                     }
                     else if(x==2){
+                        var place = places.getList();
+                        for(var i = 0; i < place.length; i++){
+                            console.log(place[i]);
+                            var marker = new google.maps.Marker({
+                                map: null,
+                                position: place[i].geometry.location
+                            });
+                            markers2.push(marker);
+                        }
                         y=markers2;
                     }
                     for (var i = 0; i < y.length; i++) {
@@ -525,19 +561,19 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', function
                     types: ['establishment']
                 };
 
-                var input = document.getElementById('mapinput');
-                var autocomplete = new google.maps.places.Autocomplete(input, options);
-                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-                autocomplete.addListener('place_changed', function() {
-                    var place = autocomplete.getPlace();
-                     var marker = new google.maps.Marker({
-                        map: map,
-                        position: place.geometry.location
-                    });
-                    markers2.push(marker);
-                    map.setCenter(marker.getPosition());  
+                // var input = document.getElementById('mapinput');
+                // var autocomplete = new google.maps.places.Autocomplete(input, options);
+                // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+                // autocomplete.addListener('place_changed', function() {
+                //     var place = autocomplete.getPlace();
+                //      var marker = new google.maps.Marker({
+                //         map: map,
+                //         position: place.geometry.location
+                //     });
+                //     markers2.push(marker);
+                //     map.setCenter(marker.getPosition());  
 
-                });
+                // });
 
 
             }
