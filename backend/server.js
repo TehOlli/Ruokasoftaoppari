@@ -60,9 +60,38 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:8080/google/return"
   },
   function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
+
+    User.findOne({googleID: profile.id}, function(err, user){
+        if(err){
+            return cb(err);
+        }
+
+        if(user){
+            return cb(null, user);
+        }else{
+            var googleID = profile.id;
+            var username = profile.displayName;
+            var userEmail = profile.emails[0].value;
+
+            console.log("Username is " + username + " and the email is " + userEmail);
+            var newUser = new User({
+                googleID: googleID,
+                username: username,
+                userEmail: userEmail,
+                token: accessToken
+            });
+
+            newUser.save(function(err){
+                if(err){
+                    throw err;
+                }
+
+                return cb(null, newUser);
+            })
+        }
     });
+
+
   }
 ));
 
@@ -174,11 +203,14 @@ app.post("/signup", user.signUp);
 
 app.post('/login', user.login);
 
-app.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/google/return', passport.authenticate('google', { session: false, failureRedirect: '/flub' }), function(req, res) {
+app.get('/google/return', passport.authenticate('google', 
+{ session: false, failureRedirect: '/flub' }), function(req, res) {
         console.log("Hell yeah.");
 
+        res.json({success:true, message: "Google auth done."});
+        /*
         var userEmail = req.user.email;
 
         User.findOne({UserEmail:userEmail}, function(err, exists){
@@ -219,7 +251,8 @@ app.get('/google/return', passport.authenticate('google', { session: false, fail
                     });
                 }
             }
-        });                     
+        });       
+        */              
 });
 
 app.post('/hello', function(req, res){

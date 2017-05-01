@@ -3,6 +3,10 @@ var bcrypt = require('bcryptjs');
 var SALT_WORK_FACTOR = 10;
 
 var userSchema = mong.Schema({
+    googleID:{
+        type: String,
+        required: true
+    },
     username:{
         type: String,
         required: true
