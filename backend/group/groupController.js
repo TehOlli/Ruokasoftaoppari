@@ -362,3 +362,23 @@ exports.getMessages = function(req, res){
         res.json(results);
     });
 };
+
+exports.savePlace = function(req, res){
+    if(!req.body) return res.sendStatus(400);
+
+    var groupID = req.body.groupid;
+    var placeID = req.body.placeid;
+
+    console.log("Saving place " + placeID + " to group " + groupID);
+
+    var place = {placeID:placeID};
+    Group.findOneAndUpdate({_id:groupID}, {$push:{places:place}}, function(err, group){
+        if(err){
+            console.log("/savePlace: Couldn't save location to database.");
+            console.log(err);
+            res.json({success:false, message:"Couldn't save location to database."}):
+        }else{
+            res.json({success:true, message: "Location saved."});
+        }
+    });
+}

@@ -1,5 +1,4 @@
 var mong = require('mongoose');
-var bodyParser = require("body-parser");
 
 /*
 var members = mong.Schema({
@@ -22,6 +21,9 @@ var groupSchema = mong.Schema({
     //subSchemaCollection: members
     members: [{
         memberEmail: String
+    }],
+    places: [{
+        placeID: String
     }]
 });
 

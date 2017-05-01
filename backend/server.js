@@ -16,7 +16,7 @@ var user                = require("./user/userController");
 
 var User                = require("./user/userModel");
 var passport            = require('passport');
-var GoogleStrategy            = require('passport-google-oauth20').Strategy;
+var GoogleStrategy      = require('passport-google-oauth20').Strategy;
 
 //==========
 //Configuration
@@ -30,7 +30,7 @@ var urlencodedParser    = bodyParser.urlencoded({extended: false});
 app.use(express.static(__dirname + '/public'));
 app.set('secret', config.secret);
 app.use('/', router);
-app.use('/auth', authRouter);
+app.use('/authe', authRouter);
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -56,7 +56,7 @@ authRouter.options("/*", function(req, res, next){
 passport.use(new GoogleStrategy({
     clientID: config.GOOGLE_CLIENT_ID,
     clientSecret: config.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http.//localhost:8080/auth/google/return"
+    callbackURL: "http://localhost:8080/google/return"
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
@@ -173,7 +173,7 @@ app.post("/signup", jsonParser, user.signUp);
 
 app.post('/login', jsonParser, user.login);
 
-app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 
 app.get('/google/return', passport.authenticate('google', { session: false, failureRedirect: '/flub' }), function(req, res) {
         console.log("Hell yeah.");
@@ -275,6 +275,8 @@ authRouter.post("/setgroupimage", jsonParser, upload.single('groupimg'), group.s
 authRouter.post("/deletegroup", jsonParser, group.deleteGroup);
 
 authRouter.get("/getmessages", group.getMessages);
+
+authRouter.post("/saveplace", group.savePlace);
 
 
 
