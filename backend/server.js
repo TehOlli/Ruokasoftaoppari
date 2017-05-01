@@ -24,14 +24,15 @@ var GoogleStrategy      = require('passport-google-oauth20').Strategy;
 
 var router              = express.Router();
 var authRouter          = express.Router();
-var jsonParser          = bodyParser.json();
-var urlencodedParser    = bodyParser.urlencoded({extended: false});
+
+
 
 app.use(express.static(__dirname + '/public'));
 app.set('secret', config.secret);
 app.use('/', router);
-app.use('/auth', authRouter);
 app.use(bodyParser.json());
+app.use('/auth', authRouter);
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email");
@@ -169,9 +170,9 @@ io.on("connection", function(socket){
 //==========
 
 //User creation & login
-app.post("/signup", jsonParser, user.signUp);
+app.post("/signup", user.signUp);
 
-app.post('/login', jsonParser, user.login);
+app.post('/login', user.login);
 
 app.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 
@@ -240,11 +241,11 @@ authRouter.get('/', function(req, res){
 
 
 //User routes
-authRouter.post('/changeusername', jsonParser, user.changeUsername);
+authRouter.post('/changeusername', user.changeUsername);
 
-authRouter.post('/changepassword', jsonParser, user.changePassword);
+authRouter.post('/changepassword', user.changePassword);
 
-authRouter.post('/setavatar', jsonParser, upload.single('avatar'), user.setAvatar);
+authRouter.post('/setavatar', upload.single('avatar'), user.setAvatar);
 
 authRouter.get('/members', user.getUsers);
 
@@ -254,29 +255,33 @@ authRouter.get('/invites', user.getInvites);
 
 
 //Group routes
-authRouter.post('/creategroup', jsonParser, group.createGroup);
+authRouter.post('/creategroup', group.createGroup);
 
-authRouter.post('/altergroup', jsonParser, group.alterGroup);
+authRouter.post('/altergroup', group.alterGroup);
 
 authRouter.get('/groups', group.getGroups);
 
-authRouter.get('/getgroup', jsonParser, group.getGroup);
+authRouter.get('/getgroup', group.getGroup);
 
-authRouter.post("/invitetogroup", jsonParser, group.invitetoGroup);
+authRouter.post("/invitetogroup", group.invitetoGroup);
 
-authRouter.post("/acceptinv", jsonParser, group.acceptInvitation);
+authRouter.post("/acceptinv", group.acceptInvitation);
 
-authRouter.post("/declineinv", jsonParser, group.declineInvitation);
+authRouter.post("/declineinv", group.declineInvitation);
 
-authRouter.post("/removefromgroup", jsonParser, group.removefromGroup);
+authRouter.post("/removefromgroup", group.removefromGroup);
 
-authRouter.post("/setgroupimage", jsonParser, upload.single('groupimg'), group.setGroupImage);
+authRouter.post("/setgroupimage", upload.single('groupimg'), group.setGroupImage);
 
-authRouter.post("/deletegroup", jsonParser, group.deleteGroup);
+authRouter.post("/deletegroup", group.deleteGroup);
 
 authRouter.get("/getmessages", group.getMessages);
 
-authRouter.post("/saveplace", jsonParser, group.savePlace);
+authRouter.post("/saveplace", group.savePlace);
+
+authRouter.post("/getplaces", group.getPlaces);
+
+authRouter.post("/deleteplace", group.deletePlace);
 
 
 

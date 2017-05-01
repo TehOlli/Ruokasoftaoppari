@@ -376,9 +376,43 @@ exports.savePlace = function(req, res){
         if(err){
             console.log("/savePlace: Couldn't save location to database.");
             console.log(err);
-            res.json({success:false, message:"Couldn't save location to database."}):
+            res.json({success:false, message: "Couldn't save location."});
         }else{
             res.json({success:true, message: "Location saved."});
         }
     });
-}
+};
+
+exports.getPlaces = function(req, res){
+    if(!req.headers['id']) return res.sendStatus(400);
+
+    var groupID = req.headers['id'];
+
+    Group.findOne({_id:groupID}, places, function(err, places){
+        if(err){
+            console.log("/getplaces: Couldn't get list of places.")
+            console.log(err);
+            res.json({success:false, message: "Couldn't get places."});
+        }
+    });
+};
+
+exports.deletePlace = function(req, res){
+    if(!req.body) return res.sendStatus(400);
+    
+    
+    var groupID = req.body.groupID;
+    var placeID = req.body.placeID;
+    
+    console.log("Deleting place " + placeID + " from group " + groupID);
+
+    Group.findOneAndUpdate({_id:groupID}, {$pull:{places:{placeID:placeID}}}, function(err, group){
+        if(err){
+            console.log("/deletePlace: Couldn't delete location from database.");
+            console.log(err);
+            res.json({success:false, message: "Couldn't delete location."});
+        }else{
+            res.json({success: true, message: "Location deleted."});
+        }
+    });
+};
