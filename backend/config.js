@@ -9,7 +9,5 @@ var dbPassword;
 
 module.exports = {
     'secret' : 'salaisuus',
-    'dbConnection' : `mongodb://${host}/${databaseName}`,
-    'GOOGLE_CLIENT_ID' : '546073062554-fvurgo1ps4fhrn4plhkno8l26b07894s.apps.googleusercontent.com',
-    'GOOGLE_CLIENT_SECRET' : '2ZaKr4gdsbe33bfGNHhhM-_0'
+    'dbConnection' : `mongodb://${host}/${databaseName}`
 };
