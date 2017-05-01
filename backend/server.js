@@ -30,7 +30,7 @@ var urlencodedParser    = bodyParser.urlencoded({extended: false});
 app.use(express.static(__dirname + '/public'));
 app.set('secret', config.secret);
 app.use('/', router);
-app.use('/authe', authRouter);
+app.use('/auth', authRouter);
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -276,7 +276,7 @@ authRouter.post("/deletegroup", jsonParser, group.deleteGroup);
 
 authRouter.get("/getmessages", group.getMessages);
 
-authRouter.post("/saveplace", group.savePlace);
+authRouter.post("/saveplace", jsonParser, group.savePlace);
 
 
 
