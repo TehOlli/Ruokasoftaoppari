@@ -39,7 +39,6 @@
         <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/controller.js"></script>
         <script type="text/javascript" src="js/services/validationService.js"></script>
-        <script type="text/javascript" src="js/services/membersService.js"></script>
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc-cuAPltUAzINMTaGCNFJ71gLtLqrWPc&libraries=places&type=restaurant"async defer></script>
         
@@ -91,8 +90,8 @@
             <ons-toolbar>
                 <div class="center">Home</div>
                 <div class="right">
-                    <ons-icon ng-click="myNavigator.pushPage('settings.html')" class="add-icon" icon="ion-android-settings"></ons-icon>
-                    <ons-icon ng-click="dialog3.show(); inviteFunction()" class="add-icon" icon="ion-android-notifications"></ons-icon>
+                    <ons-icon ng-click="myNavigator.pushPage('settings.html')" class="list-icon" icon="ion-android-settings"></ons-icon>
+                    <ons-icon id="invite-icon" ng-click="dialog3.show(); inviteFunction()" class="list-icon" icon="ion-android-notifications"></ons-icon>
                 </div>
             </ons-toolbar>
             <ons-list>
@@ -238,17 +237,20 @@
                         <input id="hidden-input" type="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" style="display:none;" accept="image/*"/>
                         <div onclick="document.getElementById('hidden-input').click();"><ons-icon icon="ion-android-add-circle"></ons-icon></div>
                     </div>
-                    <h3 ng-show="name">{{groupName}} <ons-icon style="padding-left:5px;" ng-click="name=false" icon="ion-edit"></ons-icon></h3>
-                    <p ng-hide="name">
-                        <input ng-model="groupName">
-                        <ons-icon style="padding-left:5px;" ng-click="alterGroup(groupName)" icon="ion-android-checkmark-circle">
-                    </p>           
-                    <p ng-show="desc">{{groupDesc}} <ons-icon style="padding-left:5px;" ng-click="desc=false" icon="ion-edit"></ons-icon></p>
-                    <p ng-hide="desc">
-                        <input ng-model="groupdesc">
-                        <ons-icon style="padding-left:5px;" ng-click="alterGroup()" icon="ion-android-checkmark-circle">
-                    </p>
-                    
+                    <div class="group-name">  
+                        <h3 ng-show="name">{{groupName}} <ons-icon style="padding-left:5px;" ng-click="name=false" icon="ion-edit"></ons-icon></h3>
+                        <p ng-hide="name">
+                            <input ng-model="groupName">
+                            <ons-icon class="edit-icon" ng-click="alterName()" icon="ion-android-checkmark-circle">
+                        </p>
+                    </div>
+                    <div class="group-desc">           
+                        <p ng-show="desc">{{groupDesc}} <ons-icon style="padding-left:5px;" ng-click="desc=false" icon="ion-edit"></ons-icon></p>
+                        <p ng-hide="desc">
+                            <input ng-model="groupDesc">
+                            <ons-icon  ng-click="alterDesc()" icon="ion-android-checkmark-circle">
+                        </p>
+                    </div>
                 </div>
             </div>
             <ons-list>
