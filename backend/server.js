@@ -16,7 +16,7 @@ var user                = require("./user/userController");
 
 var User                = require("./user/userModel");
 var passport            = require('passport');
-var Strategy            = require('passport-google-oauth20').Strategy;
+var GoogleStrategy            = require('passport-google-oauth20').Strategy;
 
 //==========
 //Configuration
@@ -173,13 +173,12 @@ app.post("/signup", jsonParser, user.signUp);
 
 app.post('/login', jsonParser, user.login);
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/auth/google/return', passport.authenticate('google', { session: false, failureRedirect: '/flub' }), function(req, res) {
+app.get('/google/return', passport.authenticate('google', { session: false, failureRedirect: '/flub' }), function(req, res) {
         console.log("Hell yeah.");
 
         var userEmail = req.user.email;
-
 
         User.findOne({UserEmail:userEmail}, function(err, exists){
             if(err){
@@ -219,10 +218,7 @@ app.get('/auth/google/return', passport.authenticate('google', { session: false,
                     });
                 }
             }
-        });       
-                        
-                        
-
+        });                     
 });
 
 app.post('/hello', function(req, res){
