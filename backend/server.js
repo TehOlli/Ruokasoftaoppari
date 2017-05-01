@@ -13,7 +13,6 @@ var multer              = require('multer');
 var upload              = multer({dest:'./public/uploads/'});
 var group               = require("./group/groupController");
 var user                = require("./user/userController");
-//var Strategy          = require("passport-http-bearer").Strategy;
 
 
 //==========
@@ -22,8 +21,6 @@ var user                = require("./user/userController");
 
 var router              = express.Router();
 var authRouter          = express.Router();
-
-
 
 app.use(express.static(__dirname + '/public'));
 app.set('secret', config.secret);
