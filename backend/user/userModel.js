@@ -15,7 +15,6 @@ var userSchema = mong.Schema({
     },
     userPassword:{
         type: String,
-        required: true
     },
     groups: [{
         //type: Schema.Types.ObjectId, ref: 'Group'

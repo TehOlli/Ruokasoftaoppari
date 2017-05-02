@@ -156,6 +156,8 @@ app.post("/signup", user.signUp);
 
 app.post('/login', user.login);
 
+app.post('/googleauth', user.googleAuth);
+
 //==========
 //Authenticated Routes
 //==========
@@ -206,7 +208,7 @@ authRouter.get("/getmessages", group.getMessages);
 
 authRouter.post("/saveplace", group.savePlace);
 
-authRouter.post("/getplaces", group.getPlaces);
+authRouter.get("/getplaces", group.getPlaces);
 
 authRouter.post("/deleteplace", group.deletePlace);
 

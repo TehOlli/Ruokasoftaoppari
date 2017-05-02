@@ -4,6 +4,7 @@ var jwt                 = require("jsonwebtoken");
 var express             = require("express");
 var app                 = express();
 var config              = require("../config");
+var GoogleAuth = require('google-auth-library');
 
 app.set('secret', config.secret);
 
@@ -103,6 +104,71 @@ exports.login = function(req, res){
             }else{
                 res.json({success: false, message: "Login failed. User does not exist."});
             }
+        }
+    });
+};
+
+exports.googleAuth = function(req, res){
+    var auth = new GoogleAuth;
+    var client = new auth.OAuth2(config.CLIENT_ID, '', '');
+    var token = req.body.token;
+
+    console.log("Token: " + token);
+
+    client.verifyIdToken(token, config.CLIENT_ID, function(err, login) {
+        if(err){
+            console.log("Eipä onnistunut.")
+            res.json({success:false, message: "Token verification failed."});
+        }else{
+            var payload = login.getPayload();
+            var username = payload['name'];
+            var userEmail = payload['email'];
+
+            console.log("Checking if Google user exists...");
+            User.find({userEmail:userEmail}).limit(1).exec(function(err, exists){
+                if(err){
+                    console.log("Google Auth: failed to check for existing user.");
+                    console.log(err);
+                    res.json({success:false, message:"User check failed."})
+                }else{
+                    if(exists.length){
+                        console.log(exists);
+
+                        var token = jwt.sign({userEmail: exists.userEmail}, app.get('secret'), {
+                            expiresIn: '24h'
+                        });
+
+                        res.json({
+                            success: true,
+                            message: 'Google user authenticated.',
+                            token: token
+                        });     
+                    }else{
+                        var newUser = new User({
+                            username: username,
+                            userEmail: userEmail,
+                        });
+
+                        newUser.save(function(err){
+                            if(err){
+                                console.log("Google Auth: couldn't save new user");
+                                console.log(err);
+                                res.json({success:false, message:"Couldn't save new user."});
+                            }else{
+                                var token = jwt.sign({userEmail: newUser.userEmail}, app.get('secret'), {
+                                    expiresIn: '24h'
+                                });
+
+                                res.json({
+                                    success: true,
+                                    message: 'New Google user added.',
+                                    token: token
+                                });
+                            }
+                        });
+                    }
+                }
+            });
         }
     });
 };
@@ -241,4 +307,4 @@ exports.getInvites = function(req, res){
             }
         }
     });
-}
+};

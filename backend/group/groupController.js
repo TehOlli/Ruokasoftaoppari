@@ -379,7 +379,7 @@ exports.savePlace = function(req, res){
     console.log("Saving place " + placeID + " to group " + groupID);
 
     var place = {placeID:placeID};
-    Group.find({_id:groupID, places:placeID}.limit(1), function(err, exists){
+    Group.find({_id:groupID, places:{placeID:placeID}}).limit(1).exec(function(err, exists){
         if(err){
             console.log(err);
         }else{
@@ -408,12 +408,14 @@ exports.getPlaces = function(req, res){
 
     var groupID = req.headers['id'];
 
-    Group.findOne({_id:groupID}, places, function(err, places){
+    Group.findOne({_id:groupID}).select('places.placeID').exec(function(err, places){
         if(err){
             console.log("/getplaces: Couldn't get list of places.")
             console.log(err);
             res.json({success:false, message: "Couldn't get places."});
         }
+
+        res.json(places);
     });
 };
 
