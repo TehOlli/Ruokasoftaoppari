@@ -23,7 +23,10 @@ var groupSchema = mong.Schema({
         memberEmail: String
     }],
     places: [{
-        placeID: String
+        placeID:{
+            type: String,
+            required: true
+        }
     }]
 });
 

@@ -323,7 +323,14 @@ exports.deleteGroup = function(req, res){
             User.update({"groups.groupID":groupID}, {$pull:{groups:{groupID:groupID}}} , function(err, members){
                 console.log("Removed group from users' member arrays.")
 
-                res.json({success:true, message:"Group deleted"});
+                fs.unlink("./public/uploads/groups/" + groupID + ".jpg", function(err){
+                    if(err){
+                        console.log("deleteGroup: couldn't delete groupimg");
+                        console.log(err);
+                    }
+                    res.json({success:true, message:"Group deleted"});
+                });
+                
             });
         }
     });
@@ -372,15 +379,28 @@ exports.savePlace = function(req, res){
     console.log("Saving place " + placeID + " to group " + groupID);
 
     var place = {placeID:placeID};
-    Group.findOneAndUpdate({_id:groupID}, {$push:{places:place}}, function(err, group){
+    Group.find({_id:groupID, places:placeID}.limit(1), function(err, exists){
         if(err){
-            console.log("/savePlace: Couldn't save location to database.");
             console.log(err);
-            res.json({success:false, message: "Couldn't save location."});
         }else{
-            res.json({success:true, message: "Location saved."});
+            if(exists.length){
+                console.log("Place is already on the list.");
+                res.json({success:false, message:"Place is already on the list."});
+            }else{
+                Group.findOneAndUpdate({_id:groupID}, {$push:{places:place}}, function(err, group){
+                    if(err){
+                        console.log("/savePlace: Couldn't save location to database.");
+                        console.log(err);
+                        res.json({success:false, message: "Couldn't save location."});
+                    }else{
+                        res.json({success:true, message: "Location saved."});
+                    }
+                });
+            }
         }
-    });
+
+    })
+
 };
 
 exports.getPlaces = function(req, res){
