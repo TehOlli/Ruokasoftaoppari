@@ -1,4 +1,7 @@
 # Node
 node_modules/
 */public/uploads/
-
+# Cordova
+ruokasofta/platforms
+ruokasofta/hooks
+ruokasofta/plugins
