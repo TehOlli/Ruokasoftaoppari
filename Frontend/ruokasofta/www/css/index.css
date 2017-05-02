@@ -90,7 +90,9 @@ body {
     color:blue;
     text-decoration: underline;
 }
-
+.google-login .button--material {
+    background-color:#df482e !important;
+}
 .remove-user{
     font-size: 25px;
     margin-right: 10px;

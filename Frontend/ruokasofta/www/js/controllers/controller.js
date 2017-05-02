@@ -1,11 +1,12 @@
 //CONTROLLER FOR HANDLING SIGNUP
-app.controller('signupController', ['$scope', '$log', '$http','validation', function($scope, $log, $http, validation) {
+app.controller('signupController', ['$scope', '$log', '$http','validation', 'address', function($scope, $log, $http, validation, address) {
 
        $scope.userName = "";
        $scope.userEmail = "";
        $scope.userPassword = "";
-       var local = "http://localhost:8080/";
-       var proto = "http://proto453.haaga-helia.fi:80/";
+       $scope.loginEmail = "";
+       $scope.loginPassword = "";
+       var address = address.getAddress();
        
        document.addEventListener('init', function (e) { 
 
@@ -13,7 +14,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
 
                  if(localStorage.token != null){
 
-                      $http.get(local + 'auth').then(function (success){
+                      $http.get(address + 'auth').then(function (success){
 
                         $log.info("token check success");
 
@@ -41,7 +42,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
                  var data = JSON.stringify({username:$scope.userName, email:$scope.userEmail, password:$scope.userPassword});
                 $log.info(data);
 
-                 $http.post(local + 'signup', data).then(function (success){
+                 $http.post(address + 'signup', data).then(function (success){
                     
                     if(success.data.success==false){
                         ons.notification.alert(success.data.message);
@@ -62,49 +63,21 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', func
             }
 
        }
-       $scope.googleloginFunction = function(){
 
-           document.addEventListener('deviceready', deviceReady, false);
+       $scope.loginFunction = function(){
 
-            function deviceReady() {
-                console.log('device is ready');
-                window.plugins.googleplus.login(
-                    {
-                    
-                    },
-                    function (obj) {
-                    alert(JSON.stringify(obj)); // do something useful instead of alerting
-                    },
-                    function (msg) {
-                    alert('error: ' + msg);
-                    }
-                );
-                
-            }
-       }
+        var data = {email:$scope.loginEmail, password:$scope.loginPassword};
 
-}]);
+        console.log(data)
 
-//CONTROLLER FOR HANDLING LOGIN
-app.controller('loginController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
-
-    $scope.userEmail = "";
-    $scope.userPassword = "";
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
-
-    $scope.loginFunction = function(){
-
-        var data = {email:$scope.userEmail, password:$scope.userPassword};
-
-        $http.post(local + 'login', data).then(function (success){
+        $http.post(address + 'login', data).then(function (success){
 
                  if(success.data.success==false){
                     ons.notification.alert(success.data.message);
                  }
                  else{
                     localStorage.token = success.data.token;
-                    localStorage.email = $scope.userEmail;
+                    localStorage.email = $scope.loginEmail;
                     localStorage.name = success.data.username;
                     $log.info("login success", success);
 
@@ -117,20 +90,65 @@ app.controller('loginController', ['$scope', '$log', '$http', 'validation', func
 
             });
 
-    } 
+       }
+
+       $scope.googleloginFunction = function(){
+
+           document.addEventListener('deviceready', deviceReady, false);
+
+            function deviceReady() {
+                console.log('device is ready');
+                window.plugins.googleplus.login(
+                    {
+                        'scopes': '',
+                        'webClientId': '546073062554-fvurgo1ps4fhrn4plhkno8l26b07894s.apps.googleusercontent.com',
+                        'offline': true
+                    
+                    },
+                    function (obj) {
+                        console.log(obj);
+                        authUser(obj);
+                    },
+                    function (msg) {
+                        alert('error: ' + msg);
+                    }
+                );
+
+                function authUser(obj){
+                    data = {token: obj.idToken};
+                    $http.post(address + 'googleauth', data).then(function(success){
+                        if(success.data.success==false){
+                            ons.notification.alert(success.data.message);
+                        }
+                        else{
+                            localStorage.token = success.data.token;
+                            localStorage.email = obj.email;
+                            console.log("google auth success");
+                            myNavigator.pushPage("list.html", {})
+                        }
+
+                    }, function(error){
+                        console.log("google auth error");
+
+                    });
+
+                }
+                
+            }
+       }
 
 }]);
+
 //CONTROLLER FOR HANDLING GROUP LIST
-app.controller('listController', ['$scope', '$log', '$http', function($scope, $log, $http) {
+app.controller('listController', ['$scope', '$log', '$http','address', function($scope, $log, $http, address) {
     $scope.invites = [];
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
-    $scope.imgurl = "http://localhost:8080/";
+    var address = address.getAddress();
+    $scope.imgurl = address;
     groupsFunction();
     invitesFunction();
 
     function invitesFunction(){
-        $http.get(local + 'auth/invites').then(function(success){
+        $http.get(address + 'auth/invites').then(function(success){
         console.log("invite get success");
         $scope.invites = success.data.invites;
         if($scope.invites.length){
@@ -146,7 +164,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     }
 
     function groupsFunction(){
-        $http.get(local + 'auth/groups').then(function (success){
+        $http.get(address + 'auth/groups').then(function (success){
         $scope.groups = success;
         $log.info($scope.groups.data);
         $log.info("group get success");
@@ -160,7 +178,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     $scope.acceptInvite = function(group){
         var data = {id:group.groupID};
         console.log(data);
-        $http.post(local +  'auth/acceptinv', data).then(function(success){
+        $http.post(address +  'auth/acceptinv', data).then(function(success){
             console.log(success);
             invitesFunction();
             groupsFunction();
@@ -174,7 +192,7 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
     $scope.declineInvite = function(group){
         var data = {id:group.groupID};
         console.log(data);
-        $http.post(local +  'auth/declineinv', data).then(function(success){
+        $http.post(address +  'auth/declineinv', data).then(function(success){
             console.log(success);
             invitesFunction();
 
@@ -204,13 +222,12 @@ app.controller('listController', ['$scope', '$log', '$http', function($scope, $l
 }]);
 
 //CONTROLLER FOR HANDLING CREATE A GROUP
-app.controller('createController', ['$scope', '$log', '$http','validation', function($scope, $log, $http, validation) {
+app.controller('createController', ['$scope', '$log', '$http','validation', 'address', function($scope, $log, $http, validation, address) {
 
     $scope.groupName = "";
     $scope.groupDesc = "";
     $scope.form = "";
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
+    var address = address.getAddress();
 
     $scope.uploadFile = function(files){
         var form = new FormData();
@@ -235,14 +252,14 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
 
             $log.info(data);
 
-            $http.post(local + 'auth/creategroup', data).then(function (success){
+            $http.post(address + 'auth/creategroup', data).then(function (success){
 
                 $log.info("group create success");
 
                 if($scope.form!=""){
                     var header = {headers:{'content-type':undefined, 'id':success.data.group._id}}
 
-                    $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
+                    $http.post(address + 'auth/setgroupimage', $scope.form, header).then(function(success){
                         console.log("create file send success");
                         ons.notification.alert({
                             message: "Group has been created",
@@ -279,7 +296,7 @@ app.controller('createController', ['$scope', '$log', '$http','validation', func
 }]);
 
 //CONRTOLLER FOR HANDLING USER INFORMATION
-app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$q', function($scope, $log, $http, validation, $q) {
+app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$q', 'address', function($scope, $log, $http, validation, $q, address) {
     
     $scope.username = "";
     $scope.email = "";
@@ -287,15 +304,14 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
     $scope.newpass = "";
     $scope.form = "";
     var usernamecheck = "";
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
+    var address = address.getAddress();
 
-    $http.get(local + 'auth/profile').then(function(success){
+    $http.get(address + 'auth/profile').then(function(success){
         $scope.username = success.data.username;
         usernamecheck = success.data.username;
         $scope.email = success.data.userEmail;
         var time = Date.now();
-        document.getElementById("profile-img").style.background = "url(" + local + "uploads/avatars/" + $scope.email + ".jpg" + "?" + time + ")";
+        document.getElementById("profile-img").style.background = "url(" + address + "uploads/avatars/" + $scope.email + ".jpg" + "?" + time + ")";
         document.getElementById("profile-img").style.backgroundSize = "cover";  
 
 
@@ -328,7 +344,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
             if($scope.form!=""){
                 var header = {headers:{'content-type':undefined}}
 
-                $http.post(local + 'auth/setavatar', $scope.form, header).then(function(success){
+                $http.post(address + 'auth/setavatar', $scope.form, header).then(function(success){
                     console.log("user file send success");
                 },function(error){
                     console.log("file send error", error)
@@ -354,7 +370,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
 
                 console.log(data);
 
-                $http.post(local + 'auth/changeusername', data).then(function (success){
+                $http.post(address + 'auth/changeusername', data).then(function (success){
                     console.log("username change success");
                     usernamecheck=$scope.username;
 
@@ -377,7 +393,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
                 var data = JSON.stringify({oldpassword: $scope.oldpass, newpassword: $scope.newpass, email:$scope.email});
                 console.log(data);
 
-                $http.post(local + 'auth/changepassword', data).then(function(success){
+                $http.post(address + 'auth/changepassword', data).then(function(success){
                     console.log("password change success")
                     $scope.newpass="";
                     $scope.oldpass="";
@@ -409,16 +425,15 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
 }]);
 
 //CONTROLLER FOR HANDLING CHAT
-app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', function($scope, $log, $http, $anchorScroll) {
+app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', 'address', function($scope, $log, $http, $anchorScroll, address) {
     $scope.chatInput = "";
     $scope.messages = [];
     $scope.msgdate = "01.01.1970";
     $scope.date = false;
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
+    var address = address.getAddress();
     var id = {id: localStorage.id};
 
-    $http.get(local + 'auth/getmessages', {headers: id}).then(function (success){
+    $http.get(address + 'auth/getmessages', {headers: id}).then(function (success){
 
                 $log.info(success.data);
                 for(var x in success.data){
@@ -431,7 +446,7 @@ app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', fu
 
             });
 
-    var socket = io.connect('http://localhost:8080/');
+    var socket = io.connect(address);
         socket.on('connect', function() {
         socket.emit('room', localStorage.id);
     });
@@ -459,9 +474,8 @@ app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', fu
 }]);
 
 //CONTROLLER FOR HANDLING RESTAURANT LIST
-app.controller('restaurantController', ['$scope', '$log', '$http','places', function($scope, $log, $http, places) {
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
+app.controller('restaurantController', ['$scope', '$log', '$http','places', 'address', function($scope, $log, $http, places, address) {
+    var address = address.getAddress();
     $scope.restaurants = [];
 
     document.addEventListener('init', function (e) { 
@@ -485,10 +499,9 @@ app.controller('restaurantController', ['$scope', '$log', '$http','places', func
 }]);
 
 //CONTROLLER FOR HANDLING MAP
-app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places', function($scope, $log, $http, $timeout, places) {
+app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places', 'address', function($scope, $log, $http, $timeout, places, address) {
  
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
+    var address = address.getAddress();
     $scope.list = true;
     $scope.close = false;
     
@@ -603,25 +616,24 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
 }]);
 
 //CONTROLLER FOR HANDLING GROUP
-app.controller('manageController', ['$scope', '$log', '$http', 'validation', function($scope, $log, $http, validation) {
+app.controller('manageController', ['$scope', '$log', '$http', 'validation','address', function($scope, $log, $http, validation,address) {
     $scope.admin = false;
     $scope.userEmail = "";
     $scope.groupName = "";
     $scope.groupDesc = "";
     $scope.name = true;
     $scope.desc = true;
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
+    var address = address.getAddress();
 
     getMembers();
     var header = {id: localStorage.id}
 
-    $http.get(local + 'auth/getgroup', {headers:header}).then(function(success){
+    $http.get(address + 'auth/getgroup', {headers:header}).then(function(success){
         console.log("group info get success");
         $scope.groupName = success.data.groupName;
         $scope.groupDesc = success.data.groupDesc;
         var time = Date.now();
-        document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
+        document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
         document.getElementById("group-img").style.backgroundSize = "cover";
 
     }, function(error){
@@ -634,7 +646,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
 
    function getMembers(){
        var id = {id: localStorage.id}
-       $http.get(local + 'auth/members', {headers: id}).then(function(success){
+       $http.get(address + 'auth/members', {headers: id}).then(function(success){
         $scope.users = success
 
        },function(error){
@@ -655,7 +667,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
    }
 
    $scope.alterGroup = function(x){
-       $http.post(local + 'auth/altergroup', x).then(function(success){
+       $http.post(address + 'auth/altergroup', x).then(function(success){
            console.log("group alter success");
 
        },function(error){
@@ -671,10 +683,10 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
         
         var header = {headers:{'content-type':undefined, 'id':localStorage.id}}
 
-            $http.post(local + 'auth/setgroupimage', $scope.form, header).then(function(success){
+            $http.post(address + 'auth/setgroupimage', $scope.form, header).then(function(success){
                 console.log("group file send success");
                 var time = Date.now();
-                document.getElementById("group-img").style.background = "url(" + local + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
+                document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
                 document.getElementById("group-img").style.backgroundSize = "cover";
             },function(error){
                 console.log("file send error", error)
@@ -692,7 +704,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
 
             $log.info(data);
 
-            $http.post(local + 'auth/invitetogroup', data).then(function (success){
+            $http.post(address + 'auth/invitetogroup', data).then(function (success){
 
                   if(success.data.success==false){
 
@@ -722,7 +734,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
         var data = JSON.stringify({email: email, groupid:localStorage.id});
         console.log(data);
 
-         $http.post(local + 'auth/removefromgroup', data).then(function (success){
+         $http.post(address + 'auth/removefromgroup', data).then(function (success){
 
               if(success.data.success==false){
 
@@ -747,7 +759,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
 
          var data = JSON.stringify({email: localStorage.email, groupid:localStorage.id});
 
-        $http.post(local + 'auth/removefromgroup', data).then(function (success){
+        $http.post(address + 'auth/removefromgroup', data).then(function (success){
 
                 $log.info("user remove success");
 
@@ -768,7 +780,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation', fun
 
          function confDelete(){
 
-             $http.post(local + 'auth/deletegroup', data).then(function (success){
+             $http.post(address + 'auth/deletegroup', data).then(function (success){
 
                 $log.info("delete group success");
                     ons.notification.alert({

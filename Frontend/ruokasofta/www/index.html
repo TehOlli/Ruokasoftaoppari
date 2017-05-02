@@ -20,27 +20,32 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.gstatic.com/ data: gap: https://ssl.gstatic.com 'unsafe-eval'; script-src 'self'  https://cdn.rawgit.com/ http://proto453.haaga-helia.fi/ https://code.jquery.com/ http://localhost:8080/  'unsafe-inline' 'unsafe-eval' https://*.gstatic.com https://*.googleapis.com; style-src 'self' https://fonts.googleapis.com/ 'unsafe-inline'; media-src *; connect-src http://localhost:8080/  http://proto453.haaga-helia.fi/ ws://localhost:8080/ ws://proto453.haaga-helia.fi/ https://code.jquery.com/; img-src 'self' https://maps.googleapis.com/ https://maps.gstatic.com/ https://csi.gstatic.com/ http://localhost:8080/ data: content:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.gstatic.com/ data: gap: https://ssl.gstatic.com 'unsafe-eval'; script-src 'self'  https://cdn.rawgit.com/ http://193.167.99.102:80/ https://code.jquery.com/ http://localhost:8080/  'unsafe-inline' 'unsafe-eval' https://*.gstatic.com https://*.googleapis.com; style-src 'self' https://fonts.googleapis.com/ 'unsafe-inline'; media-src *; connect-src http://localhost:8080/ http://193.167.99.102:80/ ws://localhost:8080/ w://193.167.99.102:80/ https://code.jquery.com/; img-src 'self' https://maps.googleapis.com/ https://maps.gstatic.com/ https://csi.gstatic.com/ http://localhost:8080/  http://193.167.99.102:80/ data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
         <link rel="stylesheet" type="text/css" href="css/onsenui.css">
         <link rel="stylesheet" type="text/css" href="css/onsen-css-components.css">
         <link rel="stylesheet" type="text/css" href="css/index.css">
-
+        <!--js libraries-->
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/angular.min.js"></script>
         <script type="text/javascript" src="js/onsenui.min.js"></script>
         <script type="text/javascript" src="js/angular-onsenui.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script src="https://cdn.rawgit.com/Luegg/angularjs-scroll-glue/master/src/scrollglue.js"></script>
-
+        <!--app scripts-->
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
+        <!--controllers-->
         <script type="text/javascript" src="js/controllers/controller.js"></script>
+        <!--services-->
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/placesService.js"></script>
+        <script type="text/javascript" src="js/services/addressService.js"></script>
+        <!--socket.io-->
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+        <!--google-->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc-cuAPltUAzINMTaGCNFJ71gLtLqrWPc&libraries=places&type=restaurant"async defer></script>
         
         <title>Ruokasoftaoppari</title>
@@ -64,22 +69,24 @@
                     <p>
                         <ons-button style="width:195px;" ng-click="signupFunction()" modifier="material">Sign up</ons-button>
                     </p>
-                    <p>
-                        <ons-button style="width:195px;" ng-click="googleloginFunction()" modifier="material">Login with google</ons-button>
-                    </p>
                     <hr style="width:220px;">
+                    <p class="google-login">
+                        <ons-button style="width:195px;" ng-click="googleloginFunction()" modifier="material">
+                            <ons-icon style="margin-right:5px;"icon="ion-social-google-outline"></ons-icon>Login with google
+                        </ons-button>
+                    </p>
                     <p class="login">
                         <a ng-click="dialog2.show();">Already have an account?</a>
                     </p>
                 </div>
             </form>
-            <ons-dialog var="dialog2" ng-controller="loginController">
+            <ons-dialog var="dialog2" ng-controller="signupController">
                 <div style="text-align: center; padding: 10px;">
                     <p>
-                        <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
+                        <ons-input ng-model="loginEmail" modifier="material" placeholder="Email"></ons-input>
                     </p>
                      <p>
-                        <ons-input ng-model="userPassword" id="password" modifier="material" placeholder="Password"></ons-input>
+                        <ons-input ng-model="loginPassword" modifier="material" placeholder="Password"></ons-input>
                     </p>
                     <div class="">
                         <ons-button ng-click="loginFunction()">login</ons-button>

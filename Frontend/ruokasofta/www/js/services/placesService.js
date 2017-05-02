@@ -1,11 +1,10 @@
-app.service('places', function($http){
+app.service('places', function($http, address){
     var placesList = [];
-    var local = "http://localhost:8080/";
-    var proto = "http://proto453.haaga-helia.fi:80/";
+    var address = address.getAddress();
     this.addToList = function(place){
         var data = {placeid:place.place_id, groupid:localStorage.id};
         console.log(data);
-        $http.post(local + 'auth/saveplace', data).then(function(success){
+        $http.post(address + 'auth/saveplace', data).then(function(success){
             console.log("place add success");
 
         }, function(error){
@@ -18,7 +17,7 @@ app.service('places', function($http){
     
     this.getList = function(){
         var header = {id: localStorage.id}
-        $http.get(local + 'auth/getplaces', {headers:header}).then(function(success){
+        $http.get(address + 'auth/getplaces', {headers:header}).then(function(success){
             console.log("places get success");
         }, function(error){
             console.log("places get error", error);
