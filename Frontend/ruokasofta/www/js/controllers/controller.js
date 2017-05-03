@@ -16,7 +16,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
 
                       $http.get(address + 'auth').then(function (success){
 
-                        $log.info("token check success");
+                        $log.info("ctrl 19 token check success");
 
                         myNavigator.pushPage("list.html", {animation : 'none'})
 
@@ -61,34 +61,6 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
                 });
 
             }
-
-       }
-
-       $scope.loginFunction = function(){
-
-        var data = {email:$scope.loginEmail, password:$scope.loginPassword};
-
-        console.log(data)
-
-        $http.post(address + 'login', data).then(function (success){
-
-                 if(success.data.success==false){
-                    ons.notification.alert(success.data.message);
-                 }
-                 else{
-                    localStorage.token = success.data.token;
-                    localStorage.email = $scope.loginEmail;
-                    localStorage.name = success.data.username;
-                    $log.info("login success", success);
-
-                    myNavigator.pushPage("list.html", {})
-                    }
-
-            },function (error){
-
-                $log.info("login error", error)
-
-            });
 
        }
 
@@ -137,6 +109,44 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
             }
        }
 
+}]);
+
+//CONTROLLER HANDLING LOGIN
+app.controller('loginController', ['$scope', '$log', '$http','validation', 'address', function($scope, $log, $http, validation, address) {
+
+    $scope.loginEmail = "";
+    $scope.loginPassword = "";
+    var address = address.getAddress();
+
+    $scope.loginFunction = function(){
+
+        var data = {email:$scope.loginEmail, password:$scope.loginPassword};
+
+        console.log(data)
+
+        $http.post(address + 'login', data).then(function (success){
+
+                 if(success.data.success==false){
+                    ons.notification.alert(success.data.message);
+                 }
+                 else{
+                    localStorage.token = success.data.token;
+                    localStorage.email = $scope.loginEmail;
+                    localStorage.name = success.data.username;
+                    $log.info("login success", success);
+
+                    myNavigator.pushPage("list.html", {})
+                    }
+
+            },function (error){
+
+                $log.info("login error", error)
+
+            });
+
+       }
+
+      
 }]);
 
 //CONTROLLER FOR HANDLING GROUP LIST

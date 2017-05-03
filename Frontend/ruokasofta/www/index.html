@@ -35,10 +35,17 @@
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script src="https://cdn.rawgit.com/Luegg/angularjs-scroll-glue/master/src/scrollglue.js"></script>
         <!--app scripts-->
-        <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
         <!--controllers-->
-        <script type="text/javascript" src="js/controllers/controller.js"></script>
+        <script type="text/javascript" src="js/controllers/chatController.js"></script>
+        <script type="text/javascript" src="js/controllers/createController.js"></script>
+        <script type="text/javascript" src="js/controllers/listController.js"></script>
+        <script type="text/javascript" src="js/controllers/loginController.js"></script>
+        <script type="text/javascript" src="js/controllers/manageController.js"></script>
+        <script type="text/javascript" src="js/controllers/mapController.js"></script>
+        <script type="text/javascript" src="js/controllers/restaurantController.js"></script>
+        <script type="text/javascript" src="js/controllers/settingsController.js"></script>
+        <script type="text/javascript" src="js/controllers/signupController.js"></script>
         <!--services-->
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/placesService.js"></script>
@@ -80,7 +87,7 @@
                     </p>
                 </div>
             </form>
-            <ons-dialog var="dialog2" ng-controller="signupController">
+            <ons-dialog var="dialog2" ng-controller="loginController">
                 <div style="text-align: center; padding: 10px;">
                     <p>
                         <ons-input ng-model="loginEmail" modifier="material" placeholder="Email"></ons-input>
@@ -395,5 +402,6 @@
             </div>
         </ons-page>
     </ons-template>
+    <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>
