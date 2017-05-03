@@ -1,4 +1,4 @@
-var app = ons.bootstrap('my-app', ['onsen','luegg.directives']);
+var app = angular.module('my-app', ['onsen','luegg.directives']);
 
 function Interceptor() {
   return {

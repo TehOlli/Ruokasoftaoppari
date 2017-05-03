@@ -1,8 +1,9 @@
-app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places', 'address', function($scope, $log, $http, $timeout, places, address) {
+app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places', 'address','$q', function($scope, $log, $http, $timeout, places, address, $q) {
  
     var address = address.getAddress();
     $scope.list = true;
     $scope.close = false;
+    var mapCheck = false;
     
 
     document.addEventListener('init', function (e) { 
@@ -28,20 +29,23 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                 var markers = [];
                 var markers2 = [];
                 var helsinki = {lat: 60.1699, lng: 24.9384};
-                var infowindow = new google.maps.InfoWindow();
 
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 14,
-                    center: helsinki,
-                    type: 'restaurant'
-                });
+                if(mapCheck==false){
+                    var infowindow = new google.maps.InfoWindow();
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 14,
+                        center: helsinki,
+                        type: 'restaurant'
+                    });
 
-                var service = new google.maps.places.PlacesService(map);
-                service.nearbySearch({
-                    location: helsinki,
-                    radius: 5000,
-                    type: ['restaurant']
-                }, callback);
+                    var service = new google.maps.places.PlacesService(map);
+                    service.nearbySearch({
+                        location: helsinki,
+                        radius: 5000,
+                        type: ['restaurant']
+                    }, callback);
+                    mapCheck=true;
+                }
 
                 function callback(results, status) {
                     if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -68,16 +72,32 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                         y=markers;
                     }
                     else if(x==2){
-                        var place = places.getList();
-                        for(var i = 0; i < place.length; i++){
-                            console.log(place[i]);
-                            var marker = new google.maps.Marker({
-                                map: null,
-                                position: place[i].geometry.location
+                        var promises = [];
+                        places.getList().then(function(places){
+                            angular.forEach(places, function(place){
+                                var deferred = $q.defer();
+                                promises.push(deferred.promise);
+                                console.log(place);
+                                if(place.placeID){
+                                    service.getDetails({placeId: place.placeID}, callback);
+                                }
+                                function callback(result, status) {
+                                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                                        console.log(result);
+                                          var marker = new google.maps.Marker({
+                                                map: null,
+                                                position: result.geometry.location
+                                            });
+                                            markers2.push(marker);
+                                            deferred.resolve;
+                                    }
+                                }
                             });
-                            markers2.push(marker);
-                        }
-                        y=markers2;
+                        });
+                         $q.all(promises).then(function(){
+                                console.log("kaikki markkerit")
+                                y=markers2;
+                            });
                     }
                     for (var i = 0; i < y.length; i++) {
                     y[i].setMap(map);

@@ -1,4 +1,4 @@
-app.service('places', function($http, address){
+app.service('places', function($http, address, $q){
     var placesList = [];
     var address = address.getAddress();
     this.addToList = function(place){
@@ -16,13 +16,17 @@ app.service('places', function($http, address){
     }
     
     this.getList = function(){
+        var deferred = $q.defer();
         var header = {id: localStorage.id}
         $http.get(address + 'auth/getplaces', {headers:header}).then(function(success){
             console.log("places get success");
+            deferred.resolve(success.data.places);
         }, function(error){
             console.log("places get error", error);
+            deferred.reject(error);
         });
-        return placesList;
+
+        return deferred.promise;
     }
 
 });

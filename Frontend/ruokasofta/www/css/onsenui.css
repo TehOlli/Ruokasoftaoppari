@@ -1,4 +1,4 @@
-/*! onsenui - v2.2.0 - 2017-03-14 */
+/*! onsenui - v2.2.6 - 2017-05-01 */
 /*
 Copyright 2013-2015 ASIAL CORPORATION
 
@@ -16,9 +16,9 @@ limitations under the License.
 
  */
 
-@import url("font_awesome/css/font-awesome.min.css");
 @import url("ionicons/css/ionicons.min.css");
 @import url("material-design-iconic-font/css/material-design-iconic-font.min.css");
+@import url("font_awesome/css/font-awesome.min.css");
 
 /* custom elements */
 ons-page, ons-navigator,
@@ -49,7 +49,7 @@ ons-page, ons-navigator, ons-tabbar, ons-sliding-menu, ons-split-view, ons-dialo
 }
 
 ons-fab, ons-speed-dial {
-  z-index: 3;
+  z-index: 10001;
 }
 
 * {
@@ -204,14 +204,8 @@ ons-splitter-side[side="right"][mode="collapse"] {
   left: 100%;
 }
 
-ons-splitter-side[mode="split"] ~ ons-splitter-mask {
-  display: none !important;
-}
-
 ons-splitter-side[mode="split"] {
-  -webkit-transform: none !important;
-          transform: none !important;
-  transition: none !important;
+  z-index: 2;
 }
 
 ons-toolbar-button > ons-icon[icon*="ion-"] {
@@ -469,7 +463,8 @@ ons-input {
   position: relative;
 }
 
-ons-input .text-input__container {
+ons-input .text-input__container,
+ons-input .text-input__container input {
   width: 100%;
   display: inline-block;
 }
