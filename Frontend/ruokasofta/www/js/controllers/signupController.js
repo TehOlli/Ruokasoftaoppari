@@ -14,7 +14,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
 
                  if(localStorage.token != null){
 
-                      $http.get(address + 'auth').then(function (success){
+                      $http.get(address + 'auth').then(function (success, status){
 
                         $log.info("ctrl 19 token check success");
 
