@@ -144,7 +144,7 @@ exports.invitetoGroup = function(req, res){
 
     var groupID = req.body.groupid;
     var groupName = req.body.name;
-    var userEmail = req.body.email;
+    var userID = req.body.userid;
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
 
     //Checks if user is already in that group
@@ -160,7 +160,7 @@ exports.invitetoGroup = function(req, res){
                 res.json({success: false, message: "That user is already in the group."});
             }else{
                 var invite = {groupID: groupID, groupName: groupName};
-                User.findOneAndUpdate({userEmail: userEmail}, {$push:{invites: invite}}, function(err, user){
+                User.findOneAndUpdate({_id: userID}, {$push:{invites: invite}}, function(err, user){
                     if(err){
                         res.json({success: false, message: "Cannot access database."});
                         console.log("/invitetogroup: Cannot access database to update user.");
@@ -179,39 +179,6 @@ exports.invitetoGroup = function(req, res){
                         }
                     }
                 });
-
-
-
-                /*
-                var newGroup = {"groupID": groupID};
-                User.findOneAndUpdate({userEmail: userEmail}, {$push:{groups: newGroup}}, function(err, user){
-                    if (err){
-                        res.json({success: false, message: "Cannot access database."});
-                        console.log("/invitetogroup: Cannot access database to update user.");
-                        console.log(err);
-                    }else{     
-                        if(user){
-                            console.log("User exists.");
-
-                            var newMember = {"memberEmail":userEmail};
-                            Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
-                                if (err){
-                                    res.json({success: false, message: "Cannot access database."});
-                                    console.log("/invitetogroup: Cannot access database to update group.");
-                                    console.log(err);
-                                }else{
-                                    console.log("User added to group members");
-
-                                    res.json({success:true, message:"User added"});
-                                }
-                            });
-                        }else{
-                            console.log("User with that email does not exist");
-                            res.json({success:false, message:"User with that email does not exist"});
-                        }
-                    }
-                });
-                */
             }
         }
     });
@@ -221,11 +188,11 @@ exports.acceptInvitation = function(req, res){
     if(!req.body) return res.sendStatus(400);
     if(!req.headers['userid']) return res.sendStatus(400);
 
-    var userID = req.headers['userid'];
+    var userID = req.body.userid;
     var groupID = req.body.groupid;
 
     var group = {groupID: groupID};
-    User.findOneAndUpdate({userEmail:userEmail, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}, $push:{groups:group}}, function(err, user){
+    User.findOneAndUpdate({_id:userID, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}, $push:{groups:group}}, function(err, user){
         if(err){
             res.json({success: false, message: "Couldn't access database."});
             console.log("/joinGroup: Couldn't access database to accept invite");
@@ -256,7 +223,7 @@ exports.declineInvitation = function(req, res){
     if(!req.body) return res.sendStatus(400);
     if(!req.headers['userid']) return res.sendStatus(400);
 
-    var userID = req.headers['userid'];
+    var userID = req.body.userid;
     var groupID = req.body.groupid;
 
     User.findOneAndUpdate({_id:userID, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}}, function(err, user){
