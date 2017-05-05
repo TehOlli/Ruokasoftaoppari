@@ -182,22 +182,18 @@ exports.changeUsername = function(req, res){
 
     var userID = req.body.userid;
     var newUsername = req.body.username;
-    console.log(userEmail + " " + newUsername);
+    console.log(userID + " " + newUsername);
 
-    if(req.decoded.userID = req.body.userid){
-        User.findOne({_id:userID}, function(err, user){
-            if(err){
-                console.log(err);
-            }else{
-                User.findOneAndUpdate({_id:userID}, {$set:{username:newUsername}}, function(err, results){
-                    console.log("Username changed " + results);
-                    res.json({success: true, message: "Username changed."});
-                });
-            }
-        });
-    }else{
-        console.log("userIDs don't match");
-    }
+    User.findOne({_id:userID}, function(err, user){
+        if(err){
+            console.log(err);
+        }else{
+            User.findOneAndUpdate({_id:userID}, {$set:{username:newUsername}}, function(err, results){
+                console.log("Username changed " + results);
+                res.json({success: true, message: "Username changed."});
+            });
+        }
+    });
 };
 
 exports.changePassword = function(req, res){
@@ -206,7 +202,7 @@ exports.changePassword = function(req, res){
     var userID = req.body.userid;
     var oldPassword = req.body.oldpassword;
     var newPassword = req.body.newpassword;
-    console.log(userEmail + " " + oldPassword);
+    console.log(userID + " " + oldPassword);
 
     User.findOne({_id:userID}, function(err, user){
         if(err){

@@ -148,15 +148,14 @@ exports.invitetoGroup = function(req, res){
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
 
     //Checks if user is already in that group
-    User.find({userEmail: userEmail, "groups.groupID": groupID}, function(err, exists2){
+    User.find({userEmail: userEmail, "groups.groupID": groupID}, function(err, exists){
         if (err){
             res.json({success: false, message: "Cannot access database."});
             console.log("/invitetogroup: Cannot access database to search for user.")
             console.log(err);
         }else{
-            if(exists2.length){
+            if(exists.length){
                 console.log("User is already in the group");
-                //console.log(exists2);
                 res.json({success: false, message: "That user is already in the group."});
             }else{
                 var invite = {groupID: groupID, groupName: groupName};
