@@ -218,9 +218,11 @@ app.post('/googleauth', user.googleAuth);
 //Authenticated Routes
 //==========
 
-//Used to trigger the authRouter middleware to check for authentication
-
-
+ //Used to trigger the authRouter middleware to check for authentication
+ authRouter.get('/', function(req, res){
+     res.json({success: true, message: "Token authenticated"});
+     console.log("Token authenticated");
+ });
 
 //User routes
 authRouter.post('/changeusername', user.changeUsername);
