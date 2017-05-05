@@ -5,7 +5,7 @@ app.factory('myHttpInterceptor', function($q, $rootScope) {
   return {
     'request': function(config) {
        if(localStorage.token != null){
-        config.headers['Authorization'] = 'Bearer ' + localStorage.token + "asd";
+        config.headers['Authorization'] = 'Bearer ' + localStorage.token;
         config.headers['Email'] = localStorage.email;
         console.log(config.headers);
         }
