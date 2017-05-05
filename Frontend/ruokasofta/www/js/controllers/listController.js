@@ -74,7 +74,7 @@ app.controller('listController', ['$scope', '$log', '$http','address', function(
     $scope.removeToken = function(){
         $log.info("token removed")
         localStorage.removeItem("token");
-        localStorage.removeItem("email");
+        localStorage.removeItem("userid");
        }
        
 

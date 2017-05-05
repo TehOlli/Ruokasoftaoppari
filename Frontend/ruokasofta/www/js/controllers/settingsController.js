@@ -14,7 +14,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
         usernamecheck = success.data.username;
         $scope.email = success.data.userEmail;
         var time = Date.now();
-        document.getElementById("profile-img").style.background = "url(" + address + "uploads/avatars/" + $scope.email + ".jpg" + "?" + time + ")";
+        document.getElementById("profile-img").style.background = "url(" + address + "uploads/avatars/" + localStorage.userid + ".jpg" + "?" + time + ")";
         document.getElementById("profile-img").style.backgroundSize = "cover";  
 
 
@@ -69,7 +69,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
             var deferred = $q.defer();
             var val = validation.changenameVal($scope.username, usernamecheck);
             if(val==true){
-                var data=JSON.stringify({username:$scope.username, email:$scope.email});
+                var data=JSON.stringify({username:$scope.username, userid:localStorage.userid});
 
                 console.log(data);
 
@@ -93,7 +93,7 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
             var deferred = $q.defer();
             var val = validation.changepassVal($scope.oldpass, $scope.newpass);
             if(val==true){
-                var data = JSON.stringify({oldpassword: $scope.oldpass, newpassword: $scope.newpass, email:$scope.email});
+                var data = JSON.stringify({oldpassword: $scope.oldpass, newpassword: $scope.newpass, userid:localStorage.userid});
                 console.log(data);
 
                 $http.post(address + 'auth/changepassword', data).then(function(success){

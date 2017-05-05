@@ -23,14 +23,15 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
         console.log("group info get error");
     });
 
-    if(localStorage.email==localStorage.admin){
+    if(localStorage.userid==localStorage.admin){
         $scope.admin=true;
     }
 
    function getMembers(){
        var id = {groupid: localStorage.groupid}
        $http.get(address + 'auth/members', {headers: id}).then(function(success){
-        $scope.users = success
+           $scope.users = success
+           console.log(success)
 
        },function(error){
 
@@ -38,13 +39,13 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
    }
 
    $scope.alterName = function(){
-       var data = {id: localStorage.groupid, name:$scope.groupName};
+       var data = {groupid: localStorage.groupid, name:$scope.groupName};
        $scope.alterGroup(data);
        $scope.name = true;
    }
 
    $scope.alterDesc = function(){
-       var data = {id: localStorage.groupid, desc:$scope.groupDesc};
+       var data = {groupid: localStorage.groupid, desc:$scope.groupDesc};
        $scope.alterGroup(data);
        $scope.desc = true;
    }

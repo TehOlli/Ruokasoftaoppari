@@ -31,7 +31,7 @@ app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', 'a
             var date = ('0' + t.getDate()).slice(-2) + "." + ('0' + (t.getMonth()+1)).slice(-2) + "." + t.getFullYear(); 
             console.log(time, date);
             $scope.messages.push({username: localStorage.name, msg: $scope.chatInput, own:true, time:time, date:date});
-            socket.emit('message', {room: localStorage.groupid, msg:$scope.chatInput, username:localStorage.name, email:localStorage.email, time:time, date:date});
+            socket.emit('message', {room: localStorage.groupid, msg:$scope.chatInput, username:localStorage.name, email:localStorage.userid, time:time, date:date});
             $scope.chatInput = "";
 
         }

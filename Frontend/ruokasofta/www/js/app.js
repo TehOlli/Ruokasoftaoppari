@@ -25,6 +25,13 @@ app.factory('myHttpInterceptor', function($q, $rootScope) {
         })
       }
       return $q.reject(rejection);
+    },
+
+    'response':function(response) {
+      if(response.data.success==false){
+        ons.notification.alert(response.data.message)
+      }
+      return response;
     }
   };
 });
