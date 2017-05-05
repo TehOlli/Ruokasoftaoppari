@@ -1,7 +1,7 @@
 app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places', 'address','$q', function($scope, $log, $http, $timeout, places, address, $q) {
  
     var address = address.getAddress();
-    $scope.list = true;
+    $scope.list = false;
     $scope.close = false;
     var mapCheck = false;
     
@@ -68,8 +68,9 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                     });
                 }
                 function setMapClose(map, x) {
+                    console.log(map + x)
                     if(x==1){
-                        y=markers;
+                        changeMarkers(map, markers);
                     }
                     else if(x==2){
                         var promises = [];
@@ -83,7 +84,7 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                                 }
                                 function callback(result, status) {
                                     if (status == google.maps.places.PlacesServiceStatus.OK) {
-                                        console.log(result);
+                                        
                                           var marker = new google.maps.Marker({
                                                 map: null,
                                                 position: result.geometry.location
@@ -95,15 +96,17 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                             });
                         });
                          $q.all(promises).then(function(){
-                                console.log("kaikki markkerit")
-                                y=markers2;
-                            });
-                    }
-                    for (var i = 0; i < y.length; i++) {
-                    y[i].setMap(map);
+                            console.log("kaikki markkerit")
+                            changeMarkers(map, markers2);
+                        });
                     }
                 }
-                 function clearMarkers(x) {
+                function changeMarkers(map, ms){
+                    angular.forEach(ms, function(s){
+                        s.setMap(map);
+                    })
+                }
+                function clearMarkers(x) {
                     setMapClose(null, x);
                 }
                 function showMarkers(x) {
@@ -113,19 +116,18 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                     types: ['establishment']
                 };
 
-                // var input = document.getElementById('mapinput');
-                // var autocomplete = new google.maps.places.Autocomplete(input, options);
-                // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-                // autocomplete.addListener('place_changed', function() {
-                //     var place = autocomplete.getPlace();
-                //      var marker = new google.maps.Marker({
-                //         map: map,
-                //         position: place.geometry.location
-                //     });
-                //     markers2.push(marker);
-                //     map.setCenter(marker.getPosition());  
+                var input = document.getElementById('mapinput');
+                var autocomplete = new google.maps.places.Autocomplete(input, options);
+                autocomplete.addListener('place_changed', function() {
+                    var place = autocomplete.getPlace();
+                     var marker = new google.maps.Marker({
+                        map: map,
+                        position: place.geometry.location
+                    });
+                    markers2.push(marker);
+                    map.setCenter(marker.getPosition());  
 
-                // });
+                });
 
 
             }

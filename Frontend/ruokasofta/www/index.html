@@ -225,11 +225,11 @@
                     <ons-icon class="tab-icons" icon="ion-map"></ons-icon>
                 </div>
             </ons-tab>
-            <ons-tab page="restaurant.html">
+            <!--<ons-tab page="restaurant.html">
                 <div class="tab-bar__icon">
                     <ons-icon class="tab-icons" icon="ion-pizza"></ons-icon>
                 </div>
-            </ons-tab>
+            </ons-tab>-->
             <ons-tab page="chat.html">
                 <div class="tab-bar__icon">
                     <ons-icon class="tab-icons" icon="ion-chatbox"></ons-icon>
@@ -328,18 +328,19 @@
     <ons-template id="map.html">
         <ons-page id="mappage" ng-controller="mapController">
             <div class="map-settings">
+                <div class="restaurant-search">
+                    <input placeholder="Search restaurants" id="mapinput">
+                </div>
                 <p>
-               <ons-input type="checkbox" input-id="check-1" ng-model="close">Show what's close</ons-input>
-               </p>
-               <p>
-               <ons-input type="checkbox" input-id="check-2" ng-model="list">Show from my list</ons-input>
+                    <ons-input type="checkbox" ng-model="close">close</ons-input>
+                    <ons-input type="checkbox" ng-model="list">My list</ons-input>
                </p>
             </div>
             <div id="map"></div>
         </ons-page>
     </ons-template>
 
-    <ons-template id="restaurant.html">
+    <!--<ons-template id="restaurant.html">
         <ons-page id="restaurant" ng-controller="restaurantController">
             <div class="restaurant-search">
                 <input placeholder="Search restaurants" id="mapinput">
@@ -358,7 +359,7 @@
                 </ons-list-item>
             </ons-list>
         </ons-page>
-    </ons-template>
+    </ons-template>-->
 
     <ons-template id="chat.html">
         <ons-page ng-controller="chatController" class="chat-page">

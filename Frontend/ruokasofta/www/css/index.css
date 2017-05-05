@@ -382,6 +382,7 @@ body {
 .map-settings{
     height:15%;
     width:100%;
+    text-align:center;
 }
 .map-settings p{
     margin:0;

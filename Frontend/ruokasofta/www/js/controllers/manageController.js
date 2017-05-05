@@ -9,7 +9,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
     var address = address.getAddress();
 
     getMembers();
-    var header = {id: localStorage.id}
+    var header = {groupid: localStorage.groupid}
 
     $http.get(address + 'auth/getgroup', {headers:header}).then(function(success){
         console.log("group info get success");
@@ -28,7 +28,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
     }
 
    function getMembers(){
-       var id = {id: localStorage.id}
+       var id = {groupid: localStorage.groupid}
        $http.get(address + 'auth/members', {headers: id}).then(function(success){
         $scope.users = success
 
@@ -38,13 +38,13 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
    }
 
    $scope.alterName = function(){
-       var data = {id: localStorage.id, name:$scope.groupName};
+       var data = {id: localStorage.groupid, name:$scope.groupName};
        $scope.alterGroup(data);
        $scope.name = true;
    }
 
    $scope.alterDesc = function(){
-       var data = {id: localStorage.id, desc:$scope.groupDesc};
+       var data = {id: localStorage.groupid, desc:$scope.groupDesc};
        $scope.alterGroup(data);
        $scope.desc = true;
    }
@@ -64,7 +64,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
         form.append("groupimg", files[0]);
         $scope.form = form;
         
-        var header = {headers:{'content-type':undefined, 'id':localStorage.id}}
+        var header = {headers:{'content-type':undefined, 'groupid':localStorage.groupid}}
 
             $http.post(address + 'auth/setgroupimage', $scope.form, header).then(function(success){
                 console.log("group file send success");
@@ -83,7 +83,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
 
         if(val==true){
 
-            var data = JSON.stringify({email:$scope.userEmail, id:localStorage.id, name:localStorage.groupname});
+            var data = JSON.stringify({email:$scope.userEmail, id:localStorage.groupid, name:localStorage.groupname});
 
             $log.info(data);
 
@@ -113,8 +113,8 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
     }
     $scope.removeUser = function(email){
 
-        var id = {id: localStorage.id}
-        var data = JSON.stringify({email: email, groupid:localStorage.id});
+        var id = {groupid: localStorage.groupid}
+        var data = JSON.stringify({email: email, groupid:localStorage.groupid});
         console.log(data);
 
          $http.post(address + 'auth/removefromgroup', data).then(function (success){
@@ -140,7 +140,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
     }
     $scope.leaveGroup = function(){
 
-         var data = JSON.stringify({email: localStorage.email, groupid:localStorage.id});
+         var data = JSON.stringify({email: localStorage.email, groupid:localStorage.groupid});
 
         $http.post(address + 'auth/removefromgroup', data).then(function (success){
 
@@ -159,7 +159,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
 
     $scope.deleteGroup = function(){
 
-         var data = JSON.stringify({groupid:localStorage.id});
+         var data = JSON.stringify({groupid:localStorage.groupid});
 
          function confDelete(){
 

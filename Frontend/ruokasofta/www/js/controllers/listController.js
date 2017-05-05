@@ -25,7 +25,7 @@ app.controller('listController', ['$scope', '$log', '$http','address', function(
     function groupsFunction(){
         $http.get(address + 'auth/groups').then(function (success){
         $scope.groups = success;
-        $log.info($scope.groups.data);
+        $log.info(success);
         $log.info("group get success");
 
         },function (error){
@@ -64,7 +64,7 @@ app.controller('listController', ['$scope', '$log', '$http','address', function(
 
 
     $scope.saveId= function(group){
-        localStorage.id = group._id;
+        localStorage.groupid = group._id;
         localStorage.admin = group.groupAdmin;
         localStorage.groupname = group.groupName;
         

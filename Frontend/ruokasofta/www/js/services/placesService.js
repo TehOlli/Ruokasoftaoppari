@@ -2,7 +2,7 @@ app.service('places', function($http, address, $q){
     var placesList = [];
     var address = address.getAddress();
     this.addToList = function(place){
-        var data = {placeid:place.place_id, groupid:localStorage.id};
+        var data = {placeid:place.place_id, groupid:localStorage.groupid};
         console.log(data);
         $http.post(address + 'auth/saveplace', data).then(function(success){
             console.log("place add success");
@@ -17,7 +17,7 @@ app.service('places', function($http, address, $q){
     
     this.getList = function(){
         var deferred = $q.defer();
-        var header = {id: localStorage.id}
+        var header = {groupid: localStorage.groupid}
         $http.get(address + 'auth/getplaces', {headers:header}).then(function(success){
             console.log("places get success");
             deferred.resolve(success.data.places);

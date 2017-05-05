@@ -6,7 +6,7 @@ app.factory('myHttpInterceptor', function($q, $rootScope) {
     'request': function(config) {
        if(localStorage.token != null){
         config.headers['Authorization'] = 'Bearer ' + localStorage.token;
-        config.headers['Email'] = localStorage.email;
+        config.headers['userid'] = localStorage.userid;
         console.log(config.headers);
         }
       return config;
@@ -14,7 +14,7 @@ app.factory('myHttpInterceptor', function($q, $rootScope) {
 
    'responseError': function(rejection) {
        if(rejection.status == 403&&check==false){
-        console.log("forbiden");
+        console.log("forbidden");
         check=true;
         ons.notification.alert({
             message: "Authentication error",

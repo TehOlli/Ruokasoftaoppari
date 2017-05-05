@@ -18,7 +18,7 @@ app.controller('loginController', ['$scope', '$log', '$http','validation', 'addr
                  }
                  else{
                     localStorage.token = success.data.token;
-                    localStorage.email = $scope.loginEmail;
+                    localStorage.userid = success.data.userid;
                     localStorage.name = success.data.username;
                     $log.info("login success", success);
 

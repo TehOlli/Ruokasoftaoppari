@@ -34,7 +34,7 @@ app.controller('createController', ['$scope', '$log', '$http','validation', 'add
                 $log.info("group create success");
 
                 if($scope.form!=""){
-                    var header = {headers:{'content-type':undefined, 'id':success.data.group._id}}
+                    var header = {headers:{'content-type':undefined, 'groupid':success.data.group._id}}
 
                     $http.post(address + 'auth/setgroupimage', $scope.form, header).then(function(success){
                         console.log("create file send success");

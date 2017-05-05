@@ -49,7 +49,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
                     }
                     else{
                         localStorage.token = success.data.token;
-                        localStorage.email = $scope.userEmail;
+                        localStorage.userid = success.data.userid;
                         localStorage.name = $scope.userName;
                         $log.info("signup success");
 
@@ -94,7 +94,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
                         }
                         else{
                             localStorage.token = success.data.token;
-                            localStorage.email = obj.email;
+                            localStorage.userid = success.data.userid;
                             console.log("google auth success");
                             myNavigator.pushPage("list.html", {})
                         }
