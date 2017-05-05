@@ -20,8 +20,10 @@ var groupSchema = mong.Schema({
     },
     //subSchemaCollection: members
     members: [{
-        memberID: String,
-        required: true
+        memberID:{
+            type: String,
+            required: true
+        }
     }],
     places: [{
         placeID:{
