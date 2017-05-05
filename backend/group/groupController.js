@@ -38,7 +38,7 @@ exports.createGroup = function(req, res){
                 }else{
                     console.log("Admin added to group's members array")         
                     var newGroup = {"groupID": groupID};
-                    User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
+                    User.findOneAndUpdate({_id: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
                         if (err){
                             console.log("Couldn't add group to user's array in database.");
                             console.log(err);

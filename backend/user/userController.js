@@ -255,10 +255,12 @@ exports.setAvatar = function(req, res){
     });
 };
 
-exports.getUsers = function(req, res){
+exports.getMembers = function(req, res){
     if(!req.headers['groupid']) return res.sendStatus(400);
     
-    groupID = req.headers['groupid'];
+    console.log(req.headers['groupid']);
+
+    var groupID = req.headers['groupid'];
     //console.log("GroupID: " + groupID);
     User.find({"groups.groupID":groupID}, function(err, members){
         if(err){

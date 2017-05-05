@@ -232,7 +232,7 @@ authRouter.post('/changepassword', user.changePassword);
 
 authRouter.post('/setavatar', upload.single('avatar'), user.setAvatar);
 
-authRouter.get('/members', user.getUsers);
+authRouter.get('/members', user.getMembers);
 
 authRouter.get('/profile', user.getProfile);
 
