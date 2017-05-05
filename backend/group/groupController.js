@@ -103,9 +103,9 @@ exports.alterGroup = function(req, res){
 };
 
 exports.getGroups = function(req, res){
-    if(!req.headers['email']) return res.sendStatus(400);
+    if(!req.headers['userid']) return res.sendStatus(400);
 
-    Group.find({'members.memberEmail': req.headers['email']}, function(err, groups){
+    Group.find({'members.memberEmail': req.headers['userid']}, function(err, groups){
         if(err){
             res.json({success:false, message: "Couldn't access database."});
             console.log("Couldn't get list of groups.");
@@ -217,9 +217,9 @@ exports.invitetoGroup = function(req, res){
 
 exports.acceptInvitation = function(req, res){
     if(!req.body) return res.sendStatus(400);
-    if(!req.headers['email']) return res.sendStatus(400);
+    if(!req.headers['userid']) return res.sendStatus(400);
 
-    var userEmail = req.headers['email'];
+    var userID = req.headers['userid'];
     var groupID = req.body.groupid;
 
     var group = {groupID: groupID};
@@ -230,7 +230,7 @@ exports.acceptInvitation = function(req, res){
             console.log(err);
         }else{
             console.log(user);
-            var newMember = {"memberEmail":userEmail};
+            var newMember = {"memberID":userID};
             Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
                 if (err){
                     res.json({success: false, message: "Cannot access database."});
@@ -252,12 +252,12 @@ exports.acceptInvitation = function(req, res){
 
 exports.declineInvitation = function(req, res){
     if(!req.body) return res.sendStatus(400);
-    if(!req.headers['email']) return res.sendStatus(400);
+    if(!req.headers['userid']) return res.sendStatus(400);
 
-    var userEmail = req.headers['email'];
+    var userID = req.headers['userid'];
     var groupID = req.body.groupid;
 
-    User.findOneAndUpdate({userEmail:userEmail, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}}, function(err, user){
+    User.findOneAndUpdate({_id:userID, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}}, function(err, user){
         if(err){
             res.json({success: false, message: "Couldn't access database."});
             console.log("/declineInvitation: Couldn't access database to decline invite");
@@ -278,11 +278,11 @@ exports.removefromGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var groupID = req.body.groupid;
-    var userEmail = req.body.email;
+    var userID = req.body.userid;
 
-    console.log("Removing " + userEmail + " from " + groupID);
+    console.log("Removing " + userID + " from " + groupID);
 
-    User.findOneAndUpdate({userEmail:userEmail}, {$pull:{groups:{groupID:groupID}}}, function(err, user){
+    User.findOneAndUpdate({_id:userID}, {$pull:{groups:{groupID:groupID}}}, function(err, user){
         if (err){
             res.json({success:false, message: "Couldn't access database."});
             console.log("/removefromgroup: Couldn't access database to update user.");
@@ -290,7 +290,7 @@ exports.removefromGroup = function(req, res){
         }else{
             console.log("Removed group from user document");
         
-            Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberEmail:userEmail}}}, function(err, group){
+            Group.findOneAndUpdate({_id:groupID}, {$pull:{members:{memberID:userID}}}, function(err, group){
                 if (err){
                     res.json({success:false, message: "Couldn't access database."});
                     console.log("/removefromgroup: Couldn't access database to update group.");

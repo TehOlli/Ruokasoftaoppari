@@ -203,12 +203,12 @@ exports.changeUsername = function(req, res){
 exports.changePassword = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var userEmail = req.body.email;
+    var userID = req.body.userid;
     var oldPassword = req.body.oldpassword;
     var newPassword = req.body.newpassword;
     console.log(userEmail + " " + oldPassword);
 
-    User.findOne({userEmail:userEmail}, function(err, user){
+    User.findOne({_id:userID}, function(err, user){
         if(err){
             res.json({success: false, message:"Couldn't access database."});
             console.log("/changepassword: Couldn't access database to find user.");
@@ -243,8 +243,8 @@ exports.setAvatar = function(req, res){
     console.log("Name: " + req.file.originalname);
     console.log("Path: " + req.file.path);
 
-    var userEmail = req.headers['email'];
-    fs.rename(req.file.path, req.file.destination + "avatars/" + userEmail + ".jpg", function(err, results){
+    var userID = req.headers['userid'];
+    fs.rename(req.file.path, req.file.destination + "avatars/" + userID + ".jpg", function(err, results){
         if(err){
             res.json({success: false, message: "Failed to save avatar."});
             console.log("/setavatar: renaming borked up");
@@ -256,9 +256,9 @@ exports.setAvatar = function(req, res){
 };
 
 exports.getUsers = function(req, res){
-    if(!req.headers['id']) return res.sendStatus(400);
+    if(!req.headers['groupid']) return res.sendStatus(400);
     
-    groupID = req.headers['id'];
+    groupID = req.headers['groupid'];
     //console.log("GroupID: " + groupID);
     User.find({"groups.groupID":groupID}, function(err, members){
         if(err){
@@ -276,11 +276,11 @@ exports.getUsers = function(req, res){
 };
 
 exports.getProfile = function(req, res){
-    if(!req.headers['email']) return res.sendStatus(400);
+    if(!req.headers['userid']) return res.sendStatus(400);
 
-    userEmail = req.headers['email'];
+    var userID = req.headers['userid'];
 
-    User.findOne({userEmail:userEmail}, 'username userEmail groups', function(err, profile){
+    User.findOne({_id:userID}, 'username userEmail groups', function(err, profile){
         if(err){
             res.json({success: false, message: "Cannot access database."});
             console.log("/profile: Cannot access database to find user.");
@@ -297,11 +297,11 @@ exports.getProfile = function(req, res){
 };
 
 exports.getInvites = function(req, res){
-    if(!req.headers['email']) return res.sendStatus(400);
+    if(!req.headers['userid']) return res.sendStatus(400);
 
-    userEmail = req.headers['email'];
+    var userID = req.headers['userid'];
 
-    User.findOne({userEmail:userEmail}, 'invites', function(err, invites){
+    User.findOne({_id:userID}, 'invites', function(err, invites){
         if(err){
             res.json({success: false, message: "Couldn't access database."});
             console.log("/getinvites: Cannot access database to get invites.");

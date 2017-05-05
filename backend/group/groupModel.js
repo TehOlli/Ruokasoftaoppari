@@ -20,7 +20,7 @@ var groupSchema = mong.Schema({
     },
     //subSchemaCollection: members
     members: [{
-        memberEmail: String
+        memberID: String
     }],
     places: [{
         placeID:{

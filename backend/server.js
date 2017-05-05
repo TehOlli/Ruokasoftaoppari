@@ -74,12 +74,13 @@ authRouter.use(function(req, res, next){
     if(token){
         jwt.verify(token, app.get("secret"), function(err, decoded){
             if(err){
+                console.log("Token authentication failed.");
+                
                 return res.status(403).send({ 
                     success: false, 
                     message: "Token authentication failed."
                 });
-                console.log("authRouter Middleware: jwt.verify portion failed.");
-                console.log(err);
+
             }else{
                 console.log("Token authenticated.")
                 req.decoded = decoded;
@@ -96,7 +97,7 @@ authRouter.use(function(req, res, next){
 });
 
 
-//Scope Checker: 
+//Permission Checker: 
 //Checks if decoded token contains userID or groupID matching one sent to the route.
 //If not, sends 403 Forbidden response.
 authRouter.use(function(req, res, next){
@@ -118,9 +119,9 @@ authRouter.use(function(req, res, next){
     };
 
     if(userReqID){
-        var userScope = req.decoded.userID;
+        var userPerm = req.decoded.userID;
 
-        if(userReqID == userScope){
+        if(userReqID == userPerm){
             console.log("Token has the right user scope.");
             ok = true;
         };
@@ -128,10 +129,10 @@ authRouter.use(function(req, res, next){
         var groups = req.decoded.groups;
 
         for(i=0; i<groups.length; i++){
-            var groupScope = groups[i].groupID;
+            var groupPerm = groups[i].groupID;
 
             console.log("Checking " + userReqID + " vs. " + groupScope + "...");
-            if(groupReqID == groupScope){
+            if(groupReqID == groupPerm){
                 console.log("Token has the right group scope.");
                 ok = true;
             };
@@ -218,10 +219,7 @@ app.post('/googleauth', user.googleAuth);
 //==========
 
 //Used to trigger the authRouter middleware to check for authentication
-authRouter.get('/', function(req, res){
-    res.json({success: true, message: "Token authenticated"});
-    console.log("Token authenticated");
-});
+
 
 
 //User routes
