@@ -18,7 +18,6 @@ var groupSchema = mong.Schema({
         type: String,
         required: true
     },
-    //subSchemaCollection: members
     members: [{
         memberID:{
             type: String,

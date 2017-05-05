@@ -115,7 +115,8 @@ authRouter.use(function(req, res, next){
     }else if(req.headers["groupid"]){
         var groupReqID = req.headers["groupid"];
     }else{
-
+        console.log("Ei idtä joten eteenpäin...");
+        next();
     };
 
     if(userReqID){

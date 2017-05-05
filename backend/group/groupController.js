@@ -8,8 +8,10 @@ var fs                  = require('fs');
 exports.createGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
+    console.log(req.body);
+
     var groupName = req.body.groupname;
-    var groupAdmin = req.body.groupID;
+    var groupAdmin = req.body.userid;
     var groupDesc = req.body.description;
 
     var newGroup = new Group({
@@ -20,9 +22,9 @@ exports.createGroup = function(req, res){
 
     newGroup.save(function(err, results){
         if (err){
-            res.json({success: false, message: "Couldn't save to database."});
             console.log("Couldn't save new group to database.");
             console.log(err);
+            res.json({success: false, message: "Couldn't save to database."});
         }else{
             console.log("Results " + results);
             var groupID = results._id;
@@ -30,9 +32,9 @@ exports.createGroup = function(req, res){
             var newMember = {"memberID":groupAdmin};
             Group.findOneAndUpdate({_id: groupID}, {$push:{members: newMember}}, function(err, group){
                 if (err){
-                    res.json({success:false, message: "Couldn't add member to group's array in database."});
                     console.log("Couldn't add member to group's array in database.");
                     console.log(err);
+                    res.json({success:false, message: "Couldn't add member to group's array in database."});
                 }else{
                     console.log("Admin added to group's members array")         
                     var newGroup = {"groupID": groupID};
