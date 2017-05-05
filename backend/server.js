@@ -95,6 +95,61 @@ authRouter.use(function(req, res, next){
     }
 });
 
+
+//Scope Checker: 
+//Checks if decoded token contains userID or groupID matching one sent to the route.
+//If not, sends 403 Forbidden response.
+authRouter.use(function(req, res, next){
+    if(!req.decoded) return res.sendStatus(403);
+
+    console.log("Scope checker here!")
+    var ok = false;
+
+    if(req.body.userid){
+        var userReqID = req.body.userid;
+    }else if(req.headers["userid"]){
+        var userReqID = req.headers["userid"];
+    }else if(req.body.groupid){
+        var groupReqID = req.body.groupid;
+    }else if(req.headers["groupid"]){
+        var groupReqID = req.headers["groupid"];
+    }else{
+
+    };
+
+    if(userReqID){
+        var userScope = req.decoded.userID;
+
+        if(userReqID == userScope){
+            console.log("Token has the right user scope.");
+            ok = true;
+        };
+    }else if(groupReqID){
+        var groups = req.decoded.groups;
+
+        for(i=0; i<groups.length; i++){
+            var groupScope = groups[i].groupID;
+
+            console.log("Checking " + userReqID + " vs. " + groupScope + "...");
+            if(groupReqID == groupScope){
+                console.log("Token has the right group scope.");
+                ok = true;
+            };
+        };
+    };
+
+    if(ok == true){
+        console.log("Token had the right scope, moving forward...");
+        next();
+    }else{
+        console.log("Token did not have the right scope, stopping here...")
+        return res.status(403).send({
+           success: false,
+           message: "Token did not have the right scope.", 
+        });
+    };
+});
+
 //==========
 //Socket.io
 //==========

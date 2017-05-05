@@ -32,20 +32,21 @@ exports.signUp = function(req, res){
                 console.log("User exists: " + exists);
                 res.json({success: false, message: "User with that email already exists"});
             }else{
-                newUser.save(function(err, results){
+                newUser.save(function(err, user){
                     if (err){
                         res.json({success: false, message: "Couldn't save user to database."})
                         console.log("Couldn't save to database.");
                     }else{
-                        console.log(results);
+                        console.log(user);
                         
-                        var token = jwt.sign({userEmail: newUser.userEmail}, app.get('secret'), {
+                        var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
                             expiresIn: '24h'
                         });
                         res.json({
                             success: true,
                             message: 'Token sent',
-                            token: token
+                            token: token,
+                            userid: user._id
                         });
 
                         User.findOne({username: userName}, function(err, user){
@@ -87,14 +88,15 @@ exports.login = function(req, res){
                     if(isMatch == true){
                         console.log("login userPassword: ", isMatch);
                         console.log("userEmail: " + user.userEmail);
-                        var token = jwt.sign({userEmail: user.userEmail}, app.get('secret'), {
+                        var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
                             expiresIn: '24h'
                         });
                         res.json({
                             success: true,
                             message: 'Token sent',
                             token: token,
-                            username: user.username
+                            username: user.username,
+                            userid: user._id
                         });
                     }else{
                         console.log("Password is incorrect.");
@@ -125,7 +127,7 @@ exports.googleAuth = function(req, res){
             var userEmail = payload['email'];
 
             console.log("Checking if Google user exists...");
-            User.find({userEmail:userEmail}).limit(1).exec(function(err, exists){
+            User.find({userEmail:userEmail}).limit(1).exec(function(err, user){
                 if(err){
                     console.log("Google Auth: failed to check for existing user.");
                     console.log(err);
@@ -134,14 +136,15 @@ exports.googleAuth = function(req, res){
                     if(exists.length){
                         console.log(exists);
 
-                        var token = jwt.sign({userEmail: exists.userEmail}, app.get('secret'), {
+                        var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
                             expiresIn: '24h'
                         });
 
                         res.json({
                             success: true,
                             message: 'Google user authenticated.',
-                            token: token
+                            token: token,
+                            userid: user._id
                         });     
                     }else{
                         var newUser = new User({
@@ -149,20 +152,21 @@ exports.googleAuth = function(req, res){
                             userEmail: userEmail,
                         });
 
-                        newUser.save(function(err){
+                        newUser.save(function(err, user){
                             if(err){
                                 console.log("Google Auth: couldn't save new user");
                                 console.log(err);
                                 res.json({success:false, message:"Couldn't save new user."});
                             }else{
-                                var token = jwt.sign({userEmail: newUser.userEmail}, app.get('secret'), {
+                                var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
                                     expiresIn: '24h'
                                 });
 
                                 res.json({
                                     success: true,
                                     message: 'New Google user added.',
-                                    token: token
+                                    token: token,
+                                    userid: user._id
                                 });
                             }
                         });
@@ -176,20 +180,24 @@ exports.googleAuth = function(req, res){
 exports.changeUsername = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var userEmail = req.body.email;
+    var userID = req.body.userid;
     var newUsername = req.body.username;
     console.log(userEmail + " " + newUsername);
 
-    User.findOne({userEmail:userEmail}, function(err, user){
-        if(err){
-            console.log(err);
-        }else{
-            User.findOneAndUpdate({userEmail:userEmail}, {$set:{username:newUsername}}, function(err, results){
-                console.log("Username changed " + results);
-                res.json({success: true, message: "Username changed."});
-            });
-        }
-    });    
+    if(req.decoded.userID = req.body.userid){
+        User.findOne({_id:userID}, function(err, user){
+            if(err){
+                console.log(err);
+            }else{
+                User.findOneAndUpdate({_id:userID}, {$set:{username:newUsername}}, function(err, results){
+                    console.log("Username changed " + results);
+                    res.json({success: true, message: "Username changed."});
+                });
+            }
+        });
+    }else{
+        console.log("userIDs don't match");
+    }
 };
 
 exports.changePassword = function(req, res){

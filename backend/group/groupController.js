@@ -60,7 +60,7 @@ exports.createGroup = function(req, res){
 exports.alterGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var groupID = req.body.id;
+    var groupID = req.body.groupid;
     var groupName = req.body.name;
     var groupDesc = req.body.desc;
 
@@ -117,9 +117,9 @@ exports.getGroups = function(req, res){
 };
 
 exports.getGroup = function(req, res){
-    if(!req.headers['id']) return res.sendStatus(400);
+    if(!req.headers['groupid']) return res.sendStatus(400);
 
-    var groupID = req.headers['id'];
+    var groupID = req.headers['groupid'];
     console.log(groupID);
 
     Group.findOne({_id:groupID}, function(err, group){
@@ -140,7 +140,7 @@ exports.getGroup = function(req, res){
 exports.invitetoGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    var groupID = req.body.id;
+    var groupID = req.body.groupid;
     var groupName = req.body.name;
     var userEmail = req.body.email;
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
@@ -220,7 +220,7 @@ exports.acceptInvitation = function(req, res){
     if(!req.headers['email']) return res.sendStatus(400);
 
     var userEmail = req.headers['email'];
-    var groupID = req.body.id;
+    var groupID = req.body.groupid;
 
     var group = {groupID: groupID};
     User.findOneAndUpdate({userEmail:userEmail, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}, $push:{groups:group}}, function(err, user){
@@ -255,7 +255,7 @@ exports.declineInvitation = function(req, res){
     if(!req.headers['email']) return res.sendStatus(400);
 
     var userEmail = req.headers['email'];
-    var groupID = req.body.id;
+    var groupID = req.body.groupid;
 
     User.findOneAndUpdate({userEmail:userEmail, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}}, function(err, user){
         if(err){
@@ -339,12 +339,12 @@ exports.deleteGroup = function(req, res){
 exports.setGroupImage = function(req, res){
     if(!req.file) return res.sendStatus(400);
     if(!req.body) return res.sendStatus(400);
-    if(!req.headers['id']) return res.sendStatus(400);
+    if(!req.headers['groupid']) return res.sendStatus(400);
 
     console.log("Name: " + req.file.originalname);
     console.log("Path: " + req.file.path);
 
-    var groupID = req.headers['id'];
+    var groupID = req.headers['groupid'];
     fs.rename(req.file.path, req.file.destination + "groups/" + groupID + ".jpg", function(err, results){
         if(err){
             res.json({success: false, message: "Failed to save group image."});
@@ -358,7 +358,7 @@ exports.setGroupImage = function(req, res){
 };
 
 exports.getMessages = function(req, res){
-    if(!req.headers['id']) return res.sendStatus(400);
+    if(!req.headers['groupid']) return res.sendStatus(400);
 
     var groupID = req.headers['id'];
 
@@ -404,9 +404,9 @@ exports.savePlace = function(req, res){
 };
 
 exports.getPlaces = function(req, res){
-    if(!req.headers['id']) return res.sendStatus(400);
+    if(!req.headers['groupid']) return res.sendStatus(400);
 
-    var groupID = req.headers['id'];
+    var groupID = req.headers['groupid'];
 
     Group.findOne({_id:groupID}).select('places.placeID').exec(function(err, places){
         if(err){
