@@ -105,7 +105,7 @@ exports.alterGroup = function(req, res){
 exports.getGroups = function(req, res){
     if(!req.headers['userid']) return res.sendStatus(400);
 
-    Group.find({'members.memberEmail': req.headers['userid']}, function(err, groups){
+    Group.find({'members.memberID': req.headers['userid']}, function(err, groups){
         if(err){
             res.json({success:false, message: "Couldn't access database."});
             console.log("Couldn't get list of groups.");
