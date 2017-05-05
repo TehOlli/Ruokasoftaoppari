@@ -9,7 +9,7 @@ exports.createGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var groupName = req.body.groupname;
-    var groupAdmin = req.body.email;
+    var groupAdmin = req.body.groupID;
     var groupDesc = req.body.description;
 
     var newGroup = new Group({
@@ -27,7 +27,7 @@ exports.createGroup = function(req, res){
             console.log("Results " + results);
             var groupID = results._id;
             
-            var newMember = {"memberEmail":groupAdmin};
+            var newMember = {"memberID":groupAdmin};
             Group.findOneAndUpdate({_id: groupID}, {$push:{members: newMember}}, function(err, group){
                 if (err){
                     res.json({success:false, message: "Couldn't add member to group's array in database."});
