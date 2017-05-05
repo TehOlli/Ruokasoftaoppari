@@ -168,14 +168,14 @@ io.on("connection", function(socket){
         console.log("message: " + data.msg);
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
-        console.log("email: " + data.email);
+        console.log("userid: " + data.userid);
         console.log("date: " + data.date);
         console.log("time: " + data.time);
 
         var newMessage = new Message({
             groupID: data.room,
             msg: data.msg,
-            author: data.email,
+            author: data.userid,
             username: data.username,
             date: data.date,
             time: data.time

@@ -40,9 +40,9 @@ exports.createGroup = function(req, res){
                     var newGroup = {"groupID": groupID};
                     User.findOneAndUpdate({userEmail: groupAdmin}, {$push:{groups: newGroup}}, function(err, user){
                         if (err){
-                            res.json({success:false, message: "Couldn't add group to user's array in database."});
                             console.log("Couldn't add group to user's array in database.");
                             console.log(err);
+                            res.json({success:false, message: "Couldn't add group to user's array in database."});
                         }else{
                             console.log("Group added to admin's groups array");
                             console.log("Luotu ryhmä: " + group);
