@@ -38,7 +38,7 @@ app.use(function(req, res, next) {
 
 authRouter.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email, id");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Email, userid, groupid");
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     next();
 });
@@ -75,7 +75,7 @@ authRouter.use(function(req, res, next){
         jwt.verify(token, app.get("secret"), function(err, decoded){
             if(err){
                 console.log("Token authentication failed.");
-                
+
                 return res.status(403).send({ 
                     success: false, 
                     message: "Token authentication failed."
