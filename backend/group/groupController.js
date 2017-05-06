@@ -328,7 +328,7 @@ exports.setGroupImage = function(req, res){
 exports.getMessages = function(req, res){
     if(!req.headers['groupid']) return res.sendStatus(400);
 
-    var groupID = req.headers['id'];
+    var groupID = req.headers['groupid'];
 
     console.log("Fetching messages for group " + groupID);
 
