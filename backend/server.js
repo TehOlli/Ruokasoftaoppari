@@ -105,8 +105,10 @@ authRouter.use(function(req, res, next){
 
     console.log("Scope checker here!")
     var ok = false;
-
-    if(req.body.userid){
+    if(req.body.userid && req.body.groupid){
+        var userReqID = req.body.userid;
+        var groupReqID = req.body.groupID;
+    }else if(req.body.userid && !req.body.groupid){
         var userReqID = req.body.userid;
     }else if(req.headers["userid"]){
         var userReqID = req.headers["userid"];
