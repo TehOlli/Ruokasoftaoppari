@@ -2,13 +2,11 @@ var Group               = require("./groupModel");
 var User                = require("../user/userModel");
 var Message             = require("../messageModel");
 var fs                  = require('fs');
-
+var mware               = require("../middleware.js");
 
 
 exports.createGroup = function(req, res){
     if(!req.body) return res.sendStatus(400);
-
-    console.log(req.body);
 
     var groupName = req.body.groupname;
     var groupAdmin = req.body.userid;
@@ -148,7 +146,7 @@ exports.invitetoGroup = function(req, res){
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
 
     //Checks if user is already in that group
-    User.find({userEmail: userEmail, "groups.groupID": groupID}, function(err, exists){
+    User.find({_idl: userID, "groups.groupID": groupID}, function(err, exists){
         if (err){
             res.json({success: false, message: "Cannot access database."});
             console.log("/invitetogroup: Cannot access database to search for user.")
