@@ -16,7 +16,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
         $scope.groupName = success.data.groupName;
         $scope.groupDesc = success.data.groupDesc;
         var time = Date.now();
-        document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
+        document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.groupid + ".jpg" + "?" + time + ")";
         document.getElementById("group-img").style.backgroundSize = "cover";
 
     }, function(error){
@@ -70,7 +70,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
             $http.post(address + 'auth/setgroupimage', $scope.form, header).then(function(success){
                 console.log("group file send success");
                 var time = Date.now();
-                document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.id + ".jpg" + "?" + time + ")";
+                document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.groupid + ".jpg" + "?" + time + ")";
                 document.getElementById("group-img").style.backgroundSize = "cover";
             },function(error){
                 console.log("file send error", error)

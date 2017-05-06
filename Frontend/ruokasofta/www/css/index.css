@@ -391,16 +391,31 @@ body {
 .map-settings{
     height:15%;
     width:100%;
+    background-color: white;  
+}
+
+.map-settings ons-icon{
+    font-size: 1.1em;
     
 }
+
+.map-settings span{
+    padding: 0 10px;
+}
+
 .map-settings p{
     margin:0;
     padding:5px;
     text-align: center;
+    
 }
 
 .map-settings .input-label{
     padding-left:10px;
+}
+
+#mappage .dialog--material{
+    width:90%;
 }
 
 #restaurant{
@@ -430,7 +445,7 @@ body {
 }
 
 .map-select ons-input{
-    padding:0 20px;
+    padding:0 10px;
 }
 
 *::-webkit-input-placeholder {

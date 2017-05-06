@@ -30,6 +30,7 @@
         <!--js libraries-->
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/angular.min.js"></script>
+        <script type="text/javascript" src="js/angular-sanitize.min.js"></script>
         <script type="text/javascript" src="js/onsenui.min.js"></script>
         <script type="text/javascript" src="js/angular-onsenui.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
@@ -47,6 +48,8 @@
         <script type="text/javascript" src="js/controllers/settingsController.js"></script>
         <script type="text/javascript" src="js/controllers/signupController.js"></script>
         <script type="text/javascript" src="js/controllers/groupController.js"></script>
+        <!--directives-->
+        <script type="text/javascript" src="js/directives/ratingDirective.js"></script>
         <!--services-->
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/placesService.js"></script>
@@ -341,9 +344,19 @@
             <div id="map"></div>
             <ons-dialog var="dialog4">             
                     <div style="text-align:center;">
-                        <div ng-repeat="res in restaurants">
-                            {{res.name}}
-                        </div>
+                        <ons-list>
+                            <ons-list-item ng-repeat="res in restaurants" modifier="longdivider">
+                                <div class="center">
+                                    <span class="list-item__title">{{res.name}}<res-rating style="padding-left:10px;"rating="{{res.rating}}"></res-rating></span>
+                                    <span class="list-item__subtitle">
+                                        {{res.address_components[1].long_name}} 
+                                        {{res.address_components[0].long_name}},
+                                        {{res.address_components[5].long_name}}
+                                        {{res.address_components[2].long_name}}
+                                    </span>
+                                </div>
+                            </ons-list-item>
+                        </ons-list>
                         <ons-button style="margin-bottom:10px;" ng-click="dialog4.hide()">Close</ons-button>
                     </div>
             </ons-dialog> 
