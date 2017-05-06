@@ -99,6 +99,7 @@ authRouter.use(function(req, res, next){
 
 //Middleware for checking groupID in the request against a user's list of memberships in the db
 //User found by userID in the token
+
 authRouter.use(function(req, res, next){
     if(!req.decoded) return res.sendStatus(403);
 
@@ -108,15 +109,38 @@ authRouter.use(function(req, res, next){
         var groupID = req.body.groupid;
 
         console.log("Checking members in: " + groupID);
-        Group.find({_id:groupID, "members.memberID":userID}, function(err, exists){
-            if(exists.length){
-                console.log("User " + userID + "is a member of " + groupID);
-                next();
-            }else{
-                console.log("User " + userID + " is not a member of " + groupID);
-                return res.status(403).send({
+        Group.findOne({_id:groupID}, "members.memberID", function(err, results){
+            if(err){
+                console.log(err);
+                
+                return res.status(500).send({
                     success: false,
-                    message: "User is not a member of that group.", 
+                    message: "Invalid userID.", 
+                });
+            }
+            if(results){
+                for(i=0; i<results.members.length; i++){
+                    var memberID = results.members[i].memberID;
+
+                    console.log("MemberID: " + memberID);
+
+                    if(userID == memberID){
+                        console.log("User " + userID + "is a member of " + groupID);
+                        req.body.group = group;
+                        next();
+                    }else{
+                        console.log("User is not a member of that group.");
+                        return res.status(401).send({
+                            success: false,
+                            message: "User is not a member of that group.", 
+                        });
+                    }
+                }
+            }else{
+                console.log("No such group.");
+                return res.status(404).send({
+                    success: false,
+                    message: "No such group.", 
                 });
             }
         });
@@ -124,15 +148,38 @@ authRouter.use(function(req, res, next){
         var groupID = req.headers["groupid"];
 
         console.log("Checking members in: " + groupID);
-        Group.find({_id:groupID, "members.memberID":userID}, function(err, exists){
-            if(exists.length){
-                console.log("User " + userID + "is a member of " + groupID);
-                next();
-            }else{
-                console.log("User " + userID + " is not a member of " + groupID);
-                return res.status(403).send({
+        Group.findOne({_id:groupID}, "members.memberID", function(err, results){
+            if(err){
+                console.log(err);
+                
+                return res.status(500).send({
                     success: false,
-                    message: "User is not a member of that group.", 
+                    message: "Invalid userID.", 
+                });
+            }
+            if(results){
+                for(i=0; i<results.members.length; i++){
+                    var memberID = results.members[i].memberID;
+
+                    console.log("MemberID: " + memberID);
+
+                    if(userID == memberID){
+                        console.log("User " + userID + "is a member of " + groupID);
+                        req.body.group = group;
+                        next();
+                    }else{
+                        console.log("User is not a member of that group.");
+                        return res.status(401).send({
+                            success: false,
+                            message: "User is not a member of that group.", 
+                        });
+                    }
+                }
+            }else{
+                console.log("No such group.");
+                return res.status(404).send({
+                    success: false,
+                    message: "No such group.", 
                 });
             }
         });
