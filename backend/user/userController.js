@@ -39,7 +39,7 @@ exports.signUp = function(req, res){
                     }else{
                         console.log(user);
                         
-                        var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
+                        var token = jwt.sign({userID: user._id}, app.get('secret'), {
                             expiresIn: '24h'
                         });
                         res.json({

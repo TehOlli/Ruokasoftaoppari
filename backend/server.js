@@ -13,6 +13,7 @@ var multer              = require('multer');
 var upload              = multer({dest:'./public/uploads/'});
 var group               = require("./group/groupController");
 var user                = require("./user/userController");
+var Group               = require("./group/groupModel");
 
 
 //==========
@@ -96,63 +97,71 @@ authRouter.use(function(req, res, next){
     }
 });
 
-
-//Permission Checker: 
-//Checks if decoded token contains userID or groupID matching one sent to the route.
-//If not, sends 403 Forbidden response.
+//Middleware for checking groupID in the request against a user's list of memberships in the db
+//User found by userID in the token
 authRouter.use(function(req, res, next){
     if(!req.decoded) return res.sendStatus(403);
 
-    console.log("Scope checker here!")
-    var ok = false;
-    if(req.body.userid && req.body.groupid){
-        var userReqID = req.body.userid;
-        var groupReqID = req.body.groupID;
-    }else if(req.body.userid && !req.body.groupid){
-        var userReqID = req.body.userid;
-    }else if(req.headers["userid"]){
-        var userReqID = req.headers["userid"];
-    }else if(req.body.groupid){
-        var groupReqID = req.body.groupid;
-    }else if(req.headers["groupid"]){
-        var groupReqID = req.headers["groupid"];
-    }else{
-        console.log("Ei idtä joten eteenpäin...");
-        next();
-    };
+    var userID = req.decoded.userID;
 
-    if(userReqID){
-        var userPerm = req.decoded.userID;
+    if(req.body.groupid){
+        var groupID = req.body.groupid;
 
-        if(userReqID == userPerm){
-            console.log("Token has the right user scope.");
-            ok = true;
-        };
-    }else if(groupReqID){
-        var groups = req.decoded.groups;
-
-        for(i=0; i<groups.length; i++){
-            var groupPerm = groups[i].groupID;
-
-            console.log("Checking " + userReqID + " vs. " + groupScope + "...");
-            if(groupReqID == groupPerm){
-                console.log("Token has the right group scope.");
-                ok = true;
-            };
-        };
-    };
-
-    if(ok == true){
-        console.log("Token had the right scope, moving forward...");
-        next();
-    }else{
-        console.log("Token did not have the right scope, stopping here...")
-        return res.status(403).send({
-           success: false,
-           message: "Token did not have the right scope.", 
+        console.log("Checking members in: " + groupID);
+        Group.find({_id:groupID, "members.memberID":userID}, function(err, exists){
+            if(exists.length){
+                console.log("User " + userID + "is a member of " + groupID);
+                next();
+            }else{
+                console.log("User " + userID + " is not a member of " + groupID);
+                return res.status(403).send({
+                    success: false,
+                    message: "User is not a member of that group.", 
+                });
+            }
         });
-    };
+    }else if(req.headers["groupid"]){
+        var groupID = req.headers["groupid"];
+
+        console.log("Checking members in: " + groupID);
+        Group.find({_id:groupID, "members.memberID":userID}, function(err, exists){
+            if(exists.length){
+                console.log("User " + userID + "is a member of " + groupID);
+                next();
+            }else{
+                console.log("User " + userID + " is not a member of " + groupID);
+                return res.status(403).send({
+                    success: false,
+                    message: "User is not a member of that group.", 
+                });
+            }
+        });
+    }else{
+        console.log("No IDs provided so moving on...");
+        next();
+    }
 });
+
+//Middleware for checking userID in the request against the one in the token
+//Applied seperately to specific routes so it doesn't interfere with ones that require others' userID
+//ex. /invitetogroup
+var userChecker = function(req, res, next){
+    if(!req.decoded) return res.sendStatus(403);
+
+    console.log("Checking requested user against authentication...");
+    var userID = req.decoded.userID;
+
+    if(userID == req.body.userID || userID == req.headers["userid"]){
+        console.log("Requested user matches authentication.");
+        next();
+    }else{
+        console.log("Requested user does not match authentication.");
+            return res.status(403).send({
+                success: false,
+                message: "Requested user does not match authentication.", 
+            });
+    }
+}
 
 //==========
 //Socket.io
@@ -224,21 +233,20 @@ app.post('/googleauth', user.googleAuth);
  //Used to trigger the authRouter middleware to check for authentication
  authRouter.get('/', function(req, res){
      res.json({success: true, message: "Token authenticated"});
-     console.log("Token authenticated");
  });
 
 //User routes
-authRouter.post('/changeusername', user.changeUsername);
+authRouter.get('/profile', userChecker, user.getProfile);
 
-authRouter.post('/changepassword', user.changePassword);
+authRouter.get('/invites', userChecker, user.getInvites);
 
-authRouter.post('/setavatar', upload.single('avatar'), user.setAvatar);
+authRouter.post('/changeusername', userChecker, user.changeUsername);
+
+authRouter.post('/changepassword', userChecker, user.changePassword);
+
+authRouter.post('/setavatar', userChecker, upload.single('avatar'), user.setAvatar);
 
 authRouter.get('/members', user.getMembers);
-
-authRouter.get('/profile', user.getProfile);
-
-authRouter.get('/invites', user.getInvites);
 
 
 //Group routes
