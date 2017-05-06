@@ -1,5 +1,4 @@
 app.service('places', function($http, address, $q){
-    var placesList = [];
     var address = address.getAddress();
     this.addToList = function(place){
         var data = {placeid:place.place_id, groupid:localStorage.groupid};
@@ -10,8 +9,6 @@ app.service('places', function($http, address, $q){
         }, function(error){
             console.log("place add error", error)
         });
-        placesList.push(place);
-        console.log(placesList);
         return true;
     }
     
@@ -20,6 +17,7 @@ app.service('places', function($http, address, $q){
         var header = {groupid: localStorage.groupid}
         $http.get(address + 'auth/getplaces', {headers:header}).then(function(success){
             console.log("places get success");
+            console.log(success);
             deferred.resolve(success.data.places);
         }, function(error){
             console.log("places get error", error);

@@ -46,6 +46,7 @@
         <script type="text/javascript" src="js/controllers/restaurantController.js"></script>
         <script type="text/javascript" src="js/controllers/settingsController.js"></script>
         <script type="text/javascript" src="js/controllers/signupController.js"></script>
+        <script type="text/javascript" src="js/controllers/groupController.js"></script>
         <!--services-->
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/placesService.js"></script>
@@ -213,29 +214,29 @@
         </ons-page>       
     </ons-template>
     <ons-template id="group.html">
-        <ons-page>
-        <ons-toolbar>
-                <div class="left"><ons-back-button>Back</ons-back-button></div>
-                <div class="center">{{ myNavigator.topPage.data.choice }}</div>
-                <div class="right"><ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-android-settings"></ons-icon></div>
-        </ons-toolbar>      
-        <ons-tabbar>
-             <ons-tab page="map.html" active="true">
-                <div class="tab-bar__icon">
-                    <ons-icon class="tab-icons" icon="ion-map"></ons-icon>
-                </div>
-            </ons-tab>
-            <!--<ons-tab page="restaurant.html">
-                <div class="tab-bar__icon">
-                    <ons-icon class="tab-icons" icon="ion-pizza"></ons-icon>
-                </div>
-            </ons-tab>-->
-            <ons-tab page="chat.html">
-                <div class="tab-bar__icon">
-                    <ons-icon class="tab-icons" icon="ion-chatbox"></ons-icon>
-                </div>
-            </ons-tab>
-        </ons-tabbar>
+        <ons-page id="grouppage" ng-controller="groupController">
+            <ons-toolbar>
+                    <div class="left"><ons-back-button>Back</ons-back-button></div>
+                    <div class="center">{{groupName}}</div>
+                    <div class="right"><ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-android-settings"></ons-icon></div>
+            </ons-toolbar>      
+            <ons-tabbar position="top">
+                <ons-tab page="map.html" active="true">
+                    <div class="tab-bar__icon">
+                        Map
+                    </div>
+                </ons-tab>
+                <!--<ons-tab page="restaurant.html">
+                    <div class="tab-bar__icon">
+                        <ons-icon class="tab-icons" icon="ion-pizza"></ons-icon>
+                    </div>
+                </ons-tab>-->
+                <ons-tab page="chat.html">
+                    <div class="tab-bar__icon">
+                       chat
+                    </div>
+                </ons-tab>
+            </ons-tabbar>
         </ons-page> 
     </ons-template>
 
@@ -328,15 +329,24 @@
     <ons-template id="map.html">
         <ons-page id="mappage" ng-controller="mapController">
             <div class="map-settings">
-                <div class="restaurant-search">
-                    <input placeholder="Search restaurants" id="mapinput">
-                </div>
-                <p>
+                <p class="map-select">
                     <ons-input type="checkbox" ng-model="close">close</ons-input>
                     <ons-input type="checkbox" ng-model="list">My list</ons-input>
                </p>
+               <div class="restaurant-search">
+                    <input placeholder="Search restaurants" id="mapinput">
+                    <ons-icon ng-click="dialog4.show();" icon="ion-android-list"></ons-icon>
+               </div>
             </div>
             <div id="map"></div>
+            <ons-dialog var="dialog4">             
+                    <div style="text-align:center;">
+                        <div ng-repeat="res in restaurants">
+                            {{res.name}}
+                        </div>
+                        <ons-button style="margin-bottom:10px;" ng-click="dialog4.hide()">Close</ons-button>
+                    </div>
+            </ons-dialog> 
         </ons-page>
     </ons-template>
 
@@ -363,18 +373,6 @@
 
     <ons-template id="chat.html">
         <ons-page ng-controller="chatController" class="chat-page">
-            <!--<div class="chat-input">
-                <input ng-model="chatInput" id="chatinput" modifier="material" placeholder="Enter a message" float>
-                <ons-icon ng-click="sendmesFunction()"  icon="ion-android-send"></ons-icon>
-            </div>-->
-            <!--<div>
-            <div class="messages"id="asd">
-                <div ng-repeat="mes in messages track by $index">
-                     <span ng-if="!mes.own" class="message"><span class="username">{{mes.username}}</span>{{mes.msg}}<span class="time">{{mes.time}}</span></span>
-                     <span ng-if="mes.own" class="own-message"><span></span>{{mes.msg}}<span class="time">{{mes.time}}</span></span>
-                </div>
-            </div>
-            </div>-->
             <div id="chatwindow">
                 <div id="messagewindow" scroll-glue>
                     <div ng-repeat="mes in messages track by $index" style="margin-bottom:10px;">
@@ -390,6 +388,9 @@
                             <span class="time">{{mes.time}}</span>
                             <p class="message-text">{{mes.msg}}</p>
                         </div>
+                    </div>
+                    <div ng-if="!messages.length" class="empty-chat">
+                        <p>There's no messages yet :(</p>
                     </div>
                 </div>
                 <div id="inputcontainer">
