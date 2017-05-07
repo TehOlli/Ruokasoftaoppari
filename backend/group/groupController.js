@@ -2,7 +2,6 @@ var Group               = require("./groupModel");
 var User                = require("../user/userModel");
 var Message             = require("../messageModel");
 var fs                  = require('fs');
-var mware               = require("../middleware.js");
 
 
 exports.createGroup = function(req, res){
