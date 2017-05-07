@@ -1,5 +1,5 @@
 //CONTROLLER FOR HANDLING SIGNUP
-app.controller('signupController', ['$scope', '$log', '$http','validation', 'address', function($scope, $log, $http, validation, address) {
+app.controller('signupController', function($scope, $log, $http, validation, address, socket) {
 
        $scope.userName = "";
        $scope.userEmail = "";
@@ -16,8 +16,9 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
 
                       $http.get(address + 'auth').then(function (success, status){
 
-                        $log.info("ctrl 19 token check success");
-
+                        $log.info("token check success");
+                        socket.connectUser();
+                        console.log(socket);
                         myNavigator.pushPage("list.html", {animation : 'none'})
 
                       },function (error){
@@ -52,7 +53,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
                         localStorage.userid = success.data.userid;
                         localStorage.name = $scope.userName;
                         $log.info("signup success");
-
+                        socket.connectUser();
                         myNavigator.pushPage("list.html", {})
                     }
 
@@ -96,6 +97,7 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
                             localStorage.token = success.data.token;
                             localStorage.userid = success.data.userid;
                             console.log("google auth success");
+                            socket.connectUser();
                             myNavigator.pushPage("list.html", {})
                         }
 
@@ -109,4 +111,4 @@ app.controller('signupController', ['$scope', '$log', '$http','validation', 'add
             }
        }
 
-}]);
+});

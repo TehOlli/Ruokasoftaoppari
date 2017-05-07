@@ -1,4 +1,4 @@
-app.controller('restaurantController', ['$scope', '$log', '$http','places', 'address', function($scope, $log, $http, places, address) {
+app.controller('restaurantController', function($scope, $log, $http, places, address) {
     var address = address.getAddress();
     $scope.restaurants = [];
 
@@ -20,4 +20,4 @@ app.controller('restaurantController', ['$scope', '$log', '$http','places', 'add
                 });
         }
      });
-}]);
+});

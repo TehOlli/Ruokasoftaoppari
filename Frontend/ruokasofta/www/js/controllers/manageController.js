@@ -1,5 +1,5 @@
 //CONTROLLER FOR HANDLING GROUP
-app.controller('manageController', ['$scope', '$log', '$http', 'validation','address', function($scope, $log, $http, validation,address) {
+app.controller('manageController', function($scope, $log, $http, validation,address) {
     $scope.admin = false;
     $scope.userEmail = "";
     $scope.groupName = "";
@@ -84,7 +84,7 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
 
         if(val==true){
 
-            var data = JSON.stringify({email:$scope.userEmail, id:localStorage.groupid, name:localStorage.groupname});
+            var data = JSON.stringify({email:$scope.userEmail, groupid:localStorage.groupid, name:localStorage.groupname});
 
             $log.info(data);
 
@@ -200,4 +200,4 @@ app.controller('manageController', ['$scope', '$log', '$http', 'validation','add
     }
       
 
-}]);
+});

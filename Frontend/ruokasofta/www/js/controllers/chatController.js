@@ -1,15 +1,14 @@
 //CONTROLLER FOR HANDLING CHAT
-app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', 'address', function($scope, $log, $http, $anchorScroll, address) {
+app.controller('chatController', function($scope, $log, $http, $anchorScroll, address, socket) {
     $scope.chatInput = "";
     $scope.messages = [];
     $scope.msgdate = "01.01.1970";
     $scope.date = false;
     var address = address.getAddress();
     var id = {groupid: localStorage.groupid};
+    var socket = socket.getConnection();
 
     $http.get(address + 'auth/getmessages', {headers: id}).then(function (success){
-
-            $log.info("onnistui",success.data);
             for(var x in success.data){
                 $scope.messages.push(success.data[x]);
             }
@@ -20,8 +19,7 @@ app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', 'a
 
             });
 
-    var socket = io.connect(address);
-        socket.on('connect', function() {
+    socket.on('connect', function() {
         socket.emit('room', localStorage.groupid);
     });
     $scope.sendmesFunction = function(){
@@ -45,4 +43,4 @@ app.controller('chatController', ['$scope', '$log', '$http', '$anchorScroll', 'a
    
       
 
-}]);
+});

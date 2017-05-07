@@ -1,5 +1,5 @@
 //CONTROLLER HANDLING LOGIN
-app.controller('loginController', ['$scope', '$log', '$http','validation', 'address', function($scope, $log, $http, validation, address) {
+app.controller('loginController', function($scope, $log, $http, validation, address, socket) {
 
     $scope.loginEmail = "";
     $scope.loginPassword = "";
@@ -20,6 +20,7 @@ app.controller('loginController', ['$scope', '$log', '$http','validation', 'addr
                     localStorage.token = success.data.token;
                     localStorage.userid = success.data.userid;
                     localStorage.name = success.data.username;
+                   
                     $log.info("login success", success);
 
                     myNavigator.pushPage("list.html", {})
@@ -34,4 +35,4 @@ app.controller('loginController', ['$scope', '$log', '$http','validation', 'addr
        }
 
       
-}]);
+});

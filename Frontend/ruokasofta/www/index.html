@@ -54,10 +54,11 @@
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/placesService.js"></script>
         <script type="text/javascript" src="js/services/addressService.js"></script>
+        <script type="text/javascript" src="js/services/socketService.js"></script>
         <!--socket.io-->
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
         <!--google-->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc-cuAPltUAzINMTaGCNFJ71gLtLqrWPc&libraries=places&type=restaurant"async defer></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDc-cuAPltUAzINMTaGCNFJ71gLtLqrWPc&libraries=places"async defer></script>
         
         <title>Ruokasoftaoppari</title>
     </head>
@@ -330,7 +331,7 @@
     </ons-template>
 
     <ons-template id="map.html">
-        <ons-page id="mappage" ng-controller="mapController">
+        <ons-page id="mappage" ng-controller="mapController as map">
             <div class="map-settings">
                 <p class="map-select">
                     <ons-input type="checkbox" ng-model="close">close</ons-input>
@@ -338,31 +339,45 @@
                </p>
                <div class="restaurant-search">
                     <input placeholder="Search restaurants" id="mapinput">
-                    <ons-icon ng-click="dialog4.show();" icon="ion-android-list"></ons-icon>
+                    <ons-icon ng-click="showDialog();" icon="ion-android-list"></ons-icon>
                </div>
             </div>
             <div id="map"></div>
-            <ons-dialog var="dialog4">             
-                    <div style="text-align:center;">
-                        <ons-list>
-                            <ons-list-item ng-repeat="res in restaurants" modifier="longdivider">
-                                <div class="center">
-                                    <span class="list-item__title">{{res.name}}<res-rating style="padding-left:10px;"rating="{{res.rating}}"></res-rating></span>
-                                    <span class="list-item__subtitle">
-                                        {{res.address_components[1].long_name}} 
-                                        {{res.address_components[0].long_name}},
-                                        {{res.address_components[5].long_name}}
-                                        {{res.address_components[2].long_name}}
-                                    </span>
-                                </div>
-                            </ons-list-item>
-                        </ons-list>
-                        <ons-button style="margin-bottom:10px;" ng-click="dialog4.hide()">Close</ons-button>
-                    </div>
-            </ons-dialog> 
         </ons-page>
     </ons-template>
-
+    <ons-template id="dialog.html">
+        <ons-dialog class="res-list" var="dialog4">
+            <ons-page>           
+                <div style="text-align:center;">
+                    <p style="font-weight: bold; font-size: 1.3em;">Restaurants</p>
+                    <div class="res-loop" ng-repeat="res in restaurants">
+                        <div class="res-loop-inner">
+                            <div class="res-title">
+                                <p>
+                                    {{res.name}}
+                                </p>
+                                <res-rating style="padding-left:10px;"rating="{{res.rating}}"></res-rating>       
+                            </div>
+                            <div class="res-address">
+                                <p>
+                                    {{res.address_components[1].long_name}} 
+                                    {{res.address_components[0].long_name}},
+                                    {{res.address_components[5].long_name}}
+                                    {{res.address_components[2].long_name}}
+                                </p>      
+                            </div>
+                            <div class="res-options">
+                                <a href="{{res.website}}">Website</a>
+                                <span>Remove</span>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <ons-button style="margin:10px 0;" ng-click="dialog4.hide()">Close</ons-button>
+                </div>
+            </ons-page>  
+        </ons-dialog> 
+    </ons-template>
     <!--<ons-template id="restaurant.html">
         <ons-page id="restaurant" ng-controller="restaurantController">
             <div class="restaurant-search">

@@ -1,5 +1,5 @@
 //CONRTOLLER FOR HANDLING USER INFORMATION
-app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$q', 'address', function($scope, $log, $http, validation, $q, address) {
+app.controller('settingsController', function($scope, $log, $http, validation, $q, address) {
     
     $scope.username = "";
     $scope.email = "";
@@ -125,4 +125,4 @@ app.controller('settingsController', ['$scope', '$log', '$http', 'validation','$
         });        
     }
 
-}]);
+});

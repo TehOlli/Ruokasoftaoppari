@@ -1,4 +1,4 @@
-app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places', 'address','$q','$timeout', function($scope, $log, $http, $timeout, places, address, $q, $timeout) {
+app.controller('mapController', function($scope, $log, $http, $timeout, places, address, $q, $timeout) {
  
     var address = address.getAddress();
     $scope.list = false;
@@ -9,6 +9,18 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
     var markers2 = [];
     var helsinki = {lat: 60.1699, lng: 24.9384};
 
+    $scope.showDialog = function() {
+      if ($scope.dialog) {
+        $scope.dialog.show();
+      } else {
+        ons.createDialog('dialog.html', { parentScope: $scope })
+          .then(function(dialog) {
+            $scope.dialog = dialog;
+            $scope.dialog.show();
+          }.bind($scope));
+      }
+    }.bind($scope);
+    
     $(document).one('pageinit',function(event){
         
             if(event.target.id=="mappage"){
@@ -30,12 +42,10 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                     radius: 5000,
                     type: ['restaurant']
                 }, callback);
-                mapCheck=true;
             
                 $scope.getRestaurants = function(){
                     places.getList().then(function(places){
                         angular.forEach(places, function(place){
-                            console.log(place);
                             if(place.placeID){
                                 service.getDetails({placeId: place.placeID}, callback);
                             }
@@ -137,4 +147,4 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
     });
     
     
-}]);
+});

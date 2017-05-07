@@ -1,5 +1,5 @@
 //CONTROLLER FOR HANDLING GROUP LIST
-app.controller('listController', ['$scope', '$log', '$http','address', function($scope, $log, $http, address) {
+app.controller('listController', function($scope, $log, $http, address, socket) {
     $scope.invites = [];
     var address = address.getAddress();
     $scope.imgurl = address;
@@ -73,9 +73,10 @@ app.controller('listController', ['$scope', '$log', '$http','address', function(
 
     $scope.removeToken = function(){
         $log.info("token removed")
+        socket.disconnectUser();
         localStorage.removeItem("token");
         localStorage.removeItem("userid");
        }
        
 
-}]);
+});

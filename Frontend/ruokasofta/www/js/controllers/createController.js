@@ -1,5 +1,5 @@
 //CONTROLLER FOR HANDLING CREATE A GROUP
-app.controller('createController', ['$scope', '$log', '$http','validation', 'address', function($scope, $log, $http, validation, address) {
+app.controller('createController', function($scope, $log, $http, validation, address) {
 
     $scope.groupName = "";
     $scope.groupDesc = "";
@@ -70,4 +70,4 @@ app.controller('createController', ['$scope', '$log', '$http','validation', 'add
     }
       
 
-}]);
+});

@@ -16,6 +16,8 @@ app.factory('myHttpInterceptor', function($q, $rootScope) {
        if(rejection.status == 401&&check==false){
         console.log("forbidden");
         check=true;
+        localStorage.removeItem("token");
+        localStorage.removeItem("userid");
         ons.notification.alert({
             message: "Authentication error",
             callback: function(){
@@ -39,3 +41,6 @@ app.factory('myHttpInterceptor', function($q, $rootScope) {
 app.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('myHttpInterceptor');    
 }]);
+
+app.run(function($rootScope) {
+})
