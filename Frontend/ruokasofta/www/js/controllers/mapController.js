@@ -33,11 +33,8 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                 mapCheck=true;
             
                 $scope.getRestaurants = function(){
-                    var promises = [];
                     places.getList().then(function(places){
                         angular.forEach(places, function(place){
-                            var deferred = $q.defer();
-                            promises.push(deferred.promise);
                             console.log(place);
                             if(place.placeID){
                                 service.getDetails({placeId: place.placeID}, callback);
@@ -45,19 +42,17 @@ app.controller('mapController', ['$scope', '$log', '$http', '$timeout', 'places'
                             function callback(result, status) {
                                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                                     $scope.restaurants.push(result);
+                                    console.log(result);
                                     var marker = new google.maps.Marker({
                                             map: null,
                                             position: result.geometry.location
                                         });
                                         markers2.push(marker);
-                                        deferred.resolve;
                                 }
                             }
                         });
                     });
-                    $q.all(promises).then(function(){
-                        console.log("kaikki markkerit")
-                    });
+                   
                 }
 
                 $scope.getRestaurants();

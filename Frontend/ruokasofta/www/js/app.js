@@ -1,4 +1,4 @@
-var app = angular.module('my-app', ['onsen','luegg.directives']);
+var app = angular.module('my-app', ['onsen','luegg.directives','ngSanitize']);
 
 app.factory('myHttpInterceptor', function($q, $rootScope) {
   var check=false;
@@ -13,7 +13,7 @@ app.factory('myHttpInterceptor', function($q, $rootScope) {
     },
 
    'responseError': function(rejection) {
-       if(rejection.status == 403&&check==false){
+       if(rejection.status == 401&&check==false){
         console.log("forbidden");
         check=true;
         ons.notification.alert({
