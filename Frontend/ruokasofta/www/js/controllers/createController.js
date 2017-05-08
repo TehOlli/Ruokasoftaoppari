@@ -43,6 +43,7 @@ app.controller('createController', function($scope, $log, $http, validation, add
                                 callback: function(){
                                     myNavigator.resetToPage("list.html")
                                 }
+
                             })
                         },function(error){
                             console.log("file send error", error)
@@ -60,14 +61,9 @@ app.controller('createController', function($scope, $log, $http, validation, add
 
                 }
             },function (error){
-
                 $log.info("error", error)
 
             });
-
-        }
-    
-    }
-      
-
+        }    
+    }    
 });

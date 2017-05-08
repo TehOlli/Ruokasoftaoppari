@@ -8,14 +8,15 @@ app.controller('listController', function($scope, $log, $http, address, socket) 
 
     function invitesFunction(){
         $http.get(address + 'auth/invites').then(function(success){
-        console.log("invite get success");
-        $scope.invites = success.data.invites;
-        if($scope.invites.length){
-            document.getElementById('invite-icon').style.color = "red";
-        }
-        else{
-            document.getElementById('invite-icon').style.color = "white";
-        }
+            console.log("invite get success");
+            $scope.invites = success.data.invites;
+            if($scope.invites.length){
+                document.getElementById('invite-icon').style.color = "red";
+            }
+            else{
+                document.getElementById('invite-icon').style.color = "white";
+            }
+
         },function (error){
             console.log("invite get error");
 
@@ -24,9 +25,9 @@ app.controller('listController', function($scope, $log, $http, address, socket) 
 
     function groupsFunction(){
         $http.get(address + 'auth/groups').then(function (success){
-        $scope.groups = success;
-        $log.info(success);
-        $log.info("group get success");
+            $scope.groups = success;
+            $log.info(success);
+            $log.info("group get success");
 
         },function (error){
             $log.info(error)
@@ -70,13 +71,5 @@ app.controller('listController', function($scope, $log, $http, address, socket) 
         
 
        }
-
-    $scope.removeToken = function(){
-        $log.info("token removed")
-        socket.disconnectUser();
-        localStorage.removeItem("token");
-        localStorage.removeItem("userid");
-       }
-       
 
 });

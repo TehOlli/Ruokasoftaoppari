@@ -13,24 +13,24 @@ app.controller('loginController', function($scope, $log, $http, validation, addr
 
         $http.post(address + 'login', data).then(function (success){
 
-                 if(success.data.success==false){
-                    ons.notification.alert(success.data.message);
-                 }
-                 else{
-                    localStorage.token = success.data.token;
-                    localStorage.userid = success.data.userid;
-                    localStorage.name = success.data.username;
-                   
-                    $log.info("login success", success);
+            if(success.data.success==false){
+            ons.notification.alert(success.data.message);
+            }
+            else{
+            localStorage.token = success.data.token;
+            localStorage.userid = success.data.userid;
+            localStorage.name = success.data.username;
+            socket.connectUser();
+            $log.info("login success", success);
 
-                    myNavigator.pushPage("list.html", {})
-                    }
+            myNavigator.pushPage("list.html", {})
+            }
 
-            },function (error){
+        },function (error){
 
-                $log.info("login error", error)
+            $log.info("login error", error)
 
-            });
+        });
 
        }
 

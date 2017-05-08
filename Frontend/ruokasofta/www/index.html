@@ -50,6 +50,7 @@
         <script type="text/javascript" src="js/controllers/groupController.js"></script>
         <!--directives-->
         <script type="text/javascript" src="js/directives/ratingDirective.js"></script>
+        <script type="text/javascript" src="js/directives/logoutDirective.js"></script>
         <!--services-->
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/placesService.js"></script>
@@ -115,6 +116,7 @@
                 <div class="right">
                     <ons-icon ng-click="myNavigator.pushPage('settings.html')" class="list-icon" icon="ion-android-settings"></ons-icon>
                     <ons-icon id="invite-icon" ng-click="dialog3.show(); inviteFunction()" class="list-icon" icon="ion-android-notifications"></ons-icon>
+                    <log-out></log-out>
                 </div>
             </ons-toolbar>
             <ons-list>
@@ -132,7 +134,6 @@
                 <ons-fab ng-click="myNavigator.pushPage('create.html')" position="bottom right">
                     <ons-icon icon="md-plus"></ons-icon>
                 </ons-fab>
-                <ons-button ng-click="removeToken(); myNavigator.pushPage('signup.html')" modifier="material">delete token</ons-button>
             </div>
             <ons-dialog var="dialog3">             
                     <div style="text-align:center;">
@@ -164,6 +165,9 @@
             <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">Settings</div>
+                <div class="right">
+                    <log-out></log-out>
+                </div>
             </ons-toolbar>
              <div class="profile-header">
              </div>
@@ -197,6 +201,9 @@
             <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">Create a group</div>
+                <div class="right">
+                    <log-out></log-out>
+                </div>
             </ons-toolbar>
             <div class="create-group-header">
              </div>
@@ -222,7 +229,10 @@
             <ons-toolbar>
                     <div class="left"><ons-back-button>Back</ons-back-button></div>
                     <div class="center">{{groupName}}</div>
-                    <div class="right"><ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-android-settings"></ons-icon></div>
+                    <div class="right">
+                        <ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-android-settings"></ons-icon>
+                        <log-out></log-out>
+                    </div>
             </ons-toolbar>      
             <ons-tabbar position="top">
                 <ons-tab page="map.html" active="true">
@@ -249,6 +259,9 @@
             <ons-toolbar>
                 <div class="left"><ons-back-button>Back</ons-back-button></div>
                 <div class="center">Group info</div>
+                <div class="right">
+                    <log-out></log-out>
+                </div>
             </ons-toolbar>      
             <!--<p align="center">
                 <ons-input ng-model="userEmail" id="useremail" modifier="material" placeholder="Email"></ons-input>
@@ -425,7 +438,7 @@
                     <form ng-submit="sendmesFunction()">
                         <div class="chat-input">
                             <ons-icon icon="ion-android-chat"></ons-icon>
-                            <input type="text" ng-model="chatInput" placeholder="Send a message" class="" />
+                            <input type="text" ng-model="chatInput" placeholder="Type a message..." class="" />
                         </div>
                     </form>
                 </div>

@@ -2,7 +2,9 @@ app.service('socket', function($http, address, $q){
     var address = address.getAddress();
     var socket = "";
     this.connectUser = function(){
-        socket = io.connect(address);
+        socket = io.connect(address, {
+            query: {token: localStorage.token}
+        });
         console.log("user connected")
     }
     

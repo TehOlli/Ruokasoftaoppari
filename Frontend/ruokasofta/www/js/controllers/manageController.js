@@ -89,22 +89,16 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
             $log.info(data);
 
             $http.post(address + 'auth/invitetogroup', data).then(function (success){
-
                   if(success.data.success==false){
-
-                    ons.notification.alert(success.data.message);
-
+                       ons.notification.alert(success.data.message);
                   }
                   else{
                        $log.info(success);
-
                        $scope.userEmail = "";
-
                        ons.notification.alert("Invite has been sent");
                   }
 
             },function (error){
-
                 $log.info("add error", error)
                 dialog.hide();
 
@@ -119,21 +113,15 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
         console.log(data);
 
          $http.post(address + 'auth/removefromgroup', data).then(function (success){
-
               if(success.data.success==false){
-
                     ons.notification.alert(success.data.message);
-
-                  }
-                  else{
-                       $log.info("user remove success");
-
-                       getMembers();
-
-                  }
+              }
+              else{
+                    $log.info("user remove success");
+                    getMembers();
+              }
 
             },function (error){
-
                 $log.info("user remove error", error)
 
             });
@@ -141,16 +129,12 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
     }
     $scope.leaveGroup = function(){
 
-         var data = JSON.stringify({email: localStorage.email, groupid:localStorage.groupid});
-
+        var data = JSON.stringify({email: localStorage.email, groupid:localStorage.groupid});
         $http.post(address + 'auth/removefromgroup', data).then(function (success){
-
                 $log.info("user remove success");
-
                 myNavigator.resetToPage("list.html")
 
          },function (error){
-
                 $log.info("user remove error", error)
 
             });
@@ -161,22 +145,17 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
     $scope.deleteGroup = function(){
 
          var data = JSON.stringify({groupid:localStorage.groupid});
-
          function confDelete(){
-
              $http.post(address + 'auth/deletegroup', data).then(function (success){
-
                 $log.info("delete group success");
                     ons.notification.alert({
-                            message: "Group has been deleted",
-                            callback: function(){
-                                myNavigator.resetToPage("list.html")
-                            }
-                        })
-
+                        message: "Group has been deleted",
+                        callback: function(){
+                            myNavigator.resetToPage("list.html")
+                        }
+                    })
 
             },function (error){
-
                 $log.info("delete group", error)
 
             });
@@ -195,9 +174,5 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
                 }
             }
         })
-
-
     }
-      
-
 });
