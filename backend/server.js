@@ -96,7 +96,6 @@ authRouter.use(function(req, res, next){
 
 //Middleware for checking groupID in the request against a user's list of memberships in the db
 //User found by the userID in the token
-
 var groupChecker = function(req, res, next){
     if(!req.decoded) return res.sendStatus(403);
 
@@ -119,20 +118,26 @@ var groupChecker = function(req, res, next){
                 });
             }
             if(results){
-                for(i=0; i<results.members.length; i++){
+                var i = 0;
+                while(i < results.members.length){
                     var memberID = results.members[i].memberID;
+                    var matches = false;
 
                     if(userID == memberID){
                         console.log("User " + userID + "is a member of " + groupID);
+                        matches = true;
                         next();
                         break;
-                    }else{
-                        console.log("User is not a member of that group.");
-                        return res.status(401).send({
-                            success: false,
-                            message: "User is not a member of that group.", 
-                        });
                     }
+                    console.log("Ei osunut.");
+                    i++;
+                };
+                if(matches == false){
+                    console.log("User is not a member of that group.");
+                    return res.status(401).send({
+                        success: false,
+                        message: "User is not a member of that group.", 
+                    });
                 }
             }else{
                 console.log("No such group.");

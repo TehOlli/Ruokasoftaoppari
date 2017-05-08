@@ -252,7 +252,7 @@ exports.acceptInvitation = function(req, res){
                 console.log("/acceptInvitation: that group does not exist");
                 return res.status(404).send({
                     success: false,
-                    message: "That user does not exist."
+                    message: "That group does not exist."
                 });   
             }        
         }
