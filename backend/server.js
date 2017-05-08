@@ -97,7 +97,7 @@ authRouter.use(function(req, res, next){
 //Middleware for checking groupID in the request against a user's list of memberships in the db
 //User found by the userID in the token
 
-authRouter.use(function(req, res, next){
+var groupChecker = function(req, res, next){
     if(!req.decoded) return res.sendStatus(403);
 
     var userID = req.decoded.userID;
@@ -146,7 +146,7 @@ authRouter.use(function(req, res, next){
         console.log("No IDs provided so moving on...");
         next();
     }
-});
+};
 
 //Middleware for checking userID in the request against the one in the token
 //Applied seperately to specific routes so it doesn't interfere with ones that require others' userID
@@ -167,7 +167,7 @@ var userChecker = function(req, res, next){
                 message: "Requested user does not match authentication.", 
             });
     }
-}
+};
 
 //==========
 //Socket.io
@@ -270,37 +270,37 @@ authRouter.post('/changepassword', userChecker, user.changePassword);
 
 authRouter.post('/setavatar', userChecker, upload.single('avatar'), user.setAvatar);
 
-authRouter.get('/members', user.getMembers);
+authRouter.get('/members', groupChecker, user.getMembers);
 
 
 //Group routes
 authRouter.post('/creategroup', group.createGroup);
 
-authRouter.post('/altergroup', group.alterGroup);
+authRouter.post('/altergroup', groupChecker, group.alterGroup);
 
-authRouter.get('/groups', group.getGroups);
+authRouter.get('/groups', userChecker, group.getGroups);
 
-authRouter.get('/getgroup', group.getGroup);
+authRouter.get('/getgroup', groupChecker, group.getGroup);
 
-authRouter.post("/invitetogroup", group.invitetoGroup);
+authRouter.post("/invitetogroup", groupChecker, group.invitetoGroup);
 
-authRouter.post("/acceptinv", group.acceptInvitation);
+authRouter.post("/acceptinv", userChecker,group.acceptInvitation);
 
-authRouter.post("/declineinv", group.declineInvitation);
+authRouter.post("/declineinv", userChecker, group.declineInvitation);
 
-authRouter.post("/removefromgroup", group.removefromGroup);
+authRouter.post("/removefromgroup", groupChecker, group.removefromGroup);
 
-authRouter.post("/setgroupimage", upload.single('groupimg'), group.setGroupImage);
+authRouter.post("/setgroupimage", groupChecker, upload.single('groupimg'), group.setGroupImage);
 
-authRouter.post("/deletegroup", group.deleteGroup);
+authRouter.post("/deletegroup", groupChecker, group.deleteGroup);
 
-authRouter.get("/getmessages", group.getMessages);
+authRouter.get("/getmessages", groupChecker, group.getMessages);
 
-authRouter.post("/saveplace", group.savePlace);
+authRouter.post("/saveplace", groupChecker, group.savePlace);
 
-authRouter.get("/getplaces", group.getPlaces);
+authRouter.get("/getplaces", groupChecker, group.getPlaces);
 
-authRouter.post("/deleteplace", group.deletePlace);
+authRouter.post("/deleteplace",  groupChecker, group.deletePlace);
 
 
 
