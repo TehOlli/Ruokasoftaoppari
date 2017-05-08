@@ -124,8 +124,8 @@ var groupChecker = function(req, res, next){
 
                     if(userID == memberID){
                         console.log("User " + userID + "is a member of " + groupID);
-                        req.body.group = group;
                         next();
+                        break;
                     }else{
                         console.log("User is not a member of that group.");
                         return res.status(401).send({
@@ -143,8 +143,11 @@ var groupChecker = function(req, res, next){
             }
         });
     }else{
-        console.log("No IDs provided so moving on...");
-        next();
+        console.log("groupChecker caught a request without an ID");
+        return res.status(401).send({
+            success: false,
+            message: "No groupID in the request" 
+        });
     }
 };
 
@@ -305,7 +308,6 @@ authRouter.post("/deleteplace",  groupChecker, group.deletePlace);
 
 
 
-//app.listen(port);
 http.listen(port, function(){
   console.log("Connected on port " + port);
 });

@@ -211,6 +211,8 @@ exports.acceptInvitation = function(req, res){
     var userID = req.body.userid;
     var groupID = req.body.groupid;
 
+    console.log("userID: " + userID + " & groupID: " + groupID);
+
     var group = {groupID: groupID};
     User.findOneAndUpdate({_id:userID, 'invites.groupID':groupID}, {$pull:{invites:{groupID:groupID}}, $push:{groups:group}}, function(err, user){
         if(err){
@@ -221,30 +223,38 @@ exports.acceptInvitation = function(req, res){
                 message: "Database error.", 
             });    
         }else{
-            console.log(user);
-            var newMember = {"memberID":userID};
-            Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
-                if (err){
-                    console.log("/acceptInvitation: Cannot access database to update group.");
-                    console.log(err);
-                    return res.status(500).send({
-                        success: false,
-                        message: "Database error.", 
-                    });    
-                }else{
-                    if(user){
-                        console.log("Joined group.");
-                        console.log(user);
-                        res.json({success: true, message: "Joined group."});
-                    }else{
-                        console.log("/acceptInvitation: that user does not exist");
+            if(user){
+                console.log(user);
+                var newMember = {"memberID":userID};
+                Group.findOneAndUpdate({_id:groupID}, {$push:{members: newMember}}, function(err, group){
+                    if (err){
+                        console.log("/acceptInvitation: Cannot access database to update group.");
+                        console.log(err);
                         return res.status(500).send({
                             success: false,
                             message: "Database error.", 
                         });    
+                    }else{
+                        if(group){
+                            console.log("Joined group.");
+                            console.log(group);
+                            res.json({success: true, message: "Joined group."});
+                        }else{
+                            console.log("/acceptInvitation: that group does not exist");
+                            return res.status(404).send({
+                                success: false,
+                                message: "That group does not exist." 
+                            });    
+                        }
                     }
-                }
-            });            
+                });    
+            }else{
+                console.log("/acceptInvitation: that group does not exist");
+                return res.status(404).send({
+                    success: false,
+                    message: "That user does not exist."
+                });   
+            }        
         }
     })
 };
