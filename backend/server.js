@@ -173,19 +173,22 @@ var userChecker = function(req, res, next){
 //Socket.io
 //==========
 
-
 io.use(function(socket, next){
     if(socket.handshake.query && socket.handshake.query.token){
         jwt.verify(socket.handshake.query.token, config.secret, function(err){
             if(err){
-                return next(console.log("Socket.io authentication failed."));
+                next(new Error("Socket.io auth failed."));
             }else{
-                console.log("Socket.io authentication succeeded.")
+                console.log("Socket.io authentication succeeded.");
+                next();
             }
         });
+    }else{
+        console.log("Socket.io auth didn't pass the first if");
     }
 }) 
-.on("connection", function(socket){
+
+io.on("connection", function(socket){
     console.log("Socket user connected.");
 
     socket.on("room", function(room){

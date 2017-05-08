@@ -2,6 +2,7 @@ var Group               = require("./groupModel");
 var User                = require("../user/userModel");
 var Message             = require("../messageModel");
 var fs                  = require('fs');
+var server              = require('../server.js');
 
 
 exports.createGroup = function(req, res){
@@ -206,7 +207,6 @@ exports.invitetoGroup = function(req, res){
 
 exports.acceptInvitation = function(req, res){
     if(!req.body) return res.sendStatus(400);
-    if(!req.headers['userid']) return res.sendStatus(400);
 
     var userID = req.body.userid;
     var groupID = req.body.groupid;
@@ -238,6 +238,10 @@ exports.acceptInvitation = function(req, res){
                         res.json({success: true, message: "Joined group."});
                     }else{
                         console.log("/acceptInvitation: that user does not exist");
+                        return res.status(500).send({
+                            success: false,
+                            message: "Database error.", 
+                        });    
                     }
                 }
             });            
@@ -454,8 +458,8 @@ exports.deletePlace = function(req, res){
     if(!req.body) return res.sendStatus(400);
     
     
-    var groupID = req.body.groupID;
-    var placeID = req.body.placeID;
+    var groupID = req.body.groupid;
+    var placeID = req.body.placeid;
     
     console.log("Deleting place " + placeID + " from group " + groupID);
 
@@ -468,6 +472,7 @@ exports.deletePlace = function(req, res){
                 message: "Database error.", 
             });    
         }else{
+            server.io.socket.to(groupID).emit('message', {'msg': data.msg});
             res.json({success: true, message: "Location deleted."});
         }
     });
