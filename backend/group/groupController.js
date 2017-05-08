@@ -472,7 +472,6 @@ exports.deletePlace = function(req, res){
                 message: "Database error.", 
             });    
         }else{
-            server.io.socket.to(groupID).emit('message', {'msg': data.msg});
             res.json({success: true, message: "Location deleted."});
         }
     });
