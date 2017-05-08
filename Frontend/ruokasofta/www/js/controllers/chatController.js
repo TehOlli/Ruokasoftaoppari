@@ -18,10 +18,6 @@ app.controller('chatController', function($scope, $log, $http, $anchorScroll, ad
                 $log.info(error)
 
             });
-
-    socket.on('connect', function() {
-        socket.emit('room', localStorage.groupid);
-    });
     $scope.sendmesFunction = function(){
         if(!$scope.chatInput==""){
             var t = new Date();

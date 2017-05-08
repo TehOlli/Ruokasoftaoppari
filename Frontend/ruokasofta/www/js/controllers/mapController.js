@@ -20,6 +20,18 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
           }.bind($scope));
       }
     }.bind($scope);
+
+    $scope.deletePlace = function(x){
+        var data = {groupid:localStorage.groupid, placeid:x};
+        console.log(data);
+        $http.post(address + 'auth/deleteplace', data).then(function(success){
+            console.log("place delete success");
+
+        }, function(error){
+            console.log("place delete error");
+
+        });
+    }
     
     $(document).one('pageinit',function(event){
         

@@ -36,7 +36,7 @@ app.controller('listController', function($scope, $log, $http, address, socket) 
     }
 
     $scope.acceptInvite = function(group){
-        var data = {id:group.groupID};
+        var data = {groupid:group.groupID, userid:localStorage.userid};
         console.log(data);
         $http.post(address +  'auth/acceptinv', data).then(function(success){
             console.log(success);
@@ -50,7 +50,7 @@ app.controller('listController', function($scope, $log, $http, address, socket) 
     }
 
     $scope.declineInvite = function(group){
-        var data = {id:group.groupID};
+        var data = {groupid:group.groupID, userid:localStorage.userid};
         console.log(data);
         $http.post(address +  'auth/declineinv', data).then(function(success){
             console.log(success);
