@@ -2,6 +2,17 @@ var mong = require('mongoose');
 var bcrypt = require('bcryptjs');
 var SALT_WORK_FACTOR = 10;
 
+var groupsSchema = mong.Schema({
+    groupID: String
+}, {_id:false});
+
+/*
+var invitesSchema = mong.Schema({
+    groupID: String,
+    groupName: String
+}, {_id:false});
+*/
+
 var userSchema = mong.Schema({
     username:{
         type: String,
@@ -16,15 +27,12 @@ var userSchema = mong.Schema({
     userPassword:{
         type: String,
     },
-    groups: [{
-        //type: Schema.Types.ObjectId, ref: 'Group'
-        groupID: String
-    }],
+    groups: [groupsSchema],
     invites: [{
         //type: Schema.Types.ObjectId, ref: 'Group'
         groupID: String,
         groupName: String
-    }]
+    }, {_id:false}]
 });
 
 //Hashes the user's password before Mongoose does a .save if it's been modified.

@@ -73,21 +73,18 @@ authRouter.use(function(req, res, next){
         console.log(e.message);
     }
     if(token){
-        jwt.verify(token, app.get("secret"), function(err, decoded){
+        jwt.verify(token, config.secret, function(err, decoded){
             if(err){
                 console.log("Token authentication failed.");
-
                 return res.status(403).send({ 
                     success: false, 
                     message: "Token authentication failed."
                 });
-
             }else{
                 console.log("Token authenticated.")
                 req.decoded = decoded;
                 next();
             }
-
         });
     }else{
         return res.status(403).send({
@@ -98,7 +95,7 @@ authRouter.use(function(req, res, next){
 });
 
 //Middleware for checking groupID in the request against a user's list of memberships in the db
-//User found by userID in the token
+//User found by the userID in the token
 
 authRouter.use(function(req, res, next){
     if(!req.decoded) return res.sendStatus(403);
@@ -107,61 +104,23 @@ authRouter.use(function(req, res, next){
 
     if(req.body.groupid){
         var groupID = req.body.groupid;
-
-        console.log("Checking members in: " + groupID);
-        Group.findOne({_id:groupID}, "members.memberID", function(err, results){
-            if(err){
-                console.log(err);
-                
-                return res.status(500).send({
-                    success: false,
-                    message: "Invalid userID.", 
-                });
-            }
-            if(results){
-                for(i=0; i<results.members.length; i++){
-                    var memberID = results.members[i].memberID;
-
-                    console.log("MemberID: " + memberID);
-
-                    if(userID == memberID){
-                        console.log("User " + userID + "is a member of " + groupID);
-                        req.body.group = group;
-                        next();
-                    }else{
-                        console.log("User is not a member of that group.");
-                        return res.status(401).send({
-                            success: false,
-                            message: "User is not a member of that group.", 
-                        });
-                    }
-                }
-            }else{
-                console.log("No such group.");
-                return res.status(404).send({
-                    success: false,
-                    message: "No such group.", 
-                });
-            }
-        });
     }else if(req.headers["groupid"]){
         var groupID = req.headers["groupid"];
+    }
 
+    if(groupID){
         console.log("Checking members in: " + groupID);
         Group.findOne({_id:groupID}, "members.memberID", function(err, results){
             if(err){
                 console.log(err);
-                
                 return res.status(500).send({
                     success: false,
-                    message: "Invalid userID.", 
+                    message: "Database error.", 
                 });
             }
             if(results){
                 for(i=0; i<results.members.length; i++){
                     var memberID = results.members[i].memberID;
-
-                    console.log("MemberID: " + memberID);
 
                     if(userID == memberID){
                         console.log("User " + userID + "is a member of " + groupID);
@@ -214,7 +173,19 @@ var userChecker = function(req, res, next){
 //Socket.io
 //==========
 
-io.on("connection", function(socket){
+
+io.use(function(socket, next){
+    if(socket.handshake.query && socket.handshake.query.token){
+        jwt.verify(socket.handshake.query.token, config.secret, function(err){
+            if(err){
+                return next(console.log("Socket.io authentication failed."));
+            }else{
+                console.log("Socket.io authentication succeeded.")
+            }
+        });
+    }
+}) 
+.on("connection", function(socket){
     console.log("Socket user connected.");
 
     socket.on("room", function(room){
@@ -254,7 +225,10 @@ io.on("connection", function(socket){
                 socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username, 'date': data.date,'time': data.time});
             }
         })
-        //callback(true);
+    });
+
+    socket.on("listupdated", function(data){
+        socket.to(data.room).emit("updatelist");
     });
 
     socket.on("disconnect", function(){
