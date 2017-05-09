@@ -9,15 +9,17 @@ app.controller('chatController', function($scope, $log, $http, $anchorScroll, ad
     var socket = socket.getConnection();
 
     $http.get(address + 'auth/getmessages', {headers: id}).then(function (success){
-            for(var x in success.data){
-                $scope.messages.push(success.data[x]);
-            }
-                
-            },function (error){
+        for(var x in success.data){
+            $scope.messages.push(success.data[x]);
+        }
             
-                $log.info(error)
+    },function (error){
+        $log.info(error)
 
-            });
+    });
+
+    socket.emit('room', localStorage.groupid);
+
     $scope.sendmesFunction = function(){
         if(!$scope.chatInput==""){
             var t = new Date();
@@ -31,6 +33,7 @@ app.controller('chatController', function($scope, $log, $http, $anchorScroll, ad
         }
     }
     socket.on('message', function(msg){
+        console.log(msg);
         $scope.messages.push(msg);
         $scope.$apply();
         console.log(msg)

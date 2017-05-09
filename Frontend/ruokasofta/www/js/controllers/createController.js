@@ -1,5 +1,5 @@
 //CONTROLLER FOR HANDLING CREATE A GROUP
-app.controller('createController', function($scope, $log, $http, validation, address) {
+app.controller('createController', function($scope, $log, $http, validation, address, image) {
 
     $scope.groupName = "";
     $scope.groupDesc = "";
@@ -7,17 +7,7 @@ app.controller('createController', function($scope, $log, $http, validation, add
     var address = address.getAddress();
 
     $scope.uploadFile = function(files){
-        var form = new FormData();
-        form.append("groupimg", files[0]);
-        $scope.form = form;
-
-        var reader = new FileReader();
-        reader.readAsDataURL(files[0]);
-
-        reader.onload = function (e){
-            document.getElementById("create-group-img").style.background = "url(" + e.target.result + ")";
-            document.getElementById("create-group-img").style.backgroundSize = "cover";
-        }
+       $scope.form = image.tempImage("create-group-img", files, "groupimg");
     }
 
     $scope.createFunction = function(){

@@ -26,6 +26,7 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
         console.log(data);
         $http.post(address + 'auth/deleteplace', data).then(function(success){
             console.log("place delete success");
+            $scope.getRestaurants();
 
         }, function(error){
             console.log("place delete error");
@@ -54,8 +55,17 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
                     radius: 5000,
                     type: ['restaurant']
                 }, callback);
-            
+
+                var image = {
+                    url: 'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png',
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };
+
                 $scope.getRestaurants = function(){
+                    $scope.restaurants = [];
                     places.getList().then(function(places){
                         angular.forEach(places, function(place){
                             if(place.placeID){
@@ -64,10 +74,12 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
                             function callback(result, status) {
                                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                                     $scope.restaurants.push(result);
+                                    $scope.$apply();
                                     console.log(result);
                                     var marker = new google.maps.Marker({
                                             map: null,
-                                            position: result.geometry.location
+                                            position: result.geometry.location,
+                                            icon: image
                                         });
                                         markers2.push(marker);
                                 }
@@ -107,7 +119,8 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
                     var placeLoc = place.geometry.location;
                     var marker = new google.maps.Marker({
                         map: null,
-                        position: place.geometry.location
+                        position: place.geometry.location,
+                        
                     });
                     markers.push(marker);
 
@@ -148,7 +161,8 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
                     $scope.restaurants.push(place);
                      var marker = new google.maps.Marker({
                         map: map,
-                        position: place.geometry.location
+                        position: place.geometry.location,
+                        icon: image
                     });
                     markers2.push(marker);
                     map.setCenter(marker.getPosition());  

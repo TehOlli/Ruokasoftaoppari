@@ -1,5 +1,5 @@
 //CONTROLLER FOR HANDLING GROUP
-app.controller('manageController', function($scope, $log, $http, validation,address) {
+app.controller('manageController', function($scope, $log, $http, validation, address, image) {
     $scope.admin = false;
     $scope.userEmail = "";
     $scope.groupName = "";
@@ -15,9 +15,7 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
         console.log("group info get success");
         $scope.groupName = success.data.groupName;
         $scope.groupDesc = success.data.groupDesc;
-        var time = Date.now();
-        document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.groupid + ".jpg" + "?" + time + ")";
-        document.getElementById("group-img").style.backgroundSize = "cover";
+        image.getImage("group-img", localStorage.groupid, "groups/");
 
     }, function(error){
         console.log("group info get error");
@@ -69,9 +67,8 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
 
             $http.post(address + 'auth/setgroupimage', $scope.form, header).then(function(success){
                 console.log("group file send success");
-                var time = Date.now();
-                document.getElementById("group-img").style.background = "url(" + address + "uploads/groups/" + localStorage.groupid + ".jpg" + "?" + time + ")";
-                document.getElementById("group-img").style.backgroundSize = "cover";
+                image.getImage("group-img", localStorage.groupid, "groups/");
+
             },function(error){
                 console.log("file send error", error)
             })
@@ -106,10 +103,9 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
         }
 
     }
-    $scope.removeUser = function(email){
+    $scope.removeUser = function(userid){
 
-        var id = {groupid: localStorage.groupid}
-        var data = JSON.stringify({email: email, groupid:localStorage.groupid});
+        var data = JSON.stringify({userid: userid, groupid:localStorage.groupid});
         console.log(data);
 
          $http.post(address + 'auth/removefromgroup', data).then(function (success){
@@ -129,7 +125,7 @@ app.controller('manageController', function($scope, $log, $http, validation,addr
     }
     $scope.leaveGroup = function(){
 
-        var data = JSON.stringify({email: localStorage.email, groupid:localStorage.groupid});
+        var data = JSON.stringify({userid: localStorage.userid, groupid:localStorage.groupid});
         $http.post(address + 'auth/removefromgroup', data).then(function (success){
                 $log.info("user remove success");
                 myNavigator.resetToPage("list.html")
