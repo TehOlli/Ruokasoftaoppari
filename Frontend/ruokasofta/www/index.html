@@ -56,6 +56,7 @@
         <script type="text/javascript" src="js/services/placesService.js"></script>
         <script type="text/javascript" src="js/services/addressService.js"></script>
         <script type="text/javascript" src="js/services/socketService.js"></script>
+        <script type="text/javascript" src="js/services/imageService.js"></script>
         <!--socket.io-->
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
         <!--google-->
@@ -311,7 +312,7 @@
                             <span class="list-item__subtitle">{{user.userEmail}}</span>             
                         </div>
                         <div class="right" ng-show="admin">
-                            <ons-icon ng-click="removeUser(user.userEmail)" class="remove-user" icon="md-close-circle"></ons-icon>
+                            <ons-icon ng-click="removeUser(user._id)" class="remove-user" icon="md-close-circle"></ons-icon>
                         </div>
                     </ons-list-item>
                     <ons-list-header>Manage</ons-list-header>

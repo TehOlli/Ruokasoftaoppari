@@ -22,7 +22,6 @@ app.controller('loginController', function($scope, $log, $http, validation, addr
             localStorage.name = success.data.username;
             socket.connectUser();
             $log.info("login success", success);
-
             myNavigator.pushPage("list.html", {})
             }
 

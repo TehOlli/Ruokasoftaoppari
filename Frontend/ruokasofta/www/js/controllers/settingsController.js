@@ -1,5 +1,5 @@
 //CONRTOLLER FOR HANDLING USER INFORMATION
-app.controller('settingsController', function($scope, $log, $http, validation, $q, address) {
+app.controller('settingsController', function($scope, $log, $http, validation, $q, address, image) {
     
     $scope.username = "";
     $scope.email = "";
@@ -13,10 +13,7 @@ app.controller('settingsController', function($scope, $log, $http, validation, $
         $scope.username = success.data.username;
         usernamecheck = success.data.username;
         $scope.email = success.data.userEmail;
-        var time = Date.now();
-        document.getElementById("profile-img").style.background = "url(" + address + "uploads/avatars/" + localStorage.userid + ".jpg" + "?" + time + ")";
-        document.getElementById("profile-img").style.backgroundSize = "cover";  
-
+        image.getImage("profile-img", localStorage.userid, "avatars/");
 
     },function(error){
         console.log(error);
@@ -24,20 +21,7 @@ app.controller('settingsController', function($scope, $log, $http, validation, $
     });
 
     $scope.uploadFile = function(files){
-        var form = new FormData();
-        form.append("avatar", files[0]);
-        $scope.form = form;
-        console.log("upload file");
-        var reader = new FileReader();
-        reader.readAsDataURL(files[0]);
-
-        reader.onload = function (e){
-            console.log("reader onload");
-            document.getElementById("profile-img").style.background = "url(" + e.target.result + ")";
-            document.getElementById("profile-img").style.backgroundSize = "cover";
-        }
-
-
+        $scope.form = image.tempImage("profile-img", files, "avatar");
     }
 
     $scope.saveProfile = function(){
