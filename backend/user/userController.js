@@ -84,10 +84,13 @@ exports.verify = function(req, res){
                 message: "Database error.", 
             });
         }else{
-            if(exists){}
-            console.log("User verified.");
-            res.json({success:true, message: "Account verified."});
-
+            if(user){
+                console.log("Account verified.");
+                res.json({success:true, message: "Account verified."});
+            }else{
+                console.log("Tried to verify an inexistent account.");
+                res.json({success:false, message:"That account does not exist."});
+            }
         }
     });
 };
@@ -128,7 +131,7 @@ exports.login = function(req, res){
                     }
                 });
             }else{
-                res.json({success: false, message: "Login failed. User does not exist."});
+                res.json({success: false, message: "Email or password is incorrect."});
             }
         }
     });
