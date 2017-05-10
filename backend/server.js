@@ -1,7 +1,7 @@
 var express             = require("express");
 var bodyParser          = require("body-parser");
 var app                 = express();
-var port                = process.env.port || 8080;
+var port                = process.env.port || 80;
 var mong                = require("mongoose");
 var Message             = require("./messageModel");
 var config              = require("./config");
@@ -9,12 +9,10 @@ var http                = require("http").Server(app);
 var io                  = require("socket.io")(http);
 var jwt                 = require("jsonwebtoken");
 var passport            = require("passport");
-var multer              = require('multer');
-var upload              = multer({dest:'./public/uploads/'});
 var group               = require("./group/groupController");
 var user                = require("./user/userController");
 var Group               = require("./group/groupModel");
-
+var multer              = require('multer');
 
 //==========
 //Configuration
@@ -61,22 +59,35 @@ mong.connect(config.dbConnection, function(err){
     }
 });
 
+//Multer config
+var upload = multer({
+    dest:'./public/uploads/', 
+    fileFilter: function (req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+            return cb(new Error('Only images are allowed.'), false);
+        }
+        cb(null, true);
+    },
+    limits:{
+        fileSize: 1024*1024
+    }
+});
+
 
 //==========
 //Router Middleware
 //==========
 
-authRouter.use(function(req, res, next){
-    try{
-        var token = req.headers["authorization"].replace(/^Bearer\s/, '');
-    }catch(e){
-        console.log(e.message);
-    }
+var tokenVerifier = function(req, res, next){
+    if(!req.headers["authorization"]) return res.sendStatus(401);
+    
+    var token = req.headers["authorization"].replace(/^Bearer\s/, '');
+  
     if(token){
         jwt.verify(token, config.secret, function(err, decoded){
             if(err){
                 console.log("Token authentication failed.");
-                return res.status(403).send({ 
+                return res.status(401).send({ 
                     success: false, 
                     message: "Token authentication failed."
                 });
@@ -87,26 +98,25 @@ authRouter.use(function(req, res, next){
             }
         });
     }else{
-        return res.status(403).send({
+        return res.status(401).send({
            success: false,
            message: "No token was provided.", 
         });
     }
-});
+};
+
+authRouter.use(tokenVerifier);
 
 //Middleware for checking groupID in the request against a user's list of memberships in the db
 //User found by the userID in the token
 var groupChecker = function(req, res, next){
-    if(!req.decoded) return res.sendStatus(403);
-
+    if(!req.decoded) return res.sendStatus(401);
     var userID = req.decoded.userID;
-
     if(req.body.groupid){
         var groupID = req.body.groupid;
     }else if(req.headers["groupid"]){
         var groupID = req.headers["groupid"];
     }
-
     if(groupID){
         console.log("Checking members in: " + groupID);
         Group.findOne({_id:groupID}, "members.memberID", function(err, results){
@@ -122,14 +132,12 @@ var groupChecker = function(req, res, next){
                 while(i < results.members.length){
                     var memberID = results.members[i].memberID;
                     var matches = false;
-
                     if(userID == memberID){
                         console.log("User " + userID + "is a member of " + groupID);
                         matches = true;
                         next();
                         break;
                     }
-                    console.log("Ei osunut.");
                     i++;
                 };
                 if(matches == false){
@@ -158,9 +166,10 @@ var groupChecker = function(req, res, next){
 
 //Middleware for checking userID in the request against the one in the token
 //Applied seperately to specific routes so it doesn't interfere with ones that require others' userID
-//ex. /invitetogroup
+//ex. /invite
+
 var userChecker = function(req, res, next){
-    if(!req.decoded) return res.sendStatus(403);
+    if(!req.decoded) return res.sendStatus(401);
 
     console.log("Checking requested user against authentication...");
     var userID = req.decoded.userID;
@@ -170,7 +179,7 @@ var userChecker = function(req, res, next){
         next();
     }else{
         console.log("Requested user does not match authentication.");
-            return res.status(403).send({
+            return res.status(401).send({
                 success: false,
                 message: "Requested user does not match authentication.", 
             });
@@ -252,7 +261,9 @@ io.on("connection", function(socket){
 //==========
 
 //User creation & login
-app.post("/signup", user.signUp);
+app.post('/signup', user.signUp);
+
+app.get('/verify', user.verify);
 
 app.post('/login', user.login);
 
@@ -290,7 +301,7 @@ authRouter.get('/groups', userChecker, group.getGroups);
 
 authRouter.get('/getgroup', groupChecker, group.getGroup);
 
-authRouter.post("/invitetogroup", groupChecker, group.invitetoGroup);
+authRouter.post("/invitetogroup", groupChecker, group.invite);
 
 authRouter.post("/acceptinv", userChecker,group.acceptInvitation);
 

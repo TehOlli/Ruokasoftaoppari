@@ -155,7 +155,7 @@ exports.getGroup = function(req, res){
     });
 };
 
-exports.invitetoGroup = function(req, res){
+exports.invite = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
     var groupID = req.body.groupid;
@@ -163,7 +163,6 @@ exports.invitetoGroup = function(req, res){
     var userEmail = req.body.email;
     console.log("inviteToGroup parameters: groupID " + groupID + " & " + userEmail);
 
-    //Checks if user is already in that group
     User.find({userEmail: userEmail, "groups.groupID": groupID}, function(err, exists){
         if (err){
             console.log("/invitetogroup: Cannot access database to search for user.")
@@ -252,7 +251,7 @@ exports.acceptInvitation = function(req, res){
                 console.log("/acceptInvitation: that group does not exist");
                 return res.status(404).send({
                     success: false,
-                    message: "That group does not exist."
+                    message: "That invite does not exist."
                 });   
             }        
         }
@@ -348,10 +347,7 @@ exports.deleteGroup = function(req, res){
                     if(err){
                         console.log("deleteGroup: couldn't delete groupimg");
                         console.log(err);
-                        return res.status(500).send({
-                            success: false,
-                            message: "Database error.", 
-                        });    
+                        res.json({success:true, message:"Group deleted"});
                     }
                     res.json({success:true, message:"Group deleted"});
                 });

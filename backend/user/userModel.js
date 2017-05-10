@@ -26,6 +26,15 @@ var userSchema = mong.Schema({
     },
     userPassword:{
         type: String,
+        required: true
+    },
+    verified:{
+        type: Boolean,
+        required: true
+    },
+    GAuth:{
+        type: Boolean,
+        required: true
     },
     groups: [groupsSchema],
     invites: [{

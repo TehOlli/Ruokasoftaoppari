@@ -4,28 +4,36 @@ var jwt                 = require("jsonwebtoken");
 var express             = require("express");
 var app                 = express();
 var config              = require("../config");
-var GoogleAuth = require('google-auth-library');
+var GoogleAuth          = require('google-auth-library');
+var emailService        = require('../emailService.js');
 
 app.set('secret', config.secret);
 
 exports.signUp = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
+    console.log("Hostname: " + req.hostname);
+
     var userName = req.body.username;
     var userEmail = req.body.email;
     var userPassword = req.body.password;
     console.log("Username is " + userName + " and the email is " + userEmail);
-    var newUser = new User({
+    var newUser = new Unverified({
         username: userName,
         userEmail: userEmail,
-        userPassword: userPassword
+        userPassword: userPassword,
+        verified: false,
+        GAuth: false
     });
 
     User.find({userEmail: userEmail}, function(err, exists){
         if(err){
-            res.json({success:false, message: "Couldn't access database."});
             console.log("Couldn't access database.");
             console.log(err);
+            return res.status(500).send({
+                    success: false,
+                    message: "Database error.", 
+            });      
         }else{
             if(exists.length){
                 console.log("User with that email already exists");
@@ -34,38 +42,52 @@ exports.signUp = function(req, res){
             }else{
                 newUser.save(function(err, user){
                     if (err){
-                        res.json({success: false, message: "Couldn't save user to database."})
                         console.log("Couldn't save to database.");
+                        console.log(err);
+                        return res.status(500).send({
+                                success: false,
+                                message: "Database error.", 
+                        });      
                     }else{
-                        console.log(user);
-                        
-                        var token = jwt.sign({userID: user._id}, app.get('secret'), {
-                            expiresIn: '24h'
-                        });
-                        res.json({
-                            success: true,
-                            message: 'Token sent',
-                            token: token,
-                            userid: user._id
-                        });
+                        console.log(unverified);
 
-                        User.findOne({username: userName}, function(err, user){
+                        emailService.sendConfirmation(user, req, function(err, cb){
                             if(err){
-                                res.json({success:false, message: "Couldn't confirm password."})
-                                console.log("Couldn't confirm password");
+                                console.log("Error in sending verification link.");
                                 console.log(err);
                             }else{
-                                user.comparePassword(userPassword, function(err, isMatch){
-                                    if(err) throw err;
-                                    console.log("userPassword: ", isMatch);
-                                });
+                                res.json({success: true, message: "A verification link has been sent to your email."});
                             }
                         });
+                        
                     }
                 });
             }
         }
     });
+};
+
+exports.verify = function(req, res){
+
+    console.log("Verify here.");
+
+    var linkEmail = req.query.email;
+    var userID = req.query.id;
+
+    console.log("Enabling user account...");
+    User.findOneAndUpdate({userEmail:linkEmail, _id:userID, verified:false}, {verified:true}, function(err, user){
+        if(err){
+            console.log("Verify threw an error:")
+            console.log(err);
+            return res.status(500).send({
+                success: false,
+                message: "Database error.", 
+            });
+        }else{
+            if(exists){}
+            console.log("User verified.");
+            res.json({success:true, message: "Account verified."});
+
 };
 
 exports.login = function(req, res){
@@ -76,7 +98,7 @@ exports.login = function(req, res){
     var userPassword = req.body.password;
     console.log(userEmail);
     
-    User.findOne({userEmail: userEmail}, function(err, user){
+    User.findOne({userEmail: userEmail, verified:true}, function(err, user){
         if(err){
             res.json({success: false, message: "Couldn't access database."})
             console.log("Couldn't access database.");
@@ -119,7 +141,7 @@ exports.googleAuth = function(req, res){
 
     client.verifyIdToken(token, config.CLIENT_ID, function(err, login) {
         if(err){
-            console.log("Eipä onnistunut.")
+            console.log("Google Token verification failed.");
             res.json({success:false, message: "Token verification failed."});
         }else{
             var payload = login.getPayload();
