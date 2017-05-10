@@ -88,6 +88,8 @@ exports.verify = function(req, res){
             console.log("User verified.");
             res.json({success:true, message: "Account verified."});
 
+        }
+    });
 };
 
 exports.login = function(req, res){
