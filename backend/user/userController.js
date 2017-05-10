@@ -18,7 +18,7 @@ exports.signUp = function(req, res){
     var userEmail = req.body.email;
     var userPassword = req.body.password;
     console.log("Username is " + userName + " and the email is " + userEmail);
-    var newUser = new Unverified({
+    var newUser = new User({
         username: userName,
         userEmail: userEmail,
         userPassword: userPassword,
@@ -49,7 +49,7 @@ exports.signUp = function(req, res){
                                 message: "Database error.", 
                         });      
                     }else{
-                        console.log(unverified);
+                        console.log(user);
 
                         emailService.sendConfirmation(user, req, function(err, cb){
                             if(err){
