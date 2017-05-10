@@ -33,7 +33,6 @@ app.controller('chatController', function($scope, $log, $http, $anchorScroll, ad
         }
     }
     socket.on('message', function(msg){
-        console.log(msg);
         $scope.messages.push(msg);
         $scope.$apply();
         console.log(msg)

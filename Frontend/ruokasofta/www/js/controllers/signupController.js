@@ -4,8 +4,6 @@ app.controller('signupController', function($scope, $log, $http, validation, add
        $scope.userName = "";
        $scope.userEmail = "";
        $scope.userPassword = "";
-       $scope.loginEmail = "";
-       $scope.loginPassword = "";
        var address = address.getAddress();
        
        document.addEventListener('init', function (e) { 
@@ -34,6 +32,21 @@ app.controller('signupController', function($scope, $log, $http, validation, add
             }
             });
 
+       $scope.tryloginFunction = function(){
+           var data = {email:$scope.userEmail, password:$scope.userPassword};
+           $http.post(address + "login", data).then(function(success){
+               localStorage.token = success.data.token;
+               localStorage.userid = success.data.userid;
+               localStorage.name = $scope.userName;
+               console.log("login success");
+               myNavigator.pushPage("list.html", {})
+
+           }, function(error){
+               console.log("login error");
+
+           });
+       }
+
        $scope.signupFunction = function(){
 
             var val = validation.signupVal($scope.userEmail, $scope.userName, $scope.userPassword);
@@ -49,12 +62,18 @@ app.controller('signupController', function($scope, $log, $http, validation, add
                         ons.notification.alert(success.data.message);
                     }
                     else{
-                        localStorage.token = success.data.token;
-                        localStorage.userid = success.data.userid;
-                        localStorage.name = $scope.userName;
-                        $log.info("signup success");
-                        socket.connectUser();
-                        myNavigator.pushPage("list.html", {})
+                        ons.notification.confirm({
+                            message: success.data.message + " Tap ok after verifying it.",
+                            callback: function(x){
+                                switch(x){
+                                    case 0:
+                                        break;
+                                    case 1:
+                                        $scope.tryloginFunction();
+                                        break;
+                                }
+                            }    
+                        });
                     }
 
                 },function (error){
