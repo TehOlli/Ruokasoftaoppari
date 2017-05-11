@@ -1,11 +1,11 @@
 var nm = require('nodemailer');
-
+var gmail = require('./gmail.js');
 
 var smtp = nm.createTransport({
     service: "gmail",
     auth:{
-        user: "ruokasoftaoppari@gmail.com",
-        pass: "RuokaSofta?Oppari2!"
+        user: gmail.email,
+        pass: gmail.pw
     }
 });
 
