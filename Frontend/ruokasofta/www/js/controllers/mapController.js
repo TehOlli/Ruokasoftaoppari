@@ -1,4 +1,4 @@
-app.controller('mapController', function($scope, $log, $http, $timeout, places, address, $q, $timeout) {
+app.controller('mapController', function($scope, $http, $timeout, places, address, $q, $timeout, geolocation) {
  
     var address = address.getAddress();
     $scope.list = false;
@@ -7,7 +7,7 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
     var mapCheck = false;
     var markers = [];
     var markers2 = [];
-    var helsinki = {lat: 60.1699, lng: 24.9384};
+    var userLocation = geolocation.returnPosition();
 
     $scope.showDialog = function() {
       if ($scope.dialog) {
@@ -45,13 +45,13 @@ app.controller('mapController', function($scope, $log, $http, $timeout, places, 
                 var infowindow = new google.maps.InfoWindow();
                 var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 14,
-                    center: helsinki,
+                    center: userLocation,
                     type: 'restaurant'
                 });
 
                 var service = new google.maps.places.PlacesService(map);
                 service.nearbySearch({
-                    location: helsinki,
+                    location: userLocation,
                     radius: 5000,
                     type: ['restaurant']
                 }, callback);

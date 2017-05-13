@@ -4,34 +4,7 @@ app.controller('signupController', function($scope, $log, $http, validation, add
        $scope.userName = "";
        $scope.userEmail = "";
        $scope.userPassword = "";
-       var address = address.getAddress();
-       
-       document.addEventListener('init', function (e) { 
-
-            if (e.target.id == 'signup') {
-
-                 if(localStorage.token != null){
-
-                      $http.get(address + 'auth').then(function (success, status){
-
-                        $log.info("token check success");
-                        socket.connectUser();
-                        console.log(socket);
-                        myNavigator.pushPage("list.html", {animation : 'none'})
-
-                      },function (error){
-                        
-                        localStorage.removeItem("token");
-
-                        $log.info("token check error")
-
-                      });
-                     
-                }
-
-            }
-            });
-
+    
        $scope.tryloginFunction = function(){
            var data = {email:$scope.userEmail, password:$scope.userPassword};
            $http.post(address + "login", data).then(function(success){

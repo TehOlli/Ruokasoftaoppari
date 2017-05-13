@@ -13,7 +13,9 @@ app.controller('settingsController', function($scope, $log, $http, validation, $
         $scope.username = success.data.username;
         usernamecheck = success.data.username;
         $scope.email = success.data.userEmail;
+        var time = Date.now();
         image.getImage("profile-img", localStorage.userid, "avatars/");
+        
 
     },function(error){
         console.log(error);

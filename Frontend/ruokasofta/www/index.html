@@ -42,6 +42,7 @@
         <script type="text/javascript" src="js/controllers/createController.js"></script>
         <script type="text/javascript" src="js/controllers/listController.js"></script>
         <script type="text/javascript" src="js/controllers/loginController.js"></script>
+        <script type="text/javascript" src="js/controllers/tryloginController.js"></script>
         <script type="text/javascript" src="js/controllers/manageController.js"></script>
         <script type="text/javascript" src="js/controllers/mapController.js"></script>
         <script type="text/javascript" src="js/controllers/restaurantController.js"></script>
@@ -57,6 +58,7 @@
         <script type="text/javascript" src="js/services/addressService.js"></script>
         <script type="text/javascript" src="js/services/socketService.js"></script>
         <script type="text/javascript" src="js/services/imageService.js"></script>
+        <script type="text/javascript" src="js/services/geolocationService.js"></script>
         <!--socket.io-->
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
         <!--google-->
@@ -65,8 +67,15 @@
         <title>Ruokasoftaoppari</title>
     </head>
     <body>
-    <ons-navigator var="myNavigator" page="signup.html" animation="slide">
+    <ons-navigator var="myNavigator" page="trylogin.html" animation="slide">
     </ons-navigator>
+    <ons-template id="trylogin.html">
+        <ons-page id="trylogin" ng-controller="tryloginController">
+            <div style="margin-top:50%; margin-left:39%;">
+                <ons-progress-circular indeterminate></ons-progress-circular>
+            </div>
+        </ons-page>
+    </ons-template>
     <ons-template id="signup.html">
         <ons-page id="signup"ng-controller="signupController">
             <form name="signupForm">

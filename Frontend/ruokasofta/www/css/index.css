@@ -93,6 +93,18 @@ body {
 .google-login .button--material {
     background-color:#df482e !important;
 }
+
+#trylogin .page__content{
+    background-color: #154187 !important;
+    
+}
+.progress-circular{
+    width:6em !important;
+    height:6em !important;
+}
+.progress-circular__primary{
+    stroke:white;
+}
 .remove-user{
     font-size: 25px;
     margin-right: 10px;

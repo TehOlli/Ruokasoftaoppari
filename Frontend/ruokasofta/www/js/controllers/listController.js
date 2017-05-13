@@ -1,10 +1,11 @@
 //CONTROLLER FOR HANDLING GROUP LIST
-app.controller('listController', function($scope, $log, $http, address, socket) {
+app.controller('listController', function($scope, $log, $http, address, socket, geolocation) {
     $scope.invites = [];
     var address = address.getAddress();
     $scope.imgurl = address;
     groupsFunction();
     invitesFunction();
+    geolocation.getPosition();
 
     function invitesFunction(){
         $http.get(address + 'auth/invites').then(function(success){

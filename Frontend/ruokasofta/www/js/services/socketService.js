@@ -1,4 +1,4 @@
-app.service('socket', function($http, address, $q){
+app.service('socket', function(address){
     var address = address.getAddress();
     var socket = "";
     this.connectUser = function(){
@@ -17,4 +17,5 @@ app.service('socket', function($http, address, $q){
         console.log("disconnected")
     }
 
-});
+}); 
+
