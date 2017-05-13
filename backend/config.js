@@ -10,5 +10,5 @@ var dbPassword;
 module.exports = {
     'secret' : 'salaisuus',
     'dbConnection' : `mongodb://${host}/${databaseName}`,
-    'CLIENT_ID' : '546073062554-fvurgo1ps4fhrn4plhkno8l26b07894s.apps.googleusercontent.com'
+    'CLIENT_ID' : '546073062554-fvurgo1ps4fhrn4plhkno8l26b07894s.apps.googleusercontent.com',
 };

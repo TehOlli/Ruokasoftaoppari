@@ -52,7 +52,6 @@ exports.createGroup = function(req, res){
                             }); 
                             }else{
                             console.log("Group added to admin's groups array");
-                            console.log("Luotu ryhmä: " + group);
                             res.json({
                                 success: true,
                                 message: 'Group created',

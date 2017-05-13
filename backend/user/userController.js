@@ -103,7 +103,7 @@ exports.login = function(req, res){
     var userPassword = req.body.password;
     console.log(userEmail);
     
-    User.findOne({userEmail: userEmail, verified:true}, function(err, user){
+    User.findOne({userEmail: userEmail, verified:true, GAuth: false}, function(err, user){
         if(err){
             res.json({success: false, message: "Couldn't access database."})
             console.log("Couldn't access database.");
@@ -177,6 +177,8 @@ exports.googleAuth = function(req, res){
                         var newUser = new User({
                             username: username,
                             userEmail: userEmail,
+                            GAuth: true,
+                            verified: true
                         });
 
                         newUser.save(function(err, user){

@@ -1,12 +1,13 @@
 var express             = require("express");
+var fs                  = require('fs');
 var bodyParser          = require("body-parser");
 var app                 = express();
 var port                = process.env.port || 8080;
 var mong                = require("mongoose");
 var Message             = require("./messageModel");
 var config              = require("./config");
-var http                = require("http").Server(app);
-var io                  = require("socket.io")(http);
+var https               = require("https");
+var io                  = require("socket.io")(https);
 var jwt                 = require("jsonwebtoken");
 var passport            = require("passport");
 var group               = require("./group/groupController");
@@ -323,7 +324,20 @@ authRouter.post("/deleteplace",  groupChecker, group.deletePlace);
 
 
 
-
+/*
 http.listen(port, function(){
   console.log("Connected on port " + port);
+});
+*/
+
+var key = fs.readFileSync('key.txt');
+var crt = fs.readFileSync('crt.txt');
+var credentials ={
+    key: key,
+    cert: crt
+};
+
+https.createServer(credentials, app).listen(port, function(err){
+    if(err) throw err;
+    console.log("HTTPS server listening on port " + port);
 });
