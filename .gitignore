@@ -2,7 +2,8 @@
 node_modules/
 */public/uploads/
 # Cordova
-
+plugins/
+platforms/
 #Other
 gmail.js
 
