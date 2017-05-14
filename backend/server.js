@@ -1,13 +1,13 @@
 var express             = require("express");
+var app                 = express();
+var http                = require("http").Server(app);
+var https               = require("https");
+var io                  = require("socket.io")(http);
 var fs                  = require('fs');
 var bodyParser          = require("body-parser");
-var app                 = express();
-var port                = process.env.port || 8080;
 var mong                = require("mongoose");
 var Message             = require("./messageModel");
 var config              = require("./config");
-var https               = require("https");
-var io                  = require("socket.io")(https);
 var jwt                 = require("jsonwebtoken");
 var passport            = require("passport");
 var group               = require("./group/groupController");
@@ -50,7 +50,6 @@ authRouter.options("/*", function(req, res, next){
     res.sendStatus(200);
 });
 
-//Bluebird
 mong.Promise = global.Promise;
 mong.connect(config.dbConnection, function(err){
     if(err){
@@ -204,7 +203,7 @@ io.use(function(socket, next){
     }else{
         console.log("Socket.io auth didn't pass the first if");
     }
-}) 
+});
 
 io.on("connection", function(socket){
     console.log("Socket user connected.");
@@ -212,6 +211,10 @@ io.on("connection", function(socket){
     socket.on("room", function(room){
         socket.join(room);  
         console.log(room);
+    });
+
+    socket.on("removeuser", function(room, user){
+
     });
 
     socket.on("message", function(data){
@@ -225,7 +228,7 @@ io.on("connection", function(socket){
         var newMessage = new Message({
             groupID: data.room,
             msg: data.msg,
-            author: data.userid,
+            author: data.author,
             username: data.username,
             date: data.date,
             time: data.time
@@ -324,20 +327,21 @@ authRouter.post("/deleteplace",  groupChecker, group.deletePlace);
 
 
 
-/*
-http.listen(port, function(){
-  console.log("Connected on port " + port);
+
+http.listen(config.port, function(){
+  console.log("Connected on port " + config.port);
 });
-*/
 
-var key = fs.readFileSync('key.txt');
-var crt = fs.readFileSync('crt.txt');
-var credentials ={
-    key: key,
-    cert: crt
-};
-
-https.createServer(credentials, app).listen(port, function(err){
+/*
+https.createServer(config.credentials, app).listen(port, function(err){
     if(err) throw err;
+    console.log("Credentials: " + config.credentials.key + config.credentials.cert);
     console.log("HTTPS server listening on port " + port);
 });
+
+http.createServer(app).listen(port, function(err){
+    if(err) throw err;
+    console.log("HTTP server listening on port " + port);
+});
+
+*/
