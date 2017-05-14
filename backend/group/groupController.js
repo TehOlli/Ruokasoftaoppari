@@ -2,7 +2,6 @@ var Group               = require("./groupModel");
 var User                = require("../user/userModel");
 var Message             = require("../messageModel");
 var fs                  = require('fs');
-var server              = require('../server.js');
 
 
 exports.createGroup = function(req, res){
@@ -379,6 +378,11 @@ exports.setGroupImage = function(req, res){
     });
 };
 
+exports.saveMessage = function(err, callback){
+    var yeah = "Yeah";
+    callback(null, yeah);
+};
+
 exports.getMessages = function(req, res){
     if(!req.headers['groupid']) return res.sendStatus(400);
 
@@ -386,15 +390,15 @@ exports.getMessages = function(req, res){
 
     console.log("Fetching messages for group " + groupID);
 
-    Message.find({groupID:groupID}, function(err, results){
+    Message.find({groupID:groupID}, function(err, messages){
         if(err){
             return res.status(500).send({
                 success: false,
                 message: "Database error.", 
             });    
         }else{
-            console.log("Messages: " + results);
-            res.json(results);
+            console.log("Messages: " + messages);
+            res.json(messages);
         }
     });
 };

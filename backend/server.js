@@ -23,7 +23,6 @@ var router              = express.Router();
 var authRouter          = express.Router();
 
 app.use(express.static(__dirname + '/public'));
-app.set('secret', config.secret);
 app.use('/', router);
 
 app.use(bodyParser.json());
@@ -225,10 +224,22 @@ io.on("connection", function(socket){
         console.log("date: " + data.date);
         console.log("time: " + data.time);
 
+        var F1 = function(F1data, cb){
+            console.log("F1Data: " + F1data);
+            cb(F1data);
+        };
+
+        var F2 = function(F2data){
+
+            console.log("F2Data: " +  F2data);
+        }
+
+        F1("BLOOB", F2);
+
         var newMessage = new Message({
             groupID: data.room,
             msg: data.msg,
-            author: data.author,
+            author: data.userid,
             username: data.username,
             date: data.date,
             time: data.time
@@ -238,11 +249,11 @@ io.on("connection", function(socket){
         console.log("Saving message...");
         newMessage.save(function(err, results){
             if(err){
+                console.log(err);
                 return res.status(503).send({ 
                     success: false, 
                     message: "Unable to save to database."
                 });
-                console.log(err);
             }else{
                 console.log("Saved message: ");
                 console.log(results);

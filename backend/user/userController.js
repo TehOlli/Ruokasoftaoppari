@@ -1,13 +1,9 @@
 var User                = require("./userModel");
 var fs                  = require("fs");
 var jwt                 = require("jsonwebtoken");
-var express             = require("express");
-var app                 = express();
 var config              = require("../config");
 var GoogleAuth          = require('google-auth-library');
 var emailService        = require('../emailService.js');
-
-app.set('secret', config.secret);
 
 exports.signUp = function(req, res){
     if(!req.body) return res.sendStatus(400);
@@ -115,7 +111,7 @@ exports.login = function(req, res){
                     if(isMatch == true){
                         console.log("login userPassword: ", isMatch);
                         console.log("userEmail: " + user.userEmail);
-                        var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
+                        var token = jwt.sign({userID: user._id, groups:user.groups}, config.secret, {
                             expiresIn: '24h'
                         });
                         res.json({
