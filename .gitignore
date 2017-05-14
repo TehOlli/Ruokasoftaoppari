@@ -6,4 +6,6 @@ plugins/
 platforms/
 #Other
 gmail.js
-
+crt.txt
+key.txt
+secret.txt
