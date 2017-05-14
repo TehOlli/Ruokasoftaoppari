@@ -220,7 +220,7 @@ io.on("connection", function(socket){
         console.log("message: " + data.msg);
         console.log("room: " + data.room);
         console.log("sender: " + data.username);
-        console.log("userid: " + data.userid);
+        console.log("userid: " + data.author);
         console.log("date: " + data.date);
         console.log("time: " + data.time);
 
@@ -239,7 +239,7 @@ io.on("connection", function(socket){
         var newMessage = new Message({
             groupID: data.room,
             msg: data.msg,
-            author: data.userid,
+            author: data.author,
             username: data.username,
             date: data.date,
             time: data.time
