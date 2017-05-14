@@ -3,6 +3,7 @@ var fs = require('fs');
 
 //Server settings
 var port = process.env.port || 8080;
+var secret = fs.readFileSync('secret.txt');
 
 //Database settings
 var dbhost = "localhost:27017";
@@ -23,7 +24,7 @@ var credentials ={
 //`mongodb://${dbUsername}:${dbPassword}@${host}/${databaseName}`;
 
 module.exports = {
-    'secret' : 'salaisuus',
+    'secret' : secret,
     'dbConnection' : `mongodb://${dbhost}/${databaseName}`,
     'CLIENT_ID' : '546073062554-fvurgo1ps4fhrn4plhkno8l26b07894s.apps.googleusercontent.com',
     //'credentials' : credentials,
