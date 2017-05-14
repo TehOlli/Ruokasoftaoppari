@@ -4,6 +4,7 @@ app.controller('signupController', function($scope, $log, $http, validation, add
        $scope.userName = "";
        $scope.userEmail = "";
        $scope.userPassword = "";
+       var address = address.getAddress();
     
        $scope.tryloginFunction = function(){
            var data = {email:$scope.userEmail, password:$scope.userPassword};

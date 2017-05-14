@@ -128,7 +128,7 @@ app.controller('manageController', function($scope, $log, $http, validation, add
         var data = JSON.stringify({userid: localStorage.userid, groupid:localStorage.groupid});
         $http.post(address + 'auth/removefromgroup', data).then(function (success){
                 $log.info("user remove success");
-                myNavigator.resetToPage("list.html")
+                myNavigator.resetToPage("list.html", {animation : 'slide'})
 
          },function (error){
                 $log.info("user remove error", error)
@@ -147,7 +147,7 @@ app.controller('manageController', function($scope, $log, $http, validation, add
                     ons.notification.alert({
                         message: "Group has been deleted",
                         callback: function(){
-                            myNavigator.resetToPage("list.html")
+                            myNavigator.resetToPage("list.html", {animation : 'slide'})
                         }
                     })
 

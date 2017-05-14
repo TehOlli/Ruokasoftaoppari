@@ -31,7 +31,7 @@ app.controller('createController', function($scope, $log, $http, validation, add
                             ons.notification.alert({
                                 message: "Group has been created",
                                 callback: function(){
-                                    myNavigator.resetToPage("list.html")
+                                    myNavigator.resetToPage("list.html", {animation : 'slide'})
                                 }
 
                             })
@@ -44,7 +44,7 @@ app.controller('createController', function($scope, $log, $http, validation, add
                         ons.notification.alert({
                             message: "Group has been created",
                             callback: function(){
-                                myNavigator.resetToPage("list.html")
+                                myNavigator.resetToPage("list.html" , {animation : 'slide'})
                             }
                         })
                     }
