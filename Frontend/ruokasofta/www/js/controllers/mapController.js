@@ -33,6 +33,9 @@ app.controller('mapController', function($scope, $http, $timeout, places, addres
 
         });
     }
+    $scope.addClose = function(){
+        console.log("asdasd");
+    }
     
     $(document).one('pageinit',function(event){
         
@@ -47,6 +50,20 @@ app.controller('mapController', function($scope, $http, $timeout, places, addres
                     zoom: 14,
                     center: userLocation,
                     type: 'restaurant'
+                });
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: userLocation,
+                    animation: google.maps.Animation.DROP,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        fillOpacity: 1,
+                        fillColor: 'white',
+                        strokeOpacity: 1.0,
+                        strokeColor: '#154187',
+                        strokeWeight: 7.0, 
+                        scale: 7 //pixels
+                    }
                 });
 
                 var service = new google.maps.places.PlacesService(map);
@@ -76,6 +93,7 @@ app.controller('mapController', function($scope, $http, $timeout, places, addres
                                     $scope.restaurants.push(result);
                                     $scope.$apply();
                                     console.log(result);
+                                    console.log(result.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200}))
                                     var marker = new google.maps.Marker({
                                             map: null,
                                             position: result.geometry.location,
@@ -125,7 +143,7 @@ app.controller('mapController', function($scope, $http, $timeout, places, addres
                     markers.push(marker);
 
                     google.maps.event.addListener(marker, 'click', function() {
-                        infowindow.setContent(place.name);
+                        infowindow.setContent("<span>" + place.name + "</span>" + "<br><span onclick='alert();'>asdsad</span>");
                         infowindow.open(map, this);
                     });
                 }
