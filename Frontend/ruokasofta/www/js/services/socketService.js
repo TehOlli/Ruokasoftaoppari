@@ -5,6 +5,8 @@ app.service('socket', function(address){
         socket = io.connect(address, {
             query: {token: localStorage.token}
         });
+        socket.emit("storeUser", localStorage.userid);
+
         console.log("user connected")
     }
     

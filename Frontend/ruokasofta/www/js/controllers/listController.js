@@ -4,10 +4,9 @@ app.controller('listController', function($scope, $log, $http, address, socket, 
     var address = address.getAddress();
     $scope.imgurl = address;
     groupsFunction();
-    invitesFunction();
     geolocation.getPosition();
 
-    function invitesFunction(){
+    $scope.invitesFunction = function(){
         $http.get(address + 'auth/invites').then(function(success){
             console.log("invite get success");
             $scope.invites = success.data.invites;
@@ -23,7 +22,7 @@ app.controller('listController', function($scope, $log, $http, address, socket, 
 
         });
     }
-
+    $scope.invitesFunction();
     function groupsFunction(){
         $http.get(address + 'auth/groups').then(function (success){
             $scope.groups = success;
@@ -41,7 +40,7 @@ app.controller('listController', function($scope, $log, $http, address, socket, 
         console.log(data);
         $http.post(address +  'auth/acceptinv', data).then(function(success){
             console.log(success);
-            invitesFunction();
+            $scope.invitesFunction();
             groupsFunction();
 
         },function (error){
@@ -55,7 +54,7 @@ app.controller('listController', function($scope, $log, $http, address, socket, 
         console.log(data);
         $http.post(address +  'auth/declineinv', data).then(function(success){
             console.log(success);
-            invitesFunction();
+            $scope.invitesFunction();
 
         },function (error){
 

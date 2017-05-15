@@ -121,7 +121,17 @@ body {
     color: #154187;
 }
 
-
+.group-title{
+    margin-top:20px; 
+    margin-left:10px; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    font-size: 20px;     
+    font-family: Roboto,Noto,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 500;
+    color:white;
+}
 .time{
     font-size: 0.6em;
     color: #424242;
@@ -156,7 +166,7 @@ body {
     display:table;
     background-color: #ededed;
     padding:5px;
-    margin:5px 0 0 15px;
+    margin:5px 0 30px 15px;
     word-break:break-all;
     white-space: normal;
     clear:both;
@@ -174,7 +184,7 @@ body {
   width: 0;
   height: 0;
   border: 5px solid;
-  border-color: white white transparent transparent;
+  border-color: #ededed #ededed transparent transparent;
 }
 .username{
      margin:0;
@@ -187,7 +197,7 @@ body {
     display:table;
     background-color: #6da5ff;
     padding:5px;
-    margin:5px 15px 0 0;
+    margin:5px 15px 30px 0;
     word-break:break-all;
     white-space: normal;
     float:right;

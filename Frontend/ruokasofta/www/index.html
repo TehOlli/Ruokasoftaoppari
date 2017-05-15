@@ -52,6 +52,7 @@
         <!--directives-->
         <script type="text/javascript" src="js/directives/ratingDirective.js"></script>
         <script type="text/javascript" src="js/directives/logoutDirective.js"></script>
+        <script type="text/javascript" src="js/directives/groupimageDirective.js"></script>
         <!--services-->
         <script type="text/javascript" src="js/services/validationService.js"></script>
         <script type="text/javascript" src="js/services/placesService.js"></script>
@@ -72,8 +73,8 @@
     </ons-navigator>
     <ons-template id="trylogin.html">
         <ons-page id="trylogin" ng-controller="tryloginController">
-            <div style="margin-top:50%; margin-left:39%;">
-                <ons-progress-circular indeterminate></ons-progress-circular>
+            <div style="margin-top:50%; margin-left:39%; font-size:5em; color:white;">
+                 <ons-icon spin icon="md-spinner"></ons-icon>
             </div>
         </ons-page>
     </ons-template>
@@ -151,7 +152,7 @@
             </div>
             <ons-dialog var="dialog3">             
                     <div style="text-align:center;">
-                        <h4 style="background-color: #154187; color:white; margin:0 auto; padding:10px;">Pending invites</h4>
+                        <h4 style="background-color: #154187; color:white; margin:0 auto; padding:10px;">Pending invites<ons-icon style="margin-left:10px;" ng-click="invitesFunction();" icon="ion-android-refresh"></ons-icon></h4>
                         <ons-list>
                             <ons-list-item ng-repeat="invite in invites">
                                 <div class="left">
@@ -241,8 +242,9 @@
     <ons-template id="group.html">
         <ons-page id="grouppage" ng-controller="groupController">
             <ons-toolbar>
-                    <div class="left"><ons-back-button>Back</ons-back-button></div>
-                    <div class="center">{{groupName}}</div>
+                    <div class=""><ons-back-button>Back</ons-back-button></div>
+                    <div style="width:50px;"><group-image></group-image></div>
+                    <div class="group-title">{{groupName}}</div>
                     <div class="right">
                         <ons-icon ng-click="myNavigator.pushPage('manage.html')" class="add-icon" icon="ion-android-settings"></ons-icon>
                         <log-out></log-out>
@@ -430,7 +432,7 @@
         <ons-page ng-controller="chatController" class="chat-page">
             <div id="chatwindow">
                 <div id="messagewindow" scroll-glue>
-                    <div ng-repeat="mes in messages track by $index" style="margin-bottom:10px;">
+                    <div ng-repeat="mes in messages track by $index" style="">
                         <div class="date" ng-if="messages[$index-1].date!=messages[$index].date">
                             <span>{{mes.date}}</span>
                         </div>
