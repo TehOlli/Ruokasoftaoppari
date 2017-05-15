@@ -2,11 +2,10 @@ var express             = require("express");
 var app                 = express();
 var http                = require("http").Server(app);
 var https               = require("https");
-var io                  = require("socket.io")(http);
+var io                  = require('./socketIO').listen(http)
 var fs                  = require('fs');
 var bodyParser          = require("body-parser");
 var mong                = require("mongoose");
-var Message             = require("./messageModel");
 var config              = require("./config");
 var jwt                 = require("jsonwebtoken");
 var passport            = require("passport");
@@ -189,83 +188,7 @@ var userChecker = function(req, res, next){
 //Socket.io
 //==========
 
-io.use(function(socket, next){
-    if(socket.handshake.query && socket.handshake.query.token){
-        jwt.verify(socket.handshake.query.token, config.secret, function(err){
-            if(err){
-                next(new Error("Socket.io auth failed."));
-            }else{
-                console.log("Socket.io authentication succeeded.");
-                next();
-            }
-        });
-    }else{
-        console.log("Socket.io auth didn't pass the first if");
-    }
-});
 
-io.on("connection", function(socket){
-    console.log("Socket user connected.");
-
-    socket.on("room", function(room){
-        socket.join(room);  
-        console.log(room);
-    });
-
-    socket.on("removeuser", function(room, user){
-
-    });
-
-    socket.on("message", function(data){
-        console.log("message: " + data.msg);
-        console.log("room: " + data.room);
-        console.log("sender: " + data.username);
-        console.log("userid: " + data.author);
-        console.log("date: " + data.date);
-        console.log("time: " + data.time);
-
-        var F1 = function(F1data, cb){
-            console.log("F1Data: " + F1data);
-            cb(F1data);
-        };
-
-        var F2 = function(F2data){
-
-            console.log("F2Data: " +  F2data);
-        }
-
-        F1("BLOOB", F2);
-
-        var newMessage = new Message({
-            groupID: data.room,
-            msg: data.msg,
-            author: data.author,
-            username: data.username,
-            date: data.date,
-            time: data.time
-        });
-        console.log("newMessage: " + newMessage);
-
-        console.log("Saving message...");
-        newMessage.save(function(err, results){
-            if(err){
-                console.log(err);
-            }else{
-                console.log("Saved message: ");
-                console.log(results);
-                socket.to(data.room).emit('message', {'msg': data.msg, 'username': data.username, 'date': data.date,'time': data.time});
-            }
-        })
-    });
-
-    socket.on("listupdated", function(data){
-        socket.to(data.room).emit("updatelist");
-    });
-
-    socket.on("disconnect", function(){
-        console.log("Socket user disconnected");
-    });
-});
 
 //==========
 //Routes

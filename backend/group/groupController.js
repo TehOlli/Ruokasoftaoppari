@@ -2,6 +2,7 @@ var Group               = require("./groupModel");
 var User                = require("../user/userModel");
 var Message             = require("../messageModel");
 var fs                  = require('fs');
+var socketio            = require("../socketIO.js");
 
 
 exports.createGroup = function(req, res){
@@ -313,7 +314,20 @@ exports.removefromGroup = function(req, res){
                 }else{
                     console.log("Removed user from group document");
 
-                    res.json({success:true, message:"User removed"});
+                    var socketData = {
+                        "userID": userID,
+                        "room": groupID
+                    }
+
+                    console.log("socketData: " + socketData.userID + " & " + socketData.room);
+
+                    socketio.removeSocket(socketData, res, function(err){
+                        if(err){
+                            console.log("Removing socket failed!");
+                            console.log(err);
+                            res.json({success:true, message:"User removed"});
+                        }
+                    });
                 }
             });
         }
@@ -329,27 +343,33 @@ exports.deleteGroup = function(req, res){
 
     Group.remove({_id:groupID}, function(err, results){
         if (err){
-            console.log("Failed to delete group.");
-            console.log(err);
-            return res.status(500).send({
-                success: false,
-                message: "Database error.", 
-            });    
+
         }else{
             console.log("Deleted group.")
-
-            User.update({"groups.groupID":groupID}, {$pull:{groups:{groupID:groupID}}} , function(err, members){
-                console.log("Removed group from users' member arrays.")
-
-                fs.unlink("./public/uploads/groups/" + groupID + ".jpg", function(err){
+            Message.remove({groupID:groupID}, function(err){
                     if(err){
-                        console.log("deleteGroup: couldn't delete groupimg");
+                        console.log("Failed to delete group's messages.");
                         console.log(err);
-                        res.json({success:true, message:"Group deleted"});
-                    }
-                    res.json({success:true, message:"Group deleted"});
-                });
-            });
+                        return res.status(500).send({
+                            success: false,
+                            message: "Database error.", 
+                        });    
+                    }else{
+                        User.update({"groups.groupID":groupID}, {$pull:{groups:{groupID:groupID}}} , function(err, members){
+                        console.log("Removed group from users' member arrays.")
+
+                        fs.unlink("./public/uploads/groups/" + groupID + ".jpg", function(err){
+                            if(err){
+                                console.log("deleteGroup: couldn't delete groupimg");
+                                console.log(err);
+                                res.json({success:true, message:"Group deleted"});
+                            }else{
+                                res.json({success:true, message:"Group deleted"});
+                            }
+                        });
+                    });
+                }
+            })
         }
     });
 };
