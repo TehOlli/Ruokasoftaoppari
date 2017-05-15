@@ -59,6 +59,7 @@
         <script type="text/javascript" src="js/services/socketService.js"></script>
         <script type="text/javascript" src="js/services/imageService.js"></script>
         <script type="text/javascript" src="js/services/geolocationService.js"></script>
+        <script type="text/javascript" src="js/services/fileService.js"></script>
         <!--socket.io-->
         <script src="http://localhost:8080/socket.io/socket.io.js"></script>
         <!--google-->
@@ -139,6 +140,9 @@
                             <span class="list-item__title">{{group.groupName}}</span><span class="list-item__subtitle">{{group.groupDesc}}</span>
                         </div>
                     </ons-list-item>
+                    <div ng-if="!groups.data.length" class="empty-chat">
+                        <p>You are not in any groups :(</p>
+                    </div>
             </ons-list>
             <div class="create-group" align="center">
                 <ons-fab ng-click="myNavigator.pushPage('create.html')" position="bottom right">
@@ -430,12 +434,12 @@
                         <div class="date" ng-if="messages[$index-1].date!=messages[$index].date">
                             <span>{{mes.date}}</span>
                         </div>
-                        <div class="message" ng-if="!mes.own">
+                        <div class="message" ng-if="mes.author!=userid">
                             <p class="username">{{mes.username}}</p>
                             <span class="time">{{mes.time}}</span>
                             <p class="message-text">{{mes.msg}}</p>
                         </div>
-                        <div class="own-message" ng-if="mes.own">
+                        <div class="own-message" ng-if="mes.author==userid">
                             <span class="time">{{mes.time}}</span>
                             <p class="message-text">{{mes.msg}}</p>
                         </div>

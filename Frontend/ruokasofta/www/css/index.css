@@ -457,6 +457,10 @@ body {
     font-size:1em;
 }
 
+.pac-container{
+    width:100% !important;
+}
+
 .res-loop{
     text-align:left;
 }

@@ -1,5 +1,5 @@
 //CONTROLLER FOR HANDLING GROUP LIST
-app.controller('listController', function($scope, $log, $http, address, socket, geolocation) {
+app.controller('listController', function($scope, $log, $http, address, socket, geolocation, file) {
     $scope.invites = [];
     var address = address.getAddress();
     $scope.imgurl = address;
@@ -68,8 +68,7 @@ app.controller('listController', function($scope, $log, $http, address, socket, 
     $scope.saveId= function(group){
         localStorage.groupid = group._id;
         localStorage.admin = group.groupAdmin;
-        localStorage.groupname = group.groupName;
-        
+        localStorage.groupname = group.groupName;   
 
        }
 
