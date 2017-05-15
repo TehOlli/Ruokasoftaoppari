@@ -250,10 +250,6 @@ io.on("connection", function(socket){
         newMessage.save(function(err, results){
             if(err){
                 console.log(err);
-                return res.status(503).send({ 
-                    success: false, 
-                    message: "Unable to save to database."
-                });
             }else{
                 console.log("Saved message: ");
                 console.log(results);
