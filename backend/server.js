@@ -82,8 +82,7 @@ var tokenVerifier = function(req, res, next){
     var token = req.headers["authorization"].replace(/^Bearer\s/, '');
   
     if(token){
-
-        jwt.verify(token, secret, function(err, decoded){
+        jwt.verify(token, config.secret, function(err, decoded){
             if(err){
                 console.log("Token authentication failed.");
                 return res.status(401).send({ 
