@@ -1,7 +1,7 @@
 var socketio = require('socket.io');
 var jwt = require("jsonwebtoken");
-var config = require("./config");
-var Message = require("./messageModel");
+var config = require("../config/config");
+var Message = require("./messageModel.js");
 
 
 var socketUsers = [];
@@ -105,8 +105,6 @@ exports.listen = function(app){
     });
 
     exports.removeSocket = function(socketData, res){
-
-        console.log("Remove socket here!");
         console.log("socketData: " + socketData.userID + " & " + socketData.room);
         for(var o = 0; o<socketUsers.length; o++){
             var r = socketUsers[o];
@@ -116,7 +114,7 @@ exports.listen = function(app){
             if(r.userID == socketData.userID){
                 io.sockets.connected[r.socketID].leave(socketData.room);
                 socketUsers.splice(r, 1);
-                io.sockets.connected[r.socketID].emit("removedFromGroup");
+                io.sockets.connected[r.socketID].emit("removedFromGroup", socketData.room);
 
                 console.log("Socket removed from group.");
                 res.json({success:true, message:"User removed"});

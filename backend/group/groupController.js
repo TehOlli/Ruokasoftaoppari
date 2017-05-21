@@ -1,8 +1,9 @@
 var Group               = require("./groupModel");
 var User                = require("../user/userModel");
-var Message             = require("../messageModel");
+var Message             = require("../chat/messageModel");
+var chat                = require("../chat/chatController.js");
 var fs                  = require('fs');
-var socketio            = require("../socketIO.js");
+
 
 
 exports.createGroup = function(req, res){
@@ -116,7 +117,7 @@ exports.alterGroup = function(req, res){
 exports.getGroups = function(req, res){
     if(!req.headers['userid']) return res.sendStatus(400);
 
-    Group.find({'members.memberID': req.headers['userid']}, function(err, groups){
+    Group.find({'members.memberID': req.headers['userid']}, '_id groupName groupDesc groupAdmin', function(err, groups){
         if(err){
             console.log("Couldn't get list of groups.");
             console.log(err);
@@ -321,7 +322,7 @@ exports.removefromGroup = function(req, res){
 
                     console.log("socketData: " + socketData.userID + " & " + socketData.room);
 
-                    socketio.removeSocket(socketData, res, function(err){
+                    chat.removeSocket(socketData, res, function(err){
                         if(err){
                             console.log("Removing socket failed!");
                             console.log(err);
@@ -410,17 +411,21 @@ exports.getMessages = function(req, res){
 
     console.log("Fetching messages for group " + groupID);
 
-    Message.find({groupID:groupID}, function(err, messages){
-        if(err){
-            return res.status(500).send({
-                success: false,
-                message: "Database error.", 
-            });    
-        }else{
-            console.log("Messages: " + messages);
-            res.json(messages);
-        }
-    });
+    if(groupID.length){
+        Message.find({groupID:groupID}, function(err, messages){
+            if(err){
+                return res.status(500).send({
+                    success: false,
+                    message: "Database error.", 
+                });    
+            }else{
+                console.log("Messages: " + messages);
+                res.json(messages);
+            }
+        });
+    }else{
+        return res.sendStatus(400);
+    }
 };
 
 exports.savePlace = function(req, res){
@@ -469,18 +474,22 @@ exports.getPlaces = function(req, res){
 
     var groupID = req.headers['groupid'];
 
-    Group.findOne({_id:groupID}).select('places.placeID').exec(function(err, places){
-        if(err){
-            console.log("/getplaces: Couldn't get list of places.")
-            console.log(err);
-            return res.status(500).send({
-                    success: false,
-                    message: "Database error.", 
-            });    
-        }else{
-            res.json(places);
-        }
-    });
+    if(groupID.length){
+        Group.findOne({_id:groupID}).select('places.placeID').exec(function(err, places){
+            if(err){
+                console.log("/getplaces: Couldn't get list of places.")
+                console.log(err);
+                return res.status(500).send({
+                        success: false,
+                        message: "Database error.", 
+                });    
+            }else{
+                res.json(places);
+            }
+        });
+    }else{
+        return res.sendStatus(400);
+    }
 };
 
 exports.deletePlace = function(req, res){

@@ -1,12 +1,12 @@
 var express             = require("express");
 var app                 = express();
+var config              = require("./config/config.js");
 var http                = require("http").Server(app);
-var https               = require("https");
-var io                  = require('./socketIO').listen(http)
+//var https               = require("https").Server(config.credentials, app);
+var io                  = require('./chat/chatController').listen(http)
 var fs                  = require('fs');
 var bodyParser          = require("body-parser");
 var mong                = require("mongoose");
-var config              = require("./config");
 var jwt                 = require("jsonwebtoken");
 var passport            = require("passport");
 var group               = require("./group/groupController");
@@ -82,7 +82,8 @@ var tokenVerifier = function(req, res, next){
     var token = req.headers["authorization"].replace(/^Bearer\s/, '');
   
     if(token){
-        jwt.verify(token, config.secret, function(err, decoded){
+
+        jwt.verify(token, secret, function(err, decoded){
             if(err){
                 console.log("Token authentication failed.");
                 return res.status(401).send({ 
@@ -95,6 +96,8 @@ var tokenVerifier = function(req, res, next){
                 next();
             }
         });
+
+
     }else{
         return res.status(401).send({
            success: false,
@@ -185,12 +188,6 @@ var userChecker = function(req, res, next){
 };
 
 //==========
-//Socket.io
-//==========
-
-
-
-//==========
 //Routes
 //==========
 
@@ -258,20 +255,23 @@ authRouter.post("/deleteplace",  groupChecker, group.deletePlace);
 
 
 
-http.listen(config.port, function(){
-  console.log("Connected on port " + config.port);
+http.listen(config.port, 'localhost', function(err){
+    if(err) throw err;
+    
+    console.log("Connected on port " + config.port);
 });
+
 
 /*
-https.createServer(config.credentials, app).listen(port, function(err){
+https.listen(config.port, function(err){
     if(err) throw err;
-    console.log("Credentials: " + config.credentials.key + config.credentials.cert);
-    console.log("HTTPS server listening on port " + port);
+
+    console.log("HTTPS server listening on port " + config.port + "!");
 });
 
-http.createServer(app).listen(port, function(err){
+https.createServer(config.credentials, app).listen(config.port, function(err){
     if(err) throw err;
-    console.log("HTTP server listening on port " + port);
-});
 
+    console.log("HTTPS server listening on port " + config.port);
+});
 */

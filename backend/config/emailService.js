@@ -13,7 +13,7 @@ var smtp = nm.createTransport({
 exports.sendConfirmation = function(unverified, req, cb){
     console.log("Unverified email: " + unverified.userEmail + " & id: " + unverified._id);
     console.log("Request hostname: " + req.hostname);
-    var link = "http://"+req.hostname+":"+ config.port +"/verify?email="+unverified.userEmail+"&id="+unverified._id;
+    var link = "https://"+req.hostname + "/verify?email="+unverified.userEmail+"&id="+unverified._id;
     console.log(link);
     var mailOptions ={
         from: '"Do Not Reply" <ruokasoftaoppari@gmail.com>',

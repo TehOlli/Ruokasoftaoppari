@@ -1,9 +1,9 @@
 var User                = require("./userModel");
 var fs                  = require("fs");
 var jwt                 = require("jsonwebtoken");
-var config              = require("../config");
+var config              = require("../config/config.js");
 var GoogleAuth          = require('google-auth-library');
-var emailService        = require('../emailService.js');
+var emailService        = require('../config/emailService.js');
 
 exports.signUp = function(req, res){
     if(!req.body) return res.sendStatus(400);
@@ -82,10 +82,10 @@ exports.verify = function(req, res){
         }else{
             if(user){
                 console.log("Account verified.");
-                res.json({success:true, message: "Account verified."});
+                res.redirect('/public/www/verify.html')
             }else{
                 console.log("Tried to verify an inexistent account.");
-                res.json({success:false, message:"That account does not exist."});
+                res.redirect('/public/www/fail.html')
             }
         }
     });
@@ -111,7 +111,8 @@ exports.login = function(req, res){
                     if(isMatch == true){
                         console.log("login userPassword: ", isMatch);
                         console.log("userEmail: " + user.userEmail);
-                        var token = jwt.sign({userID: user._id, groups:user.groups}, config.secret, {
+                        
+                        var token = jwt.sign({userID: user._id}, config.secret, {
                             expiresIn: '24h'
                         });
                         res.json({
@@ -149,8 +150,8 @@ exports.googleAuth = function(req, res){
             var username = payload['name'];
             var userEmail = payload['email'];
 
-            console.log("Checking if Google user exists...");
-            User.find({userEmail:userEmail}).limit(1).exec(function(err, user){
+            console.log("Checking if Google user " + username + " exists...");
+            User.find({userEmail:userEmail}).limit(1).exec(function(err, exists){
                 if(err){
                     console.log("Google Auth: failed to check for existing user.");
                     console.log(err);
@@ -158,23 +159,26 @@ exports.googleAuth = function(req, res){
                 }else{
                     if(exists.length){
                         console.log(exists);
-
-                        var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
+                        
+                        var token = jwt.sign({userID: exists[0]._id}, config.secret, {
                             expiresIn: '24h'
                         });
 
+                        console.log("GAuth sending token response... 1");
                         res.json({
                             success: true,
                             message: 'Google user authenticated.',
                             token: token,
-                            userid: user._id
+                            userid: exists[0]._id,
+                            username: exists[0].username
                         });     
                     }else{
                         var newUser = new User({
                             username: username,
                             userEmail: userEmail,
                             GAuth: true,
-                            verified: true
+                            verified: true,
+                            userPassword: username
                         });
 
                         newUser.save(function(err, user){
@@ -183,15 +187,16 @@ exports.googleAuth = function(req, res){
                                 console.log(err);
                                 res.json({success:false, message:"Couldn't save new user."});
                             }else{
-                                var token = jwt.sign({userID: user._id, groups:user.groups}, app.get('secret'), {
+                                var token = jwt.sign({userID: user._id}, config.secret, {
                                     expiresIn: '24h'
                                 });
-
+                                console.log("GAuth sending token response... 2");
                                 res.json({
                                     success: true,
                                     message: 'New Google user added.',
                                     token: token,
-                                    userid: user._id
+                                    userid: user._id,
+                                    username: user.username
                                 });
                             }
                         });
@@ -278,24 +283,26 @@ exports.setAvatar = function(req, res){
 
 exports.getMembers = function(req, res){
     if(!req.headers['groupid']) return res.sendStatus(400);
-    
-    console.log(req.headers['groupid']);
 
     var groupID = req.headers['groupid'];
-    //console.log("GroupID: " + groupID);
-    User.find({"groups.groupID":groupID}, function(err, members){
-        if(err){
-            res.json({success:false, message: "Couldn't access database."});
-            console.log("Couldn't get list of users.");
-            console.log(err);
-        }else{
-            if(members){
-                res.json(members);
+    
+    if(groupID.length){
+        User.find({"groups.groupID":groupID}, function(err, members){
+            if(err){
+                res.json({success:false, message: "Couldn't access database."});
+                console.log("Couldn't get list of users.");
+                console.log(err);
             }else{
-                res.json(null);
+                if(members){
+                    res.json(members);
+                }else{
+                    res.json(null);
+                }
             }
-        }
-    });
+        });
+    }else{
+        return res.sendStatus(400);
+    }
 };
 
 exports.getProfile = function(req, res){
@@ -303,20 +310,24 @@ exports.getProfile = function(req, res){
 
     var userID = req.headers['userid'];
 
-    User.findOne({_id:userID}, 'username userEmail groups', function(err, profile){
-        if(err){
-            res.json({success: false, message: "Cannot access database."});
-            console.log("/profile: Cannot access database to find user.");
-            console.log(err);
-        }else{
-            if(profile){
-                res.json(profile);
+    if(userID.length){
+        User.findOne({_id:userID}, 'username userEmail groups GAuth', function(err, profile){
+            if(err){
+                res.json({success: false, message: "Cannot access database."});
+                console.log("/profile: Cannot access database to find user.");
+                console.log(err);
             }else{
-                res.json({success: false, message: "No user by that email!"});
-                console.log("/profile: Couldn't find user by that email.");
+                if(profile){
+                    res.json(profile);
+                }else{
+                    res.json({success: false, message: "No user by that email!"});
+                    console.log("/profile: Couldn't find user by that email.");
+                }
             }
-        }
-    });
+        });
+    }else{
+        return res.sendStatus(400);
+    }
 };
 
 exports.getInvites = function(req, res){
@@ -324,18 +335,22 @@ exports.getInvites = function(req, res){
 
     var userID = req.headers['userid'];
 
-    User.findOne({_id:userID}, 'invites', function(err, invites){
-        if(err){
-            res.json({success: false, message: "Couldn't access database."});
-            console.log("/getinvites: Cannot access database to get invites.");
-            console.log(err);
-        }else{
-            if(invites){
-                res.json(invites);
+    if(userID.length){
+        User.findOne({_id:userID}, 'invites', function(err, invites){
+            if(err){
+                res.json({success: false, message: "Couldn't access database."});
+                console.log("/getinvites: Cannot access database to get invites.");
+                console.log(err);
             }else{
-                res.json({success: false, message: "No invites found."});
-                console.log("/getInvites: No invites found.");
+                if(invites){
+                    res.json(invites);
+                }else{
+                    res.json({success: false, message: "No invites found."});
+                    console.log("/getInvites: No invites found.");
+                }
             }
-        }
-    });
+        });
+    }else{
+        return res.sendStatus(400);
+    }
 };
