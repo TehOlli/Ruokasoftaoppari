@@ -1,2 +1,2 @@
-# Ruokasoftaoppari
+# DinnerChatter
 #Tärkeää tekstiä
