@@ -90,6 +90,10 @@ exports.listen = function(app){
             socket.to(data.room).emit("updatelist");
         });
 
+        socket.on("newVote", function(vote){
+            socket.to(vote.room).emit("vote", vote);
+        });
+
         socket.on("disconnect", function(){
             for(var i=0; i<socketUsers.length; i++){
                 var u = socketUsers[i];
