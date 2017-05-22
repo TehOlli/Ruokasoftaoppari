@@ -82,10 +82,10 @@ exports.verify = function(req, res){
         }else{
             if(user){
                 console.log("Account verified.");
-                res.redirect('/public/www/verify.html')
+                res.redirect('/www/verify.html')
             }else{
                 console.log("Tried to verify an inexistent account.");
-                res.redirect('/public/www/fail.html')
+                res.redirect('/www/fail.html')
             }
         }
     });
@@ -94,7 +94,6 @@ exports.verify = function(req, res){
 exports.login = function(req, res){
     if(!req.body) return res.sendStatus(400);
 
-    console.log("Hello, login here.");
     var userEmail = req.body.email;
     var userPassword = req.body.password;
     console.log(userEmail);

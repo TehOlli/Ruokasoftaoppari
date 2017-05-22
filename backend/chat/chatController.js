@@ -91,7 +91,14 @@ exports.listen = function(app){
         });
 
         socket.on("newVote", function(vote){
-            socket.to(vote.room).emit("vote", vote);
+            var newVote = {"placeID":vote.place};
+            Group.findOneAndUpdate({groupID:vote.room}, {$push:{voting: newVote}}, function(err){
+                if(err){
+                    console.log(err);
+                }else{
+                    socket.to(vote.room).emit("vote", vote);
+                }
+            });
         });
 
         socket.on("disconnect", function(){

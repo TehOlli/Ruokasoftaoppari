@@ -5,10 +5,10 @@ var http                = require("http").Server(app);
 //var https               = require("https").Server(config.credentials, app);
 var io                  = require('./chat/chatController').listen(http)
 var fs                  = require('fs');
+var path                = require('path');
 var bodyParser          = require("body-parser");
 var mong                = require("mongoose");
 var jwt                 = require("jsonwebtoken");
-var passport            = require("passport");
 var group               = require("./group/groupController");
 var user                = require("./user/userController");
 var Group               = require("./group/groupModel");
@@ -58,10 +58,12 @@ mong.connect(config.dbConnection, function(err){
 });
 
 //Multer config
+
 var upload = multer({
     dest:'./public/uploads/', 
     fileFilter: function (req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        var ext = path.extname(file.originalname.toLowerCase());
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
             return cb(new Error('Only images are allowed.'), false);
         }
         cb(null, true);

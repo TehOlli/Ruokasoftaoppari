@@ -450,7 +450,7 @@ exports.savePlace = function(req, res){
                 console.log("Place is already on the list.");
                 res.json({success:false, message:"Place is already on the list."});
             }else{
-                Group.findOneAndUpdate({_id:groupID}, {$push:{places:place}}, function(err, group){
+                Group.findOneAndUpdate({_id:groupID}, {$addToSet:{places:place}}, function(err, group){
                     if(err){
                         console.log("/savePlace: Couldn't save location to database.");
                         console.log(err);
@@ -464,9 +464,7 @@ exports.savePlace = function(req, res){
                 });
             }
         }
-
     })
-
 };
 
 exports.getPlaces = function(req, res){
@@ -475,7 +473,7 @@ exports.getPlaces = function(req, res){
     var groupID = req.headers['groupid'];
 
     if(groupID.length){
-        Group.findOne({_id:groupID}).select('places.placeID').exec(function(err, places){
+        Group.findOne({_id:groupID}, 'places.placeID voting', function(err, places){
             if(err){
                 console.log("/getplaces: Couldn't get list of places.")
                 console.log(err);
@@ -484,6 +482,8 @@ exports.getPlaces = function(req, res){
                         message: "Database error.", 
                 });    
             }else{
+                console.log("Places:" + places);
+                console.log("Votes:" + places.voting);
                 res.json(places);
             }
         });

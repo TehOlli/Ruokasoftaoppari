@@ -1,10 +1,22 @@
 var mong = require('mongoose');
 
-/*
-var members = mong.Schema({
-    memberEmail: String
+var memberSchema = mong.Schema({
+    memberID: String
 },{_id:false});
-*/
+
+var votingSchema = mong.Schema({
+    userID: String,
+    placeID: String
+}, {_id:false});
+
+var placeSchema = mong.Schema({
+    placeID:{
+        type: String,
+        required: true,
+        unique: true
+    }
+}, {_id:false});;
+
 var groupSchema = mong.Schema({
     groupName:{
         type: String,
@@ -18,18 +30,9 @@ var groupSchema = mong.Schema({
         type: String,
         required: true
     },
-    members: [{
-        memberID:{
-            type: String,
-            required: true
-        }
-    }],
-    places: [{
-        placeID:{
-            type: String,
-            required: true
-        }
-    }]
+    members: [memberSchema],
+    places: [placeSchema],
+    voting: [votingSchema]
 });
 
 var Group = mong.model('Group', groupSchema);
