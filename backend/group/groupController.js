@@ -510,6 +510,8 @@ exports.deletePlace = function(req, res){
                 message: "Database error.", 
             });    
         }else{
+            chat.socket.to(groupID).emit('placeremoved', placeID);
+
             res.json({success: true, message: "Location deleted."});
         }
     });
