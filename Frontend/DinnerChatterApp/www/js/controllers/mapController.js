@@ -249,8 +249,7 @@ app.controller('mapController', function($scope, $http, $timeout, places, addres
                 $scope.addNearby = function(x){
                     places.addToList(x).then(function(success){
                         listMarker(x);
-                        console.log(markers2);
-                        console.log($scope.restaurants);
+                        $scope.newPlace=false;
                     }, function(error){
 
                     })
@@ -260,7 +259,6 @@ app.controller('mapController', function($scope, $http, $timeout, places, addres
                     for (var i = 0; i < $scope.restaurants.length; i++) {
                         if($scope.restaurants[i].place_id==id){
                             $scope.restaurants.splice(i,1);
-                            console.log($scope.restaurants)
                         }
                         
                     }
@@ -272,6 +270,12 @@ app.controller('mapController', function($scope, $http, $timeout, places, addres
                             console.log("marker removed")
                         }
                         
+                    }
+                });
+                socket.on('placeadded', function(data){
+                    console.log(data);
+                    if(data.user!=localStorage.userid){
+                        listMarker(data.place);
                     }
                 })
 

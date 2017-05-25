@@ -211,11 +211,10 @@ body {
 }
 
 .empty-chat{
-    position:absolute;
-    top:45%;
-    left:20%;
+    margin-top:50%;
     font-size:1.2em;
     color:gray;
+    text-align: center;
 }
 
 .chat-input input{
@@ -429,8 +428,8 @@ body {
 :checked+.checkbox--material__checkmark:before{
         background-color: #8bc24a;
 }
-.res-list .dialog--material{
-    width:90%;
+.res-list div.dialog.dialog--material{
+    width:80%;
     height:90%;
 }
 
@@ -474,9 +473,10 @@ body {
 }
 
 .res-loop hr{
-    margin:0; 
+    margin:0 auto; 
     border:none; 
-    border-bottom:solid 1px #e0e0e0;
+    border-bottom:solid 1px #eee;
+    width:90%;
 }
 
 .res-loop-inner{
@@ -567,7 +567,7 @@ img[src="https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png"]{
 }
 
 .dialog-close{
-    text-align: right;
+    
     padding:5px 10px 10px 10px;
     font-size: 1.5em;
     color:white;
@@ -579,4 +579,10 @@ img[src="https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png"]{
 }
 .viewone-info p{
     display: inline;
+}
+
+.close-icon{
+    position:absolute;
+    top:10px;
+    right:10px;
 }

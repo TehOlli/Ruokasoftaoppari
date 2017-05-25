@@ -375,7 +375,10 @@
         <ons-dialog class="res-list" var="dialog4">
             <ons-page id="restaurantpage">           
                 <div style="text-align:center;">
-                    <p style="font-weight: bold; font-size: 1.3em;">Restaurants</p>
+                    <div class="dialog-close">
+                        <p style="display: inline;">Restaurants</p>
+                        <ons-icon class="close-icon" ng-click="dialog4.hide()" icon="ion-android-close"></ons-icon>
+                    </div>
                     <div class="res-loop" ng-repeat="res in restaurants">
                         <div class="res-loop-inner">
                             <div class="res-title">
@@ -396,13 +399,12 @@
                                 <a href="{{res.website}}">Website</a>
                                 <span ng-click="deletePlace(res.place_id);">Remove</span>
                             </div>
-                            <div class="res-options">
-                                <ons-range disabled style="width: 100%;"></ons-range>
-                            </div>
                         </div>
                         <hr>
                     </div>
-                    <ons-button style="margin:10px 0;" ng-click="dialog4.hide()">Close</ons-button>
+                     <div ng-if="!restaurants.length" class="empty-chat">
+                        <p>Your list is currently empty</p>
+                    </div>
                 </div>
             </ons-page>  
         </ons-dialog> 
@@ -410,16 +412,21 @@
     <ons-template id="viewone.html">
         <ons-dialog var="dialog5">
             <div class="dialog-close">
-                <ons-icon ng-click="dialog5.hide()" icon="ion-android-close"></ons-icon>
+                <p style="display:inline; font-size:0.7em;">Restaurant details</p>
+                <ons-icon class="close-icon" ng-click="dialog5.hide()" icon="ion-android-close"></ons-icon>
             </div>
             <div class="viewone-info">
                 <p>{{dialogPlace.name}}</p>
-                <res-rating style="padding-left:10px;"rating="{{dialogPlace.rating}}"></res-rating>    
-            </div>
-            <div class="viewone-info res-address">
-                <p>
-                    {{dialogPlace.vicinity}}
-                </p>      
+                <res-rating rating="{{dialogPlace.rating}}"></res-rating>  
+                <div class="res-options res-address">
+                    <p>
+                        {{dialogPlace.vicinity}}
+                    </p>
+                </div>
+                <div class="res-options">
+                    <a href="{{dialogPlace.website}}">Website</a>
+                    <span ng-click="deletePlace(dialogPlace.place_id);">Remove</span>
+                </div>       
             </div>
             <div ng-if="newPlace" style="text-align: center;">
                 <ons-button style="margin:10px 0;" ng-click="addNearby(dialogPlace.place_id);">Add to list</ons-button>
