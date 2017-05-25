@@ -459,7 +459,18 @@ exports.savePlace = function(req, res){
                             message: "Database error.", 
                         });    
                     }else{
-                        res.json({success:true, message: "Location saved."});
+                        var placeData = {
+                            "placeID": placeID,
+                            "room": groupID
+                        }
+
+                        chat.savePlace(placeData, res, function(err){
+                            if(err){
+                                console.log("Couldn't emit a placeadded event!");
+                                console.log(err);
+                                res.json({success:true, message:"The place was removed but your friends didn't get the message!"});
+                            }
+                        });
                     }
                 });
             }
@@ -511,14 +522,11 @@ exports.deletePlace = function(req, res){
             });    
         }else{
 
-            var placeData = {
-                "placeID": placeID,
-                "room": groupID
-            }
+
 
             chat.removePlace(placeData, res, function(err){
                 if(err){
-                    console.log("Couldn't emit a removeplace event!");
+                    console.log("Couldn't emit a placeremoved event!");
                     console.log(err);
                     res.json({success:true, message:"The place was removed but your friends didn't get the message!"});
                 }

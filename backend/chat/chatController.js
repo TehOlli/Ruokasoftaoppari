@@ -132,11 +132,16 @@ exports.listen = function(app){
                 break; 
             }
         }
-    }
+    };
+
+    exports.addPlace = function(placeData, res){
+        io.to(placeData.room).emit('placeadded', placeData.placeID);
+        res.json({success: true, message: "Place added."});
+    };
 
     exports.removePlace = function(placeData, res){
         io.to(placeData.room).emit('placeremoved', placeData.placeID);
-        res.json({success: true, message: "Place deleted."});
+        res.json({success: true, message: "Place removed."});
     };
 
     return io;
