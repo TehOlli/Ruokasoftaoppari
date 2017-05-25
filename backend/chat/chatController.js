@@ -135,10 +135,12 @@ exports.listen = function(app){
     };
 
     exports.addPlace = function(placeData, res){
+        console.log("addPlace here!");
         var data = {
             'place':placeData.placeID,
             'user':placeData.user
         }
+        console.log("Emitting placeadded.");
         io.to(placeData.room).emit('placeadded', data);
         res.json({success: true, message: "Place added."});
     };

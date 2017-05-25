@@ -464,7 +464,7 @@ exports.savePlace = function(req, res){
                             "room": groupID,
                             "user": req.headers['userid']
                         }
-
+                        console.log("Calling chat.addPlace...");
                         chat.addPlace(placeData, res, function(err){
                             if(err){
                                 console.log("Couldn't emit a placeadded event!");
@@ -522,8 +522,11 @@ exports.deletePlace = function(req, res){
                 message: "Database error.", 
             });    
         }else{
-
-
+            var placeData = {
+                "placeID": placeID,
+                "room": groupID,
+                "user": req.headers['userid']
+            }
 
             chat.removePlace(placeData, res, function(err){
                 if(err){
