@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-    Copyright 2017 ruokasoftaoppari@gmail.com
+    Copyright 2017 dinnerchatter@gmail.com
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 <html ng-app="my-app">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.gstatic.com/ data: gap: https://ssl.gstatic.com 'unsafe-eval'; script-src 'self' https://dinnerchatter.oppariteam.com/ https://cdn.rawgit.com/ http://193.167.99.102:80/ https://code.jquery.com/ http://localhost:8080/  'unsafe-inline' 'unsafe-eval' https://*.gstatic.com https://*.googleapis.com; style-src 'self' https://fonts.googleapis.com/ 'unsafe-inline'; media-src *; connect-src https://dinnerchatter.oppariteam.com/ http://localhost:8080/ http://193.167.99.102:80/ ws://localhost:8080/socket.io/ ws://dinnerchatter.oppariteam.com/ ws://193.167.99.102/socket.io/  https://code.jquery.com/; img-src 'self' https://maps.googleapis.com/ https://maps.gstatic.com/ https://csi.gstatic.com/ http://localhost:8080/ https://dinnerchatter.oppariteam.com/ http://193.167.99.102:80/ data: content:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.gstatic.com/ data: gap: https://ssl.gstatic.com 'unsafe-eval'; script-src 'self' https://dinnerchatter.oppariteam.com/ https://cdn.rawgit.com/ http://193.167.99.102:80/ https://code.jquery.com/ http://localhost:8080/  'unsafe-inline' 'unsafe-eval' https://*.gstatic.com https://*.googleapis.com; style-src 'self' https://fonts.googleapis.com/ 'unsafe-inline'; media-src *; connect-src https://dinnerchatter.oppariteam.com/ http://localhost:8080/ http://193.167.99.102:80/ ws://localhost:8080/socket.io/ ws://dinnerchatter.oppariteam.com/ ws://193.167.99.102/socket.io/  https://code.jquery.com/; img-src 'self' https://*.googleusercontent.com/ https://maps.googleapis.com/ https://maps.gstatic.com/ https://csi.gstatic.com/ http://localhost:8080/ https://dinnerchatter.oppariteam.com/ http://193.167.99.102:80/ data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -59,7 +59,7 @@
         <script type="text/javascript" src="js/services/geolocationService.js"></script>
         <script type="text/javascript" src="js/services/fileService.js"></script>
         <!--socket.io-->
-        <script src="https://dinnerchatter.oppariteam.com/socket.io/socket.io.js"></script>
+        <script src="http://localhost:8080/socket.io/socket.io.js"></script>
         <!--google-->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAg6qTBOOFhiWk7yuhuLkW5dN0CTdnBa9g&libraries=places"async defer></script>
         
@@ -357,7 +357,7 @@
     </ons-template>
 
     <ons-template id="map.html">
-        <ons-page id="mappage" ng-controller="mapController">
+        <ons-page id="mappage" ng-controller="mapController as map">
                <div class="restaurant-search">
                     <input ng-model="mapinput" placeholder="Search restaurants" id="mapinput">
                     <ons-icon ng-click="showDialog();" icon="ion-android-list"></ons-icon>
@@ -365,15 +365,15 @@
             <div id="map"></div>
             <div id="mapcontrols"class="map-settings">
                 <p class="map-select">
-                    <ons-input type="checkbox" ng-model="close">close</ons-input>
-                    <ons-input type="checkbox" ng-model="list">My list</ons-input>
+                    <ons-input type="checkbox" ng-model="close">Nearby</ons-input>
+                    <ons-input type="checkbox" ng-model="list">List</ons-input>
                </p>
             </div>
         </ons-page>
     </ons-template>
     <ons-template id="dialog.html">
         <ons-dialog class="res-list" var="dialog4">
-            <ons-page>           
+            <ons-page id="restaurantpage">           
                 <div style="text-align:center;">
                     <p style="font-weight: bold; font-size: 1.3em;">Restaurants</p>
                     <div class="res-loop" ng-repeat="res in restaurants">
@@ -396,12 +396,34 @@
                                 <a href="{{res.website}}">Website</a>
                                 <span ng-click="deletePlace(res.place_id);">Remove</span>
                             </div>
+                            <div class="res-options">
+                                <ons-range disabled style="width: 100%;"></ons-range>
+                            </div>
                         </div>
                         <hr>
                     </div>
                     <ons-button style="margin:10px 0;" ng-click="dialog4.hide()">Close</ons-button>
                 </div>
             </ons-page>  
+        </ons-dialog> 
+    </ons-template>
+    <ons-template id="viewone.html">
+        <ons-dialog var="dialog5">
+            <div class="dialog-close">
+                <ons-icon ng-click="dialog5.hide()" icon="ion-android-close"></ons-icon>
+            </div>
+            <div class="viewone-info">
+                <p>{{dialogPlace.name}}</p>
+                <res-rating style="padding-left:10px;"rating="{{dialogPlace.rating}}"></res-rating>    
+            </div>
+            <div class="viewone-info res-address">
+                <p>
+                    {{dialogPlace.vicinity}}
+                </p>      
+            </div>
+            <div ng-if="newPlace" style="text-align: center;">
+                <ons-button style="margin:10px 0;" ng-click="addNearby(dialogPlace.place_id);">Add to list</ons-button>
+            </div>
         </ons-dialog> 
     </ons-template>
     <!--<ons-template id="restaurant.html">

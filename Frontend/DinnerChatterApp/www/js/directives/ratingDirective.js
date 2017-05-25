@@ -6,6 +6,7 @@ app.directive('resRating', function() {
     },
     controller: function ($scope, $sce) {
         $scope.x = "";
+        console.log($scope.rating);
         var stars = (Math.round($scope.rating * 2) / 2).toFixed(1);
         for(i = 0; i < 5 ; i++){
             if(stars>=1){

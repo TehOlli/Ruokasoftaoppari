@@ -420,15 +420,22 @@ body {
     padding-left:10px;
 }
 .checkbox--material__checkmark:before{
-    
+    color:#8bc24a;
 }
 
 .checkbox--material{
    
 }
+:checked+.checkbox--material__checkmark:before{
+        background-color: #8bc24a;
+}
 .res-list .dialog--material{
     width:90%;
     height:90%;
+}
+
+.res-list .dialog-container{
+    height:100%;
 }
 
 #restaurant{
@@ -543,4 +550,33 @@ body {
 }
 #invite-icon{
     margin-left:20px;
+}
+
+img[src*="googleusercontent.com"]{
+        width:34px !important;
+        height:34px !important;
+        border-radius:50%;
+        border:1px solid #194da0 !important;
+}
+img[src="https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png"]{
+        width:34px !important;
+        height:34px !important;
+        border-radius:50%;
+        border:1px solid #194da0 !important;
+        background-color: white;
+}
+
+.dialog-close{
+    text-align: right;
+    padding:5px 10px 10px 10px;
+    font-size: 1.5em;
+    color:white;
+    background-color: #194da0;
+}
+
+.viewone-info{
+    padding:5px;
+}
+.viewone-info p{
+    display: inline;
 }

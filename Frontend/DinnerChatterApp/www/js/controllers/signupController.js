@@ -67,7 +67,7 @@ app.controller('signupController', function($scope, $log, $http, validation, add
                 window.plugins.googleplus.login(
                     {
                         'scopes': '',
-                        'webClientId': '546073062554-fvurgo1ps4fhrn4plhkno8l26b07894s.apps.googleusercontent.com',
+                        'webClientId': '767186635156-c8rj81hi36717j1o1qukkdfbhacou9fp.apps.googleusercontent.com',
                         'offline': true
                     
                     },

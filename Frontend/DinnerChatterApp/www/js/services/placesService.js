@@ -1,15 +1,22 @@
 app.service('places', function($http, address, $q){
     var address = address.getAddress();
     this.addToList = function(place){
-        var data = {placeid:place.place_id, groupid:localStorage.groupid};
-        console.log(data);
+        var deferred = $q.defer();
+        var data = {placeid:place, groupid:localStorage.groupid};
         $http.post(address + 'auth/saveplace', data).then(function(success){
-            console.log("place add success");
+            if(success.data.success==false){
+                deferred.reject();
+            }
+            else{
+                deferred.resolve();
+                console.log("place add success");
+            }
 
         }, function(error){
             console.log("place add error", error)
+            deferred.reject();
         });
-        return true;
+        return deferred.promise;
     }
     
     this.getList = function(){
