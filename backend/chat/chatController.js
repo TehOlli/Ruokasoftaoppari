@@ -134,6 +134,10 @@ exports.listen = function(app){
         }
     }
 
+    exports.removePlace = function(placeData, res){
+        socket.to(placeData.room).emit('placeremoved', placeData.placeID);
+        res.json({success: true, message: "Place deleted."});
+    };
 
     return io;
 };

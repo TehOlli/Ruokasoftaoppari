@@ -510,9 +510,19 @@ exports.deletePlace = function(req, res){
                 message: "Database error.", 
             });    
         }else{
-            chat.socket.to(groupID).emit('placeremoved', placeID);
 
-            res.json({success: true, message: "Location deleted."});
+            var placeData = {
+                "placeID": userID,
+                "room": groupID
+            }
+
+            chat.removePlace(placeData, res, function(err){
+                if(err){
+                    console.log("Couldn't emit a removeplace event!");
+                    console.log(err);
+                    res.json({success:true, message:"The place was removed but your friends didn't get the message!"});
+                }
+            });
         }
     });
 };
