@@ -461,7 +461,8 @@ exports.savePlace = function(req, res){
                     }else{
                         var placeData = {
                             "placeID": placeID,
-                            "room": groupID
+                            "room": groupID,
+                            "user": req.headers['userid']
                         }
 
                         chat.addPlace(placeData, res, function(err){
