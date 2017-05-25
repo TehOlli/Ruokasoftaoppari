@@ -464,7 +464,7 @@ exports.savePlace = function(req, res){
                             "room": groupID
                         }
 
-                        chat.savePlace(placeData, res, function(err){
+                        chat.addPlace(placeData, res, function(err){
                             if(err){
                                 console.log("Couldn't emit a placeadded event!");
                                 console.log(err);
