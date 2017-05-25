@@ -12,8 +12,6 @@ var votingSchema = mong.Schema({
 var placeSchema = mong.Schema({
     placeID:{
         type: String,
-        required: true,
-        unique: true
     }
 }, {_id:false});;
 
