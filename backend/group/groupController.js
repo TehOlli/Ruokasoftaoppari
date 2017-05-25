@@ -512,7 +512,7 @@ exports.deletePlace = function(req, res){
         }else{
 
             var placeData = {
-                "placeID": userID,
+                "placeID": placeID,
                 "room": groupID
             }
 
