@@ -2,6 +2,7 @@ var express             = require("express");
 var app                 = express();
 var config              = require("./config/config.js");
 var http                = require("http").Server(app);
+//Switch to HTTPS if not using Nginx HTTPS reverse proxy
 //var https               = require("https").Server(config.credentials, app);
 var io                  = require('./chat/chatController').listen(http)
 var fs                  = require('fs');
